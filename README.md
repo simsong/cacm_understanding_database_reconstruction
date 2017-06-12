@@ -293,7 +293,82 @@ ground truth set.
 
 
 There are at least three possible ways of solving for the 45 unknown
-variables. 
+variables:
+
+1 - Try all possible values of the 45 variables. This will take a long
+time, as finding a solution requires exponential time with respect to
+the number of variables. (There are a lot of possible solutions.)
+
+2 - Use the constraints to create a single cost function, and then use
+an off-the-shelf optimizer to find a solution. This has the advantage
+of passing the hard work off to a code that somebody else has written.
+
+3 - Use a SAT solver. SAT solvers are programs that have been
+developed to solve exponential problems quickly. They utilize a number
+of huristics that are too complex to explain here. Advances in SAT
+solvers over the past decade have made many problems easy that were
+once hard.
+
+Many SAT solvers can only solve for boolean values. Fortunately, every
+problem can be reduced to boolean variables. For example, each of our
+variables in this example can have a boolean representation:
+
+```
+  H - Household Number
+        1 = FALSE
+        2 = TRUE
+
+  A - AGE - encode as an 8-bit number:
+
+   A = b7 b6 b5 b4 b3 b2 b1 b0
+
+   where AGE = b7*128 + b6*64 + b5*32 + b4*16 + b3*8 + b2*4 + b1*2 + b0
+       
+  S - SEX:
+       MALE = FALSE
+       FEMALE = TRUE
+
+  R - RACE:
+      WHITE = FALSE
+      BLACK = TRUE
+
+  G - GENERATION:
+      GRANDPARENT = 2 = TRUE  FALSE
+      PARENT      = 1 = FALSE TRUE
+      CHILD       = 0 = FALSE FALSE
+
+```
+  So each row codes to 1 + 8 + 1 + 1 + 2 = 13 boolean variables
+
+The entire database can thus be described by 13 * 9 = 117 boolean
+variables.
+
+There are thus 2^117 possible solutions, of which the majority are
+inconsistent with our constraints.
+
+Although that might seem like a larger number, in 2002 a SAT solver
+solved random 3-SAT instances with one million variables in linear
+time. (Converting the general purpose SAT problems we have discussed
+here to 3-SAT problems is a mechanical process that an be done in
+polynominal time.)
+
+## References:
+
+* https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
+* https://en.wikipedia.org/wiki/Constraint_satisfaction_problem
+* https://cs.stackexchange.com/questions/18021/multicore-sat-solver
+* http://satcompetition.org
+* http://baldur.iti.kit.edu/sat-competition-2016/
+* http://fmv.jku.at/lingeling/
+* https://en.wikipedia.org/wiki/Tseytin_transformation
+
+
+## Other options
+
+* Use a SMT (Satisfiability Modulo Theories) solver:
+  - http://cvc4.cs.stanford.edu/
+
+
 
 
 
