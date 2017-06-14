@@ -370,20 +370,3 @@ polynominal time.)
 
 
 
-
-
-   
-
-
-
-
-
-We are looking for a set of values for these  45 variables that are
-consistent with the constraints. 
-
-However, we can create a set of constraints for the ages and races of each individual in this dataset. Assume that our individuals have ages A1 .. A8. We know that:
-
-
-
-
-
