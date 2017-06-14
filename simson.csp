@@ -1,0 +1,13 @@
+; Simson's first sugar attempt
+; Solve the equation system:
+;       3x + y = 10
+;          2*y = 8
+; Should get x=2
+; y=4
+; where x and y can range from 0 to 64
+
+(int x 0 107374182)
+(int y 0 107374182)
+(= (+ (* 3 x) y) 10)
+(= (+ y y) 8)
+;END
