@@ -1,5 +1,6 @@
 import pycosat
 import itertools
+import time
 import dimacs_processor
 
 # Program to simulate a Database Reconstruction Attack on databases
@@ -26,15 +27,19 @@ import dimacs_processor
 # yields as many solutions as it finds until iterator is exhausted
 # allAns = pycosat.itersolve(myCNF)
 
-FILE_NAME = "zebra.dimacs"
+FILE_NAME = "demo2.dimacs"
 
 if __name__ == '__main__':
     input = dimacs_processor.process_dimacs(FILE_NAME)
     print("Solving for all solutions...")
+    start_time = time.time()
     allAns = pycosat.itersolve(input)
+    stop_time = time.time()
+    time_elapsed = stop_time - start_time
+
     numAns = 0
     for solution in allAns:
         print("Solution: ", solution)
         numAns += 1
-    if numAns == 0: print("Finished search. System is unsatisfiable.")
-    else: print("Number of solutions found: ", numAns)
+    if numAns == 0: print("Finished search in " , time_elapsed, ". System is unsatisfiable.")
+    else: print("Number of solutions found in ", time_elapsed, "seconds" ": ", numAns)
