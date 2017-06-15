@@ -11,7 +11,7 @@ Audience:
   * Users of Census data products (later on)
 
 
-1. A paper that demonstrates the fesability of a database reconstruction attack against the products of a statistical agency:
+1. A paper that demonstrates the feasibility of a database reconstruction attack against the products of a statistical agency:
   
 - Using a toy example that makes sense to a person with high-school level math background.
 

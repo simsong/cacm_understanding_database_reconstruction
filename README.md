@@ -3,4 +3,6 @@ of database reconstruction attacks.
 
 The problem statement and white paper are found in problem_analysis.md.
 
-Demo programs using pycoSAT can be found in satsolver_attack_example.py. 
+Demo program using pycoSAT can be found in satsolver_attack_example.py.
+ 
+[pycosat SAT Solver Information/Download](https://pypi.python.org/pypi/pycosat)

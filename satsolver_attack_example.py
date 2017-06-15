@@ -27,13 +27,13 @@ import dimacs_processor
 # yields as many solutions as it finds until iterator is exhausted
 # allAns = pycosat.itersolve(myCNF)
 
-FILE_NAME = "demo2.dimacs"
+FILE_NAME = "zebra.dimacs"
 
 if __name__ == '__main__':
     input = dimacs_processor.process_dimacs(FILE_NAME)
     print("Solving for all solutions...")
     start_time = time.time()
-    allAns = pycosat.itersolve(input)
+    allAns = pycosat.itersolve(input, prop_limit = -1) #no propagation limit
     stop_time = time.time()
     time_elapsed = stop_time - start_time
 

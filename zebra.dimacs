@@ -1,16 +1,12 @@
-c The zebra problem.
+c A CNF encoding of the zebra problem by Jon Freeman.
 c
-c  Reference:
+c  Problem taken from:
 c
 c    Rina Dechter,
 c    Enhancement Schemes for Constraint Processing:
 c    Backjumping, Learning, and Cutset Decomposition",
 c    Artificial Intelligence,
 c    Volume 41, pages 273-312.
-c
-c  Encoded in CNF by Jon Freeman, November 1994.
-c  I have found three solutions; there may be more.
-c
 p cnf 155 1135
 1 2 3
 4 5 0

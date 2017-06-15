@@ -221,3 +221,67 @@ of equations.
 
 ##The SAT Solver: Scalability and Efficacy
 
+To demonstrate the real capabilities of the SAT solver when faced
+with a very large constraint system, in contrast to our above small
+example, we will use a system with 155 variables and 1135 boolean clauses.
+This system results from the CNF encoding of a famous problem
+known as the [Zebra Problem](http://www.ics.uci.edu/~csp/r8.pdf).
+This problem is appropriate because it closely models the current format of a 
+Census data publication. The writer receives the survey answers from the respondents,
+redacts much of the information to avoid giving away PII, and then
+publishes a data product.  
+
+The size of this problem more closely approximates the number
+of variables an attacker would need to generate constraints for
+when performing a DRA through queries on a massive public data set. It is too complex
+for the vast majority of humans to solve in any reasonable time. 
+
+This problem is stated as follows: 
+
+   1.  Five people have five different pets, smoke five different
+       brands of cigarettes, have five different favorite drinks and
+       live in five different houses.
+   2.  The Englishman lives in the red house.
+   3.  The Spaniard has a dog.
+   4.  The Ukranian drinks tea.
+   5.  The Norwegian lives in the leftmost house.
+   6.  The Japanese smokes Parliaments.
+   7.  The Norwegian lives next to the blue house.
+   8.  Coffee is drunk in the green house.
+   9.  The snail owner smokes Old Gold.
+   10. The inhabitant of the yellow house smokes Kools.
+   11. The Lucky Strikes smoker drinks orange juice.
+   12. Milk is drunk in the middle house.
+   13. The green house is immediately to the right of the ivory house.
+   14. The Chesterfield smoker lives next door to the fox owner.
+   15. The Kools smoker lives next door to where the horse is kept.
+
+   Given these conditions, determine who owns the zebra and who drinks
+   water.  
+   (The attacker is 'targeting' the water drinker and the zebra owner.)  
+   
+Just as demonstrated in the previous example, this problem
+can be encoded as a large set of boolean equations. The problem
+gives 15 explicit constraints which allow the attacker to begin to generate
+more constraints, and each of the combinations of variables (five people, 
+five houses, five drinks, etc.) can be represented as a boolean variable, for
+example, "The Norwegian lives in the red house == False"
+
+Once the attacker has generated every constraint possible from the
+given information, he can input the constraints into a SAT solver. 
+In this example, we run the zebra problem through the open-source, freely available software
+PicoSAT written in C. 
+
+The results: (**tabulate in latex**)  
+~~~
+Solving for all solutions...  
+Solution:  [-1, -2, 3, -4, -5, -6, -7, -8, -9, 10..., -152, -153, 154, -155]  
+Number of solutions found in  0.0004699230194091797 seconds:  1
+~~~
+
+PicoSAT is able to solve this very complex problem in a fraction
+of a second, and has reconstructed the entire database, thus
+obtaining the PII of all the residents of the village despite the 
+fact that the vast majority of their information was redacted by the
+problem writer before release. 
+
