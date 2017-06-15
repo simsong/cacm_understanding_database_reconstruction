@@ -51,8 +51,8 @@ To understand how a DRA works, let us
 consider a simple example data table generated from the following
 survey given to two households:
 
-Please provide the following for each member of your family:
-Age, Sex, Race, Generation
+**Please provide the following for each member of your family:
+Age, Sex, Race, Generation.**
 
 Here are the survey responses (the 'ground truth'):
 
@@ -70,7 +70,7 @@ Household #2:
 * 17 Female White Child
 
 The statistical agency publishes the following data based
-on the survey(**Needs to be tabulated**):  
+on the survey (**Needs to be tabulated**):  
 
 Format: Group, Number, Average Age 
  
@@ -208,7 +208,7 @@ the cost function using optimization software.
 3. Use a SAT solver, which are complex programs that solve Boolean
 algebra problems. 
 
-For large data sets such as the Census, brute force is infeasible
+For large data sets such as the U.S. Census, brute force is infeasible
 due to the fact that the runtime of brute force programs
 scales exponentially with the number of unknowns. However,
 cost functions and SAT solvers are both quite effective because they
@@ -218,4 +218,6 @@ to solve systems with *millions* of variables in linear time.
 In later examples, we will use a SAT solver to demonstrate
 how quickly these very complex programs can solve large systems
 of equations.
+
+##The SAT Solver: Scalability and Efficacy
 

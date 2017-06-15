@@ -2,8 +2,8 @@
 
 Project type:  Educational project
 Key hurdles to overcome: 
-     - Writing something readalbe; 
-     - developing a clean exmaple; 
+     - Writing something readable; 
+     - developing a clean example; 
      - use open source solvers to solve a problem too hard to solve by hand.
 
 Audience:
