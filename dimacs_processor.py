@@ -3,11 +3,12 @@
 #reads in a text file and returns a List[List[int]] with extraneous info (comments, p line, 0s) removed
 #@author Christian Martindale
 
-FILE_NAME = "demo1.dimacs"
+FILE_NAME = "demo2.dimacs"
 
 def read_dimacs(filename):
     with open(filename) as f:
         lines = [line.rstrip() for line in f if not line.isspace()]
+        print(lines)
         return lines
 
 def strings_to_int_list(myList):
@@ -19,12 +20,16 @@ def strings_to_int_list(myList):
 #strip comments, strip definition line, strip end of line zeroes, remove empty lines
 def process_dimacs(filename):
     initial = read_dimacs(filename)
-    print("initial is ", initial)
     only_numbers = [x for x in initial if (x[0] != ("c") and x[0] != ("p") and len(x) != 0)]
-    no_zeroes = [y[:-1] for y in only_numbers]
-    no_empties = [z for z in no_zeroes if len(z) != 0]
-
-    int_list = strings_to_int_list(no_empties)
+    no_empties = [z for z in only_numbers if len(z) != 0]
+    to_split_zeroes = " ".join(no_empties)
+    split_by_zeroes = to_split_zeroes.split(" 0")
+    print("split by zeroes is " , split_by_zeroes)
+    zeroes_no_spaces = [x.strip(" ") for x in split_by_zeroes]
+    print("zeroes no spaces is ", zeroes_no_spaces)
+    remove_nulls = [y for y in zeroes_no_spaces if(y != "" and y!= " ")]
+    print("remove nulls is ", remove_nulls)
+    int_list = strings_to_int_list(remove_nulls)
 
     return int_list
 

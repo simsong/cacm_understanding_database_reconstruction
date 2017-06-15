@@ -7,6 +7,7 @@ import dimacs_processor
 # Uses pycosat - Python wrapper of the picoSAT SAT solver (in C)
 # @author Christian Martindale
 
+# EX:
 # original CNF eqn is (A OR B) AND (NOT(B) OR C OR (NOT(D)))
 # AND (D OR (NOT(E)))
 
@@ -24,13 +25,8 @@ import dimacs_processor
 # ans = pycosat.solve(myCNF)
 # yields as many solutions as it finds until iterator is exhausted
 # allAns = pycosat.itersolve(myCNF)
-# print("First solution found: " , ans)
-# print("All solutions found: ")
-# for solution in allAns:
-#     print(solution)
-# print("Total number of solutions: " , len(list(pycosat.itersolve(myCNF))))
 
-FILE_NAME = "demo2.dimacs"
+FILE_NAME = "zebra.dimacs"
 
 if __name__ == '__main__':
     input = dimacs_processor.process_dimacs(FILE_NAME)
@@ -38,6 +34,7 @@ if __name__ == '__main__':
     allAns = pycosat.itersolve(input)
     numAns = 0
     for solution in allAns:
-        print(solution)
+        print("Solution: ", solution)
         numAns += 1
-    print ("Number of solutions found: ", numAns)
+    if numAns == 0: print("Finished search. System is unsatisfiable.")
+    else: print("Number of solutions found: ", numAns)
