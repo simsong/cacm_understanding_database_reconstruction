@@ -30,7 +30,14 @@ import dimacs_processor
 #     print(solution)
 # print("Total number of solutions: " , len(list(pycosat.itersolve(myCNF))))
 
-FILE_NAME = "demo1.dimacs"
+FILE_NAME = "demo2.dimacs"
 
 if __name__ == '__main__':
     input = dimacs_processor.process_dimacs(FILE_NAME)
+    print("Solving for all solutions...")
+    allAns = pycosat.itersolve(input)
+    numAns = 0
+    for solution in allAns:
+        print(solution)
+        numAns += 1
+    print ("Number of solutions found: ", numAns)

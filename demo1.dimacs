@@ -1,3 +1,4 @@
+c this file has an issue - you can't have a 0 in the middle of a clause
 c Example CNF format file
 c
 p cnf 4 3

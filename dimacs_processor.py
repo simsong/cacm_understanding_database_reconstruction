@@ -7,7 +7,7 @@ FILE_NAME = "demo1.dimacs"
 
 def read_dimacs(filename):
     with open(filename) as f:
-        lines = [line.rstrip() for line in f]
+        lines = [line.rstrip() for line in f if not line.isspace()]
         return lines
 
 def strings_to_int_list(myList):
@@ -19,7 +19,8 @@ def strings_to_int_list(myList):
 #strip comments, strip definition line, strip end of line zeroes, remove empty lines
 def process_dimacs(filename):
     initial = read_dimacs(filename)
-    only_numbers = [x for x in initial if (x[0] != ("c") and x[0] != ("p"))]
+    print("initial is ", initial)
+    only_numbers = [x for x in initial if (x[0] != ("c") and x[0] != ("p") and len(x) != 0)]
     no_zeroes = [y[:-1] for y in only_numbers]
     no_empties = [z for z in no_zeroes if len(z) != 0]
 
