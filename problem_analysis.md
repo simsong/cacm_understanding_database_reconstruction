@@ -41,9 +41,18 @@ of the table are given without upper or lower bound (e.g.
 reporting the highest bucket for age as "80+" instead of 
 "80-90" and "90-100")
 
-While these techniques are not without merit, this paper will
+
+The goal of a Database Reconstruction Attack is to 
+use public data to create a mathematical system of equations,
+which then can be used to reconstruct the original (before the disclosure
+avoidance techniques were applied) data set.
+While the above techniques are not without merit, this paper will
 demonstrate that they alone are insufficient in guarding data against
 a modern DRA. 
+
+##Vocabulary
+Should there be a vocab section, or just in body when discussed?
+
 
 ##The Database Reconstruction Attack: An Example
 
