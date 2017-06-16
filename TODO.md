@@ -12,7 +12,7 @@ Best-known generic SAT-solver today: CDCL. Many (all?) implementations of CDCL  
 Best implementation of CDCL: Lingeling 
 
 
-Auggested another solver: Glucose
+Suggested another solver: Glucose
 
 There are also "educational" versions of CDCL solvers: Laurent Simon coded up
 one in Python for his tutorial in 2016 (linked to above) and Armin

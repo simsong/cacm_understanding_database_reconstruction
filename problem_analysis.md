@@ -13,11 +13,14 @@ This paper will answer the following questions:
 2. To what extent are modern DRAs effective in reconstructing 
 the ground truth data?
 3. How scalable are DRAs with database size?
-4. How can we guard public data against a DRA without 
+4. How can a statistical agency guard public data against a DRA without 
 significantly impacting the accuracy of the data?
 
 We will also develop a vocabulary to facilitate the discussion
 of database privacy and formally define some important terms. 
+
+Keywords: Database Reconstruction Attack, SAT solver, privacy, 
+disclosure avoidance
 
 ##Problem Background
 
@@ -51,8 +54,24 @@ demonstrate that they alone are insufficient in guarding data against
 a modern DRA. 
 
 ##Vocabulary
-Should there be a vocab section, or just in body when discussed?
+**Should there be a vocab section, or just in body when discussed?**
 
+* **Database Reconstruction Attack (DRA)** - an attempt to determine survey 
+response information from a publicly available data set which has had
+disclosure avoidance techniques applied to it.
+
+* **Constraint Equation** - A mathematical equation that represents 
+information known to be true for a set of data.
+
+* **Solution Universe (U)** - The set of all combinations of a 
+group of variables that satisfies a certain set of constraint equations.
+
+* **SAT Solver** - A program that uses a complex set of heuristics
+to find the solution universe given a set of constraint equations.
+
+* **Noise Addition** - The addition of small random numbers to 
+statistical table values before
+publication for the purpose of protecting respondent privacy.
 
 ##The Database Reconstruction Attack: An Example
 
@@ -182,16 +201,16 @@ Once the attacker has converted all the published statistics
 into equations like the ones above, he will have a system
 of a large number of equations in 45 unknowns. 
 This system has one 'true' solution, Sg, equivalent to the 
-ground truth, and possibly many other false solutions, {S1...Sn}. 
+ground truth, and possibly many other 'false' solutions, {S1...Sn}. 
 
-The set of system solutions, U, is potentially originally quite large:  
+The Solution Universe, **U**, is potentially originally quite large:  
 
 **U = {S1...Sn}**
 
 However, each time the agency publishes a new statistic, the attacker
 can generate new constraints and therefore narrow
 down the set of possible solutions. Eventually, the attacker
-will obtain U = {Sg}, at which point he has 
+will obtain **U = {Sg}**, at which point he has 
 found the ground truth and reconstructed the database
 successfully. Note here that the cell suppression disclosure avoidance
 technique does not prevent the attacker from performing
@@ -202,10 +221,11 @@ Even if the number of constraints is insufficient to narrow down U
 to just one element, personal data can often still be identified 
 because of the high probability that all remaining possible solutions 
 will share the same values for a certain person. For example, if   
-U = {S1, S2} and  
-S1 ∩ S2 = {H1=h1, A1=a1, S1=s1, R1=r1, G1=g1},  
-then we know that {h1, a1, a1, r1, g1} must be an actual person in 
-the ground truth set.
+**U = {S1, S2}** and S1 and S2 both have values **{h1, a1, s1, r1, g1}** in common
+(represented mathematically by **S1 ∩ S2 = {H1=h1, A1=a1, S1=s1, R1=r1, G1=g1}**),  
+then we know that **{h1, a1, a1, r1, g1}** must be an actual person in 
+the ground truth set. Thus, the database has failed to protect user privacy
+even though the attack did not fully reconstruct the database.
 
 ###Methods of Attack
 
@@ -294,3 +314,27 @@ obtaining the PII of all the residents of the village despite the
 fact that the vast majority of their information was redacted by the
 problem writer before release. 
 
+The success of this attack demonstrates the inefficacy of 
+cell suppression as a method for protecting PII against
+a SAT solver-driven DRA. This problem
+contained far more suppressed cells than unsuppressed ones, which is 
+not realistic given that a real publishing agency would want to minimize
+the number of suppressed cells. Despite this over-suppression, 
+the SAT solver was still able to easily solve for the values of all cells in the example.
+
+##Defending Against a DRA
+
+As demonstrated above, new techniques must be developed in 
+order to protect databases against reconstruction attacks.
+One recently developed technique that has proven effective against
+the DRA is a special type of noise addition called the 
+[Laplace Mechanism](https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf).
+The mathematics behind this process are beyond the scope of this paper,
+but the important property of this distribution is that it is effective
+in creating noise that makes the task of the database reconstruction
+attacker much more difficult.
+
+###How Noise Addition Defeats Attacks
+
+Zebra problem doesn't work here because it has no integer
+values, just booleans. We need to make a numerical example.
