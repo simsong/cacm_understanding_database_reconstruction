@@ -135,7 +135,7 @@ Grandparent = 2
 gives:  
 (**Needs to be tabulated**) 
  
-ID HOUSEHOLD AGE SEX RACE GENDER  
+ID HOUSEHOLD AGE SEX RACE GENERATION  
 1 1 24 0 0 1  
 2 1 28 1 1 1  
 3 1 55 1 0 2  
