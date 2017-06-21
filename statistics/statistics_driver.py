@@ -55,5 +55,7 @@ if __name__ == '__main__':
     num_gparents = statistics_generator.count_matches(data, "gen", 2)
     print("Total number of grandparents is", num_gparents)
 
+    average_age = statistics_generator.calc_avg(data, "age")
+    print("Average age is", average_age)
     average_hh_size = statistics_generator.calc_avg_hh_size(data)
     print("Average household size is", average_hh_size)

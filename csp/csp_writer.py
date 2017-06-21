@@ -35,4 +35,4 @@ def write_gen(file, num):
         file.write("\n")
 
 if __name__ == '__main__':
-    write("encoded_stats.csp", 35)
+    write("new_encoded_stats.csp", 35)
