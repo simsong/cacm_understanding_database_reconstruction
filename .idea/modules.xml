@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/csp/csp.iml" filepath="$PROJECT_DIR$/csp/csp.iml" />
       <module fileurl="file://$PROJECT_DIR$/database_reconstruction.iml" filepath="$PROJECT_DIR$/database_reconstruction.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples/examples.iml" filepath="$PROJECT_DIR$/examples/examples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/statistics/statistics.iml" filepath="$PROJECT_DIR$/statistics/statistics.iml" />
     </modules>
   </component>
 </project>

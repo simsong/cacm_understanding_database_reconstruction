@@ -76,6 +76,6 @@ def create_person_array(num_households):
 
 
 if __name__ == '__main__':
-    FILE_NAME = "example_survey_responses.txt"
+    FILE_NAME = "new_example_survey_responses.txt"
     houses = create_person_array(10)
     write_to_file(FILE_NAME, houses)

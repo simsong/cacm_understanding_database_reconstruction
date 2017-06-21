@@ -1,9 +1,0 @@
-c This is simson's first SAT problem
-c Can we find the number 42 in binary?
-c 42 = 32 + 8 + 2
-c 42 = 2**5 + 2**3 + 2
-c let x1=2   x2=4   x3=8   x4=16  x5=32  x6=64  x7==128
-c So the SAT problem is a bunch of things that must be true.
-c x1...
-
-c It's really hard. You need to encode it as a circuit. Sugar does this for you...

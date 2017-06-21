@@ -50,7 +50,6 @@ def count_matches(data, param_name, value):
         person = line.split()
         if int(person[categories[param_name]]) == value:
             ans += 1
-            print(person[0])
     return ans
 
 
@@ -70,8 +69,18 @@ def calc_avg(filtered_data, param_name):
         running_total += int(person[categories[param_name]])
     return running_total / population_size
 
+#calculates the average household size for a set of people
+def calc_avg_hh_size(filtered_data):
+    households = set([])
+    for line in filtered_data:
+        person = line.split()
+        households.add(int(person[categories["hh"]]))
+    return len(filtered_data) / len(households)
+
+
+
 if __name__ == '__main__':
-    filename ="example_survey_responses.txt"
+    filename ="new_example_survey_responses.txt"
     data = read_file(filename)
     param_name = "race"
     race_value = 1
