@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import example_generator
-
 
 #reads in a file of PII data and generates statistics for mock publication
 #input format:
@@ -14,19 +12,35 @@ categories = {"id":0, "hh": 1, "age":2, "sex":3, "race":4, "gen":5}
 def read_file(filename):
     with open(filename) as f:
         lines = [line.rstrip() for line in f if not line.isspace()]
-        return lines[1:]
+        return lines
 
 #just for readability's sake later
 def count_people(data):
     return len(data)
 
 #creates a list with only people matching the filter criteria in it
-def filter_data(data, param_name, value):
+#comparator is a string: ("=", "<", ">", "<=", ">=")
+#very ugly but it gets the job done - is there a way to convert str input
+#for comparator into the actual comparator symbol in the code to avoid duplication?
+def filter_data(data, param_name, value, comparator):
     filtered = []
     for line in data:
         person = line.split()
-        if int(person[categories[param_name]]) == value:
-            filtered.append(line)
+        if comparator == "=":
+            if int(person[categories[param_name]]) == value:
+                filtered.append(line)
+        elif comparator == "<":
+            if int(person[categories[param_name]]) < value:
+                filtered.append(line)
+        elif comparator == ">":
+            if int(person[categories[param_name]]) > value:
+                filtered.append(line)
+        elif comparator == "<=":
+            if int(person[categories[param_name]]) <= value:
+                filtered.append(line)
+        elif comparator == ">=":
+            if int(person[categories[param_name]]) >= value:
+                filtered.append(line)
     return filtered
 
 #counts the number of people in the file matching a description
@@ -36,7 +50,9 @@ def count_matches(data, param_name, value):
         person = line.split()
         if int(person[categories[param_name]]) == value:
             ans += 1
+            print(person[0])
     return ans
+
 
 #calculates the percent of people matching criteria 2 that also match 
 #criteria 1
@@ -61,5 +77,5 @@ if __name__ == '__main__':
     race_value = 1
     count = count_matches(data, param_name, race_value)
     print("Number of people with", param_name, "value", race_value, "is", count)
-    filtered_whites_only = filter_data(data, "race", 1)
+    filtered_whites_only = filter_data(data, "race", 1, "=")
     print("Average age of whites is", calc_avg(filtered_whites_only, "age"))
