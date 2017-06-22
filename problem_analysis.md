@@ -293,7 +293,7 @@ PicoSAT for usability improvements.
 The results of the attack are:
 
 
-##The SAT Solver: Scalability
+##The SAT Solver: Scalability (move to appendix)
 
 To demonstrate the real capabilities of the SAT solver when faced
 with a very large constraint system, in contrast to our above relatively small

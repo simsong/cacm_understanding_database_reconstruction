@@ -1,0 +1,83 @@
+(int H1 1 4)
+(int H2 1 4)
+(int H3 1 4)
+(int H4 1 4)
+(int H5 1 4)
+(int H6 1 4)
+(int H7 1 4)
+(int H8 1 4)
+(int H9 1 4)
+(int H10 1 4)
+(int A1 1 90)
+(int A2 1 90)
+(int A3 1 90)
+(int A4 1 90)
+(int A5 1 90)
+(int A6 1 90)
+(int A7 1 90)
+(int A8 1 90)
+(int A9 1 90)
+(int A10 1 90)
+(int S1 0 1)
+(int S2 0 1)
+(int S3 0 1)
+(int S4 0 1)
+(int S5 0 1)
+(int S6 0 1)
+(int S7 0 1)
+(int S8 0 1)
+(int S9 0 1)
+(int S10 0 1)
+(int R1 0 1)
+(int R2 0 1)
+(int R3 0 1)
+(int R4 0 1)
+(int R5 0 1)
+(int R6 0 1)
+(int R7 0 1)
+(int R8 0 1)
+(int R9 0 1)
+(int R10 0 1)
+(int G1 0 2)
+(int G2 0 2)
+(int G3 0 2)
+(int G4 0 2)
+(int G5 0 2)
+(int G6 0 2)
+(int G7 0 2)
+(int G8 0 2)
+(int G9 0 2)
+(int G10 0 2)
+;
+;average age total completed
+(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 10) 40)
+;number of children completed
+(= (+ (if (= G1 0) 1 0) (if (= G2 0) 1 0) (if (= G3 0) 1 0) (if (= G4 0) 1 0) (if (= G5 0) 1 0) (if (= G6 0) 1 0) (if (= G7 0) 1 0) (if (= G8 0) 1 0) (if (= G9 0) 1 0) (if (= G10 0) 1 0) ) 3)
+;number of parents completed
+(= (+ (if (= G1 1) 1 0) (if (= G2 1) 1 0) (if (= G3 1) 1 0) (if (= G4 1) 1 0) (if (= G5 1) 1 0) (if (= G6 1) 1 0) (if (= G7 1) 1 0) (if (= G8 1) 1 0) (if (= G9 1) 1 0) (if (= G10 1) 1 0) ) 4)
+;number of grandparents completed
+(= (+ (if (= G1 2) 1 0) (if (= G2 2) 1 0) (if (= G3 2) 1 0) (if (= G4 2) 1 0) (if (= G5 2) 1 0) (if (= G6 2) 1 0) (if (= G7 2) 1 0) (if (= G8 2) 1 0) (if (= G9 2) 1 0) (if (= G10 2) 1 0) ) 3)
+;number of males completed
+(= (+ (if (= S1 0) 1 0) (if (= S2 0) 1 0) (if (= S3 0) 1 0) (if (= S4 0) 1 0) (if (= S5 0) 1 0) (if (= S6 0) 1 0) (if (= S7 0) 1 0) (if (= S8 0) 1 0) (if (= S9 0) 1 0) (if (= S10 0) 1 0) ) 5)
+;number of females completed
+(= (+ (if (= S1 1) 1 0) (if (= S2 1) 1 0) (if (= S3 1) 1 0) (if (= S4 1) 1 0) (if (= S5 1) 1 0) (if (= S6 1) 1 0) (if (= S7 1) 1 0) (if (= S8 1) 1 0) (if (= S9 1) 1 0) (if (= S10 1) 1 0) ) 5)
+;number blacks completed
+(= (+ (if (= R1 1) 1 0) (if (= R2 1) 1 0) (if (= R3 1) 1 0) (if (= R4 1) 1 0) (if (= R5 1) 1 0) (if (= R6 1) 1 0) (if (= R7 1) 1 0) (if (= R8 1) 1 0) (if (= R9 1) 1 0) (if (= R10 1) 1 0) ) 5)
+;number whites completed
+(= (+ (if (= R1 0) 1 0) (if (= R2 0) 1 0) (if (= R3 0) 1 0) (if (= R4 0) 1 0) (if (= R5 0) 1 0) (if (= R6 0) 1 0) (if (= R7 0) 1 0) (if (= R8 0) 1 0) (if (= R9 0) 1 0) (if (= R10 0) 1 0) ) 5)
+;average age blacks completed
+(= (/ (+ (* A1 (if (= R1 1) 1 0)) (* A2 (if (= R2 1) 1 0)) (* A3 (if (= R3 1) 1 0)) (* A4 (if (= R4 1) 1 0)) (* A5 (if (= R5 1) 1 0)) (* A6 (if (= R6 1) 1 0)) (* A7 (if (= R7 1) 1 0)) (* A8 (if (= R8 1) 1 0)) (* A9 (if (= R9 1) 1 0)) (* A10 (if (= R10 1) 1 0))) 5) 30)
+;average age whites completed
+(= (/ (+ (* A1 (if (= R1 0) 1 0)) (* A2 (if (= R2 0) 1 0)) (* A3 (if (= R3 0) 1 0)) (* A4 (if (= R4 0) 1 0)) (* A5 (if (= R5 0) 1 0)) (* A6 (if (= R6 0) 1 0)) (* A7 (if (= R7 0) 1 0)) (* A8 (if (= R8 0) 1 0)) (* A9 (if (= R9 0) 1 0)) (* A10 (if (= R10 0) 1 0))) 5) 50)
+;average age children completed
+(= (/ (+ (* A1 (if (= G1 0) 1 0)) (* A2 (if (= G2 0) 1 0)) (* A3 (if (= G3 0) 1 0)) (* A4 (if (= G4 0) 1 0)) (* A5 (if (= G5 0) 1 0)) (* A6 (if (= G6 0) 1 0)) (* A7 (if (= G7 0) 1 0)) (* A8 (if (= G8 0) 1 0)) (* A9 (if (= G9 0) 1 0)) (* A10 (if (= G10 0) 1 0)) ) 3) 10)
+;average age parents completed
+(= (/ (* (+ (* A1 (if (= G1 1) 1 0)) (* A2 (if (= G2 1) 1 0)) (* A3 (if (= G3 1) 1 0)) (* A4 (if (= G4 1) 1 0)) (* A5 (if (= G5 1) 1 0)) (* A6 (if (= G6 1) 1 0)) (* A7 (if (= G7 1) 1 0)) (* A8 (if (= G8 1) 1 0)) (* A9 (if (= G9 1) 1 0)) (* A10 (if (= G10 1) 1 0))) 10) 4) 325)
+;average age grandparents completed
+(= (/ (+ (* A1 (if (= G1 2) 1 0)) (* A2 (if (= G2 2) 1 0)) (* A3 (if (= G3 2) 1 0)) (* A4 (if (= G4 2) 1 0)) (* A5 (if (= G5 2) 1 0)) (* A6 (if (= G6 2) 1 0)) (* A7 (if (= G7 2) 1 0)) (* A8 (if (= G8 2) 1 0)) (* A9 (if (= G9 2) 1 0)) (* A10 (if (= G10 2) 1 0)) ) 3) 80)
+;average age males
+(= (/ (+ (* A1 (if (= S1 0) 1 0)) (* A2 (if (= S2 0) 1 0)) (* A3 (if (= S3 0) 1 0)) (* A4 (if (= S4 0) 1 0)) (* A5 (if (= S5 0) 1 0)) (* A6 (if (= S6 0) 1 0)) (* A7 (if (= S7 0) 1 0)) (* A8 (if (= S8 0) 1 0)) (* A9 (if (= S9 0) 1 0)) (* A10 (if (= S10 0) 1 0)) ) 5) 34)
+;average age females
+(= (/ (+ (* A1 (if (= S1 1) 1 0)) (* A2 (if (= S2 1) 1 0)) (* A3 (if (= S3 1) 1 0)) (* A4 (if (= S4 1) 1 0)) (* A5 (if (= S5 1) 1 0)) (* A6 (if (= S6 1) 1 0)) (* A7 (if (= S7 1) 1 0)) (* A8 (if (= S8 1) 1 0)) (* A9 (if (= S9 1) 1 0)) (* A10 (if (= S10 1) 1 0)) ) 5) 46)
+;number of hh (nvalue returns number of distinct elements)
+(nvalue 4 (H1 H2 H3 H4 H5 H6 H7 H8 H9 H10))
