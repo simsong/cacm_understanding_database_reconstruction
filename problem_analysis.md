@@ -248,11 +248,55 @@ In later examples, we will use a SAT solver to demonstrate
 how quickly these very complex programs can solve large systems
 of equations.
 
-##The SAT Solver: Scalability and Efficacy
+##Revisiting the Example
+
+In order to show how a SAT solver can be used to rapidly narrow down
+the solution universe for a data set, we will programmatically generate
+random survey responses, this time with a much larger data set of 35 people
+from 10 households **(in example_survey_responses.txt)** . We therefore have 35*5 = 175 variables to solve for;
+this task is too difficult for a human to solve in a reasonable length
+of time.  
+The statistical agency again publishes the following statistics after processing
+the survey responses:
+
+**RACIAL STATS**  
+Number of blacks is 14  
+Average age of blacks is 32.5  
+Number of black children is 6  
+Number of black parents is 6  
+Number of whites is 21  
+Average age of whites is 39.0  
+Number of white children is 7  
+Number of white parents is 8    
+**GENDER STATS**  
+Number of males is 17  
+Number of females is 18    
+**GENERATION STATS**    
+Number of children is 13  
+Average age of children is 5.923076923076923  
+Number of parents is 14  
+Average age of parents is 40.785714285714285  
+Number of grandparents is 8  
+Average age of grandparents is 78.25    
+**MISCELLANEOUS STATS**  
+Total number of people is 35  
+Total number of children is 13  
+Total number of parents is 14  
+Total number of grandparents is 8  
+Average age is 36.4  
+Average household size is 3.5  
+
+From this data, the attacker generates many constraints, **(in encoded_stats.csp)**
+and then inputs them into a SAT solver. In this example, we use a free open-source program
+called Sugar which wraps PicoSAT for usability improvements.
+
+The results of the attack are:
+
+##The SAT Solver: Scalability
 
 To demonstrate the real capabilities of the SAT solver when faced
-with a very large constraint system, in contrast to our above small
-example, we will use a system with 155 variables and 1135 boolean clauses.
+with a very large constraint system, in contrast to our above relatively small
+examples, we will use a system with 155 variables and 1135 boolean clauses.
 This system results from the CNF encoding of a famous problem
 known as the [Zebra Problem](http://www.ics.uci.edu/~csp/r8.pdf).
 This problem is appropriate because it closely models the current format of a 

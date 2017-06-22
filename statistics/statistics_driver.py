@@ -14,7 +14,7 @@ if __name__ == '__main__':
     filtered_blacks_only = statistics_generator.filter_data(data, "race", 1, "=")
     print("Average age of blacks is", statistics_generator.calc_avg(filtered_blacks_only, "age"))
     filtered_less_18 = statistics_generator.filter_data(filtered_blacks_only, "age", 18, "<")
-    print("Number of blacks under 18 is", len(filtered_less_18))
+    print("Number of black children is", len(filtered_less_18))
     filtered_black_parents = statistics_generator.filter_data(filtered_blacks_only, "gen", 1, "=")
     print("Number of black parents is", statistics_generator.count_people(filtered_black_parents))
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     filtered_whites_only = statistics_generator.filter_data(data, "race", 0, "=")
     print("Average age of whites is", statistics_generator.calc_avg(filtered_whites_only, "age"))
     filtered_less_18 = statistics_generator.filter_data(filtered_whites_only, "age", 18, "<")
-    print("Number of whites under 18 is", len(filtered_less_18))
+    print("Number of white children is", len(filtered_less_18))
     filtered_white_parents = statistics_generator.filter_data(filtered_whites_only, "gen", 1, "=")
     print("Number of white parents is", statistics_generator.count_people(filtered_white_parents))
 
@@ -42,6 +42,26 @@ if __name__ == '__main__':
     female_count = statistics_generator.count_people(filtered_females)
     print("Number of females is", female_count)
     female_avg_age = statistics_generator.calc_avg(filtered_females, "age")
+
+    print("**GENERATION STATS**")
+    #generation stats
+    filtered_children = statistics_generator.filter_data(data, "gen", 0, "=")
+    child_count = statistics_generator.count_people(filtered_children)
+    print("Number of children is", child_count)
+    child_avg_age = statistics_generator.calc_avg(filtered_children, "age")
+    print("Average age of children is", child_avg_age)
+
+    filtered_parents = statistics_generator.filter_data(data, "gen", 1, "=")
+    parent_count = statistics_generator.count_people(filtered_parents)
+    print("Number of parents is", parent_count)
+    parent_avg_age = statistics_generator.calc_avg(filtered_parents, "age")
+    print("Average age of parents is", parent_avg_age)
+
+    filtered_grandparents = statistics_generator.filter_data(data, "gen", 2, "=")
+    grandparent_count = statistics_generator.count_people(filtered_grandparents)
+    print("Number of grandparents is", grandparent_count)
+    grandparent_avg_age = statistics_generator.calc_avg(filtered_grandparents, "age")
+    print("Average age of grandparents is", grandparent_avg_age)
 
 
     print("**MISCELLANEOUS STATS**")
