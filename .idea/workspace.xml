@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="" />
+    <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/csp/encoded_stats.csp" afterPath="$PROJECT_DIR$/csp/encoded_stats.csp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/example_survey_responses.txt" afterPath="$PROJECT_DIR$/examples/example_survey_responses.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/problem_analysis.md" afterPath="$PROJECT_DIR$/problem_analysis.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/statistics/statistics_driver.py" afterPath="$PROJECT_DIR$/statistics/statistics_driver.py" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,19 +18,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="problem_analysis.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/problem_analysis.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="208">
-                <caret line="283" column="18" lean-forward="false" selection-start-line="283" selection-start-column="18" selection-end-line="283" selection-end-column="18" />
-                <folding />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="csp_writer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/csp/csp_writer.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -36,12 +28,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="encoded_stats.csp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="encoded_stats.csp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/csp/encoded_stats.csp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="203" column="0" lean-forward="true" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+            <state relative-caret-position="471">
+              <caret line="210" column="0" lean-forward="true" selection-start-line="210" selection-start-column="0" selection-end-line="210" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="problem_analysis.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/problem_analysis.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="-1606">
+                <caret line="15" column="29" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+                <folding />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -49,8 +54,8 @@
       <file leaf-file-name="example_survey_responses.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/example_survey_responses.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="4" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
+            <state relative-caret-position="36">
+              <caret line="15" column="7" lean-forward="false" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -59,8 +64,8 @@
       <file leaf-file-name="statistics_driver.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/statistics/statistics_driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
+            <state relative-caret-position="-273">
+              <caret line="45" column="44" lean-forward="false" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -113,11 +118,11 @@
         <option value="$PROJECT_DIR$/example_generator.py" />
         <option value="$PROJECT_DIR$/examples/encoded_stats.csp" />
         <option value="$PROJECT_DIR$/csp/csp_writer.py" />
-        <option value="$PROJECT_DIR$/examples/example_survey_responses.txt" />
         <option value="$PROJECT_DIR$/csp/sandbox.csp" />
+        <option value="$PROJECT_DIR$/problem_analysis.md" />
+        <option value="$PROJECT_DIR$/examples/example_survey_responses.txt" />
         <option value="$PROJECT_DIR$/statistics/statistics_driver.py" />
         <option value="$PROJECT_DIR$/csp/encoded_stats.csp" />
-        <option value="$PROJECT_DIR$/problem_analysis.md" />
       </list>
     </option>
   </component>
@@ -623,6 +628,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="26" width="1268" height="724" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -632,7 +638,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977098" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -995,22 +1001,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/statistics/statistics_driver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/example_survey_responses.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="4" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/csp/csp_writer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="341">
@@ -1019,22 +1009,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/csp/encoded_stats.csp">
+    <entry file="file://$PROJECT_DIR$/problem_analysis.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-1606">
+            <caret line="15" column="29" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/statistics/statistics_driver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="203" column="0" lean-forward="true" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+        <state relative-caret-position="-273">
+          <caret line="45" column="44" lean-forward="false" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/problem_analysis.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="208">
-            <caret line="283" column="18" lean-forward="false" selection-start-line="283" selection-start-column="18" selection-end-line="283" selection-end-column="18" />
-            <folding />
-          </first_editor>
-          <second_editor />
+    <entry file="file://$PROJECT_DIR$/examples/example_survey_responses.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="15" column="7" lean-forward="false" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/csp/encoded_stats.csp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="210" column="0" lean-forward="true" selection-start-line="210" selection-start-column="0" selection-end-line="210" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

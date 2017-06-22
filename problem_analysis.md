@@ -54,7 +54,6 @@ demonstrate that they alone are insufficient in guarding data against
 a modern DRA. 
 
 ##Vocabulary
-**Should there be a vocab section, or just in body when discussed?**
 
 * **Database Reconstruction Attack (DRA)** - an attempt to determine survey 
 response information from a publicly available data set which has had
@@ -287,10 +286,12 @@ Average age is 36.4
 Average household size is 3.5  
 
 From this data, the attacker generates many constraints, **(in encoded_stats.csp)**
-and then inputs them into a SAT solver. In this example, we use a free open-source program
-called Sugar which wraps PicoSAT for usability improvements.
+and then inputs them into a SAT solver. In this example, we use a free open-source SAT solver 
+called PicoSAT written in C. Output is given from the Sugar program, which wraps
+PicoSAT for usability improvements.
 
 The results of the attack are:
+
 
 ##The SAT Solver: Scalability
 
@@ -342,8 +343,8 @@ example, "The Norwegian lives in the red house == False"
 
 Once the attacker has generated every constraint possible from the
 given information, he can input the constraints into a SAT solver. 
-In this example, we run the zebra problem through the open-source, freely available software
-PicoSAT written in C. 
+In this example, we run the zebra problem through PycoSAT, a free Python
+wrapper of PicoSAT.
 
 The results: (**tabulate in latex**)  
 ~~~

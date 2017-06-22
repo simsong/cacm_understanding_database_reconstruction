@@ -194,14 +194,17 @@
 (= (/ (* (+ (* A1 (if (= R1 1) 1 0)) (* A2 (if (= R2 1) 1 0)) (* A3 (if (= R3 1) 1 0)) (* A4 (if (= R4 1) 1 0)) (* A5 (if (= R5 1) 1 0)) (* A6 (if (= R6 1) 1 0)) (* A7 (if (= R7 1) 1 0)) (* A8 (if (= R8 1) 1 0)) (* A9 (if (= R9 1) 1 0)) (* A10 (if (= R10 1) 1 0)) (* A11 (if (= R11 1) 1 0)) (* A12 (if (= R12 1) 1 0)) (* A13 (if (= R13 1) 1 0)) (* A14 (if (= R14 1) 1 0)) (* A15 (if (= R15 1) 1 0)) (* A16 (if (= R16 1) 1 0)) (* A17 (if (= R17 1) 1 0)) (* A18 (if (= R18 1) 1 0)) (* A19 (if (= R19 1) 1 0)) (* A20 (if (= R20 1) 1 0)) (* A21 (if (= R21 1) 1 0)) (* A22 (if (= R22 1) 1 0)) (* A23 (if (= R23 1) 1 0)) (* A24 (if (= R24 1) 1 0)) (* A25 (if (= R25 1) 1 0)) (* A26 (if (= R26 1) 1 0)) (* A27 (if (= R27 1) 1 0)) (* A28 (if (= R28 1) 1 0)) (* A29 (if (= R29 1) 1 0)) (* A30 (if (= R30 1) 1 0)) (* A31 (if (= R31 1) 1 0)) (* A32 (if (= R32 1) 1 0)) (* A33 (if (= R33 1) 1 0)) (* A34 (if (= R34 1) 1 0)) (* A35 (if (= R35 1) 1 0)) ) 10) 14) 325)
 ;average age whites completed
 (= (/ (* (+ (* A1 (if (= R1 0) 1 0)) (* A2 (if (= R2 0) 1 0)) (* A3 (if (= R3 0) 1 0)) (* A4 (if (= R4 0) 1 0)) (* A5 (if (= R5 0) 1 0)) (* A6 (if (= R6 0) 1 0)) (* A7 (if (= R7 0) 1 0)) (* A8 (if (= R8 0) 1 0)) (* A9 (if (= R9 0) 1 0)) (* A10 (if (= R10 0) 1 0)) (* A11 (if (= R11 0) 1 0)) (* A12 (if (= R12 0) 1 0)) (* A13 (if (= R13 0) 1 0)) (* A14 (if (= R14 0) 1 0)) (* A15 (if (= R15 0) 1 0)) (* A16 (if (= R16 0) 1 0)) (* A17 (if (= R17 0) 1 0)) (* A18 (if (= R18 0) 1 0)) (* A19 (if (= R19 0) 1 0)) (* A20 (if (= R20 0) 1 0)) (* A21 (if (= R21 0) 1 0)) (* A22 (if (= R22 0) 1 0)) (* A23 (if (= R23 0) 1 0)) (* A24 (if (= R24 0) 1 0)) (* A25 (if (= R25 0) 1 0)) (* A26 (if (= R26 0) 1 0)) (* A27 (if (= R27 0) 1 0)) (* A28 (if (= R28 0) 1 0)) (* A29 (if (= R29 0) 1 0)) (* A30 (if (= R30 0) 1 0)) (* A31 (if (= R31 0) 1 0)) (* A32 (if (= R32 0) 1 0)) (* A33 (if (= R33 0) 1 0)) (* A34 (if (= R34 0) 1 0)) (* A35 (if (= R35 0) 1 0)) ) 10) 21) 390)
-;average age children (needs data adjustment for decimal places)
-
-;average age parents (")
+;average age children completed
+(= (/ (* (+ (* A1 (if (= G1 0) 1 0)) (* A2 (if (= G2 0) 1 0)) (* A3 (if (= G3 0) 1 0)) (* A4 (if (= G4 0) 1 0)) (* A5 (if (= G5 0) 1 0)) (* A6 (if (= G6 0) 1 0)) (* A7 (if (= G7 0) 1 0)) (* A8 (if (= G8 0) 1 0)) (* A9 (if (= G9 0) 1 0)) (* A10 (if (= G10 0) 1 0)) (* A11 (if (= G11 0) 1 0)) (* A12 (if (= G12 0) 1 0)) (* A13 (if (= G13 0) 1 0)) (* A14 (if (= G14 0) 1 0)) (* A15 (if (= G15 0) 1 0)) (* A16 (if (= G16 0) 1 0)) (* A17 (if (= G17 0) 1 0)) (* A18 (if (= G18 0) 1 0)) (* A19 (if (= G19 0) 1 0)) (* A20 (if (= G20 0) 1 0)) (* A21 (if (= G21 0) 1 0)) (* A22 (if (= G22 0) 1 0)) (* A23 (if (= G23 0) 1 0)) (* A24 (if (= G24 0) 1 0)) (* A25 (if (= G25 0) 1 0)) (* A26 (if (= G26 0) 1 0)) (* A27 (if (= G27 0) 1 0)) (* A28 (if (= G28 0) 1 0)) (* A29 (if (= G29 0) 1 0)) (* A30 (if (= G30 0) 1 0)) (* A31 (if (= G31 0) 1 0)) (* A32 (if (= G32 0) 1 0)) (* A33 (if (= G33 0) 1 0)) (* A34 (if (= G34 0) 1 0)) (* A35 (if (= G35 0) 1 0)) ) 100) 13) 6)
+;average age parents (needs data adjustment for minimizing decimal places)
 
 ;average age grandparents completed
 (= (/ (* (+ (* A1 (if (= G1 2) 1 0)) (* A2 (if (= G2 2) 1 0)) (* A3 (if (= G3 2) 1 0)) (* A4 (if (= G4 2) 1 0)) (* A5 (if (= G5 2) 1 0)) (* A6 (if (= G6 2) 1 0)) (* A7 (if (= G7 2) 1 0)) (* A8 (if (= G8 2) 1 0)) (* A9 (if (= G9 2) 1 0)) (* A10 (if (= G10 2) 1 0)) (* A11 (if (= G11 2) 1 0)) (* A12 (if (= G12 2) 1 0)) (* A13 (if (= G13 2) 1 0)) (* A14 (if (= G14 2) 1 0)) (* A15 (if (= G15 2) 1 0)) (* A16 (if (= G16 2) 1 0)) (* A17 (if (= G17 2) 1 0)) (* A18 (if (= G18 2) 1 0)) (* A19 (if (= G19 2) 1 0)) (* A20 (if (= G20 2) 1 0)) (* A21 (if (= G21 2) 1 0)) (* A22 (if (= G22 2) 1 0)) (* A23 (if (= G23 2) 1 0)) (* A24 (if (= G24 2) 1 0)) (* A25 (if (= G25 2) 1 0)) (* A26 (if (= G26 2) 1 0)) (* A27 (if (= G27 2) 1 0)) (* A28 (if (= G28 2) 1 0)) (* A29 (if (= G29 2) 1 0)) (* A30 (if (= G30 2) 1 0)) (* A31 (if (= G31 2) 1 0)) (* A32 (if (= G32 2) 1 0)) (* A33 (if (= G33 2) 1 0)) (* A34 (if (= G34 2) 1 0)) (* A35 (if (= G35 2) 1 0)) ) 100) 8) 7825)
-;average age males
+;average age males (data adj needed)
 
-;average age females
+;average age females (data adj needed)
 
-;average hh size = 35 / num_hh = avg_hh_size (USE NVAL CONSTRAINT)
+;number of hh (nvalue returns number of distinct elements)
+(= (nvalue (H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 H16 H17 H18 H19 H20 H21 H22 H23 H24 H25 H26 H27 H28 H29 H30 H31 H32 H33 H34 H35) ) 10)
+;average hh size
+(= (/ 35 (nvalue (H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 H16 H17 H18 H19 H20 H21 H22 H23 H24 H25 H26 H27 H28 H29 H30 H31 H32 H33 H34 H35) ) ) 3.5)

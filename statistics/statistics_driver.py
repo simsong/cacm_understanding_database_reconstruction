@@ -36,12 +36,14 @@ if __name__ == '__main__':
     male_count = statistics_generator.count_people(filtered_males)
     print("Number of males is", male_count)
     male_avg_age = statistics_generator.calc_avg(filtered_males, "age")
+    print("Average age of males is", male_avg_age)
 
     #female stats
     filtered_females = statistics_generator.filter_data(data, "sex", 1, "=")
     female_count = statistics_generator.count_people(filtered_females)
     print("Number of females is", female_count)
     female_avg_age = statistics_generator.calc_avg(filtered_females, "age")
+    print("Average age of females is", female_avg_age)
 
     print("**GENERATION STATS**")
     #generation stats
