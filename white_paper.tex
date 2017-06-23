@@ -1,7 +1,8 @@
 \documentclass[jou,apacite]{apa6}
+\usepackage{amsmath}
 
 \title{Analysis of a Database Reconstruction Attack on Public Data}
-\shorttitle{APA style}
+\shorttitle{}
 
 \twoauthors{Simson Garfinkel}{Christian Martindale}
 \twoaffiliations{Center for Disclosure Avoidance, U.S. Census Bureau}{Center for Disclosure Avoidance, U.S. Census Bureau}
@@ -27,8 +28,6 @@ of database privacy and formally define some important terms.
 \textbf{Keywords: Database Reconstruction Attack, SAT solver, privacy,
 disclosure avoidance}}
 
-\rightheader{APA style}
-\leftheader{Author One}
 
 \begin{document}
 \maketitle
@@ -83,11 +82,183 @@ group of variables that satisfies a certain set of constraint equations.
 
 \section{The Database Reconstruction Attack: An Example}
 To understand how a DRA works, let us consider a simple example data table generated from the following survey given to two households:
+\begin{verbatim}
+Please provide the following for each member
+of your family:
+Age, Sex, Race, Generation.
+\end{verbatim}
+Tables 1 and 2 summarize the survey responses for the two households surveyed.
+\begin{table}[!htb]
+\caption{Household 1}\label{tab1}
+\begin{tabular}{cccc}
+\hline\\[-1.5ex]
+Age & Sex & Race & Gen \\[0.5ex]
+\hline\\[-1.5ex]
+55 & Female & White & Grandparent\\[0.5ex]
+24 & Male & White & Parent\\[0.5ex]
+28 & Female & Black & Parent\\[0.5ex]
+5 & Female & Black & Child\\[0.5ex]
+8 & Male & White & Child\\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
 
-**Please provide the following for each member of your family:
-Age, Sex, Race, Generation.**
+\begin{table}[!htb]
+\caption{Household 2}\label{tab2}
+\begin{tabular}{cccc}
+\hline\\[-1.5ex]
+Age & Sex & Race & Gen \\[0.5ex]
+\hline\\[-1.5ex]
+50 & Male & White & Parent\\[0.5ex]
+45 & Male & White & Parent\\[0.5ex]
+15 & Female & White & Child\\[0.5ex]
+17 & Female & White & Child\\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
 
-Here are the survey responses (the 'ground truth'):
+The statistical agency then publishes the following data based
+on the survey results: \footnote {Note that statistics formed from groups made up of only one individual are redacted with "XXXX". This is an example of cell suppression used to protect the privacy of those individuals.}
+
+\begin{table}[!htb]
+\caption{Survey Results}\label{tab3}
+\begin{tabular}{ccc}
+\hline\\[-1.5ex]
+Group & Number & Average Age \\[0.5ex]
+\hline\\[-1.5ex]
+Individuals & 9 & 27.44 \\[0.5ex]
+Males & 4 & 31.75 \\[0.5ex]
+Females & 5 & 24 \\[0.5ex]
+Parents & 4 & 36.75 \\[0.5ex]
+Grandparents & 1 & XXXX \\[0.5ex]
+Children (0-12) & 2 & 6.5 \\[0.5ex]
+Children (13-17) & 2 & 16 \\[0.5ex]
+Whites & 7 & 30.57 \\[0.5ex]
+Blacks & 2 & 24 \\[0.5ex]
+Black parents & 1 & XXXX \\[0.5ex]
+Black children & 1 & XXXX\\[0.5ex]
+White parents & 3 & 39.66 \\[0.5ex]
+White children & 3 & 13.33 \\[0.5ex]
+Households & 2 & 27.85 \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+Retabulating these results in a numerical format with the keys in Table 4 gives the results in Table 5.
+
+\begin{table}[!htb]
+\caption{Survey Results}\label{tab4}
+\begin{tabular}{c|c}
+\hline\\[-1.5ex]
+Key & Value \\[0.5ex]
+\hline\\[-1.5ex]
+Male & 0 \\[0.5ex]
+Female & 1 \\[0.5ex]
+White & 0 \\[0.5ex]
+Black & 1 \\[0.5ex]
+Child & 0 \\[0.5ex]
+Parent & 1 \\[0.5ex]
+Grandparent & 2 \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb]
+\caption{Survey Results}\label{tab5}
+\begin{tabular}{c|c|c|c|c|c}
+\hline\\[-1.5ex]
+ID & Household & Age & Sex & Race & Generation \\[0.5ex]
+\hline\\[-1.5ex]
+1 & 1 & 24 & 0 & 0 & 1  \\[0.5ex]
+2 & 1 & 28 & 1 & 1 & 1  \\[0.5ex]
+3 & 1 & 55 & 1 & 0 & 2  \\[0.5ex]
+4 & 1 & 5 & 1 & 1 & 0  \\[0.5ex]
+5 & 1 & 8 & 0 & 0 & 0  \\[0.5ex]
+6 & 2 & 50 & 0 & 0 & 1  \\[0.5ex]
+7 & 2 & 45 & 1 & 0 & 0  \\[0.5ex]
+8 & 2 & 15 & 1 & 0 & 0  \\[0.5ex]
+9 & 2 & 17 & 1 & 0 & 0 \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+
+The data in Table 5 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the following table of 45 unknowns:
+
+\begin{table}[!htb]
+\caption{Survey Results}\label{tab6}
+\begin{tabular}{c|c|c|c|c|c}
+\hline\\[-1.5ex]
+ID & Household & Age & Sex & Race & Generation \\[0.5ex]
+\hline\\[-1.5ex]
+1 & H1 & A1 & S1 & R1 & G1  \\[0.5ex]
+2 & H2 & A2 & S2 & R2 & G2  \\[0.5ex]
+3 & H3 & A3 & S3 & R3 & G3  \\[0.5ex]
+4 & H4 & A4 & S4 & R4 & G4  \\[0.5ex]
+5 & H5 & A5 & S5 & R5 & G5  \\[0.5ex]
+6 & H6 & A6 & S6 & R6 & G6  \\[0.5ex]
+7 & H7 & A7 & S7 & R7 & G7  \\[0.5ex]
+8 & H8 & A8 & S8 & R8 & G8  \\[0.5ex]
+9 & H9 & A9 & S9 & R9 & G9  \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+The reconstruction attack works by identifying constraint
+equations given by the data table. For example, we have the
+following statistic:
+\begin{verbatim}
+Individuals: 9, 27.44
+\end{verbatim}
+
+This can be written as a linear constraint equation: \footnote{In the actual calculation, mathematical transformations must be applied to avoid floating point rounding errors, but that is beyond the scope of this paper.}
+\[(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)*100/9 = 27.44\]
+
+This equation is in 9 unknowns, and so is unsolvable alone.
+However, the attacker can write more constraint equations.
+
+\begin{verbatim}
+Grandparents: 1, XXX
+\end{verbatim}
+
+
+Becomes: \footnote{X==Y evaluates to 0 if X!=Y and 1 if $X=Y$.}
+\begin{align*}
+& (G1==2) + (G2==2) + (G3==2) + (G4==2) + \\
+& (G5==2)+ (G6==2) + (G7==2) +\\
+& (G8==2) + (G9==2) = 1
+\end{align*}
+
+\begin{verbatim}
+Children 0-12: 2, 6.5
+\end{verbatim}
+
+Becomes the following two equations:
+\begin{align*}
+& (G1==0) + (G2==0) + (G3==0)+\\
+& (G4==0)+  (G5==0) + (G6==0) +\\
+& (G7==0) + (G8==0) + G9==0) = 2
+\end{align*}
+
+\begin{align*}
+& (A1 * (G1==0) + A2 * (G2==0) + A3 * (G3==0) +\\
+& A4 * (G4==0) +  A5 * (G5==0) + A6 * (G6==0) + \\
+& A7 * (G7==0) + A8 * (G8==0) + A9 * (G9==0)) = 13
+\end{align*}
+Once the attacker has converted all the published statistics
+into equations like the ones above, he will have a system
+of a large number of equations in 45 unknowns. This system has one 'true' solution, $S_g$, equivalent to the
+ground truth, and possibly many other 'false' solutions, $[S_1...S_n]$.
+The Solution Universe, U, is potentially originally quite large, with $U = [S_1...S_n]$
+
+However, each time the agency publishes a new statistic, the attacker
+can generate new constraints and therefore narrow
+down the set of possible solutions. Eventually, the attacker
+will obtain $U = [S_g]$, at which point he has
+found the ground truth and reconstructed the database
+successfully. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives him one fewer constraint to work with per cell suppressed.
+Even if the number of constraints is insufficient to narrow down U
+
 \section{Methods of Attack}
 
 \section{Revisiting the Example}
@@ -117,7 +288,5 @@ AAA & BBB & CCC \\[0.5ex]
 \end{tabular}
 \end{table}
 
-
-\bibliography{sample}
 
 \end{document}
