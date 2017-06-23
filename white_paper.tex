@@ -1,11 +1,12 @@
-\documentclass[12pt]{article}
-\title{Analysis of the Database Reconstruction Attack on Public Data}
-\author{Christian Martindale}
-\date{June 2017}
-\maketitle
-\begin{document}
-\begin{abstract}
-In recent years, a certain type of malicious database attack,
+\documentclass[jou,apacite]{apa6}
+
+\title{Analysis of a Database Reconstruction Attack on Public Data}
+\shorttitle{APA style}
+
+\twoauthors{Simson Garfinkel}{Christian Martindale}
+\twoaffiliations{Center for Disclosure Avoidance, U.S. Census Bureau}{Center for Disclosure Avoidance, U.S. Census Bureau}
+
+\abstract{In recent years, a certain type of malicious database attack,
 the database reconstruction attack, has become increasingly
 more feasible due to rapid advances in attack algorithm
 sophistication. Here, we will discuss how these attacks
@@ -13,20 +14,110 @@ function, demonstrate their effectiveness and efficiency,
 and provide solutions for defending against such an attack.
 
 This paper will answer the following questions:
-
-1. What is a database reconstruction attack (DRA)?
-2. To what extent are modern DRAs effective in reconstructing
-the ground truth data?
-3. How scalable are DRAs with database size?
-4. How can a statistical agency guard public data against a DRA without
-significantly impacting the accuracy of the data?
+\begin{enumerate}
+    \item What is a database reconstruction attack (DRA)?
+    \item To what extent are modern DRAs effective in reconstructing the ground truth data?
+    \item How scalable are DRAs with database size?
+    \item How can a statistical agency guard public data against a DRA without significantly impacting the accuracy of the data?
+\end{enumerate}
 
 We will also develop a vocabulary to facilitate the discussion
 of database privacy and formally define some important terms.
 
-Keywords: Database reconstruction attack, SAT solver, privacy,
-disclosure avoidance
-\end{abstract}
+\textbf{Keywords: Database Reconstruction Attack, SAT solver, privacy,
+disclosure avoidance}}
 
-Hello world!
+\rightheader{APA style}
+\leftheader{Author One}
+
+\begin{document}
+\maketitle
+
+\section{Problem Background}
+Malicious people often seek to identify individuals from publicly
+available data products such as tables and graphs.
+Defending against such privacy breaches is
+a high priority for statistical agencies, and so researchers
+have developed a variety of techniques to prevent database users
+from identifying any Personally Identifiable Information (PII)
+
+These techniques include:
+\begin{enumerate}
+  \item Cell Suppression, where the values of cells with small counts or few possible
+        generating combinations are removed from the published table
+  \item Row Swapping, where the data rows corresponding to individuals
+        with similar values in certain key cells are switched
+  \item Bucketing, where numerical values are grouped into
+        buckets corresponding to ranges, instead of giving the exact
+        values for each entry in the table
+  \item Topcoding, where the buckets at the high and low ends
+        of the table are given without upper or lower bound (e.g.
+        reporting the highest bucket for age as "80+" instead of
+        "80-90" and "90-100")
+\end{enumerate}
+
+The goal of a Database Reconstruction Attack is to
+use public data to create a mathematical system of equations,
+which then can be used to reconstruct the original (before the disclosure
+avoidance techniques were applied) data set.
+While the above techniques are not without merit, this paper will
+demonstrate that they alone are insufficient in guarding data against
+a modern DRA.
+
+\section{Vocabulary}
+
+\begin{itemize}
+\item Database Reconstruction Attack (DRA) - An attempt to determine survey response information from a publicly available data set which has had disclosure avoidance techniques applied to it.
+
+\item Personally Identifiable Information (PII) - Data that can be used to identify a single person.
+
+\item Constraint Equation - A mathematical equation that represents information known to be true for a set of data.
+
+\item Solution Universe (U) - The set of all combinations of a
+group of variables that satisfies a certain set of constraint equations.
+
+\item SAT Solver - A program that uses a complex set of heuristics to find the solution universe given a set of constraint equations.
+
+\item Noise Addition - The addition of small random numbers to statistical table values before publication for the purpose of protecting respondent privacy.
+\end{itemize}
+
+\section{The Database Reconstruction Attack: An Example}
+To understand how a DRA works, let us consider a simple example data table generated from the following survey given to two households:
+
+**Please provide the following for each member of your family:
+Age, Sex, Race, Generation.**
+
+Here are the survey responses (the 'ground truth'):
+\section{Methods of Attack}
+
+\section{Revisiting the Example}
+
+\section{Defending Against a DRA}
+
+
+\section{Appendix}
+
+\subsection{SAT Solvers}
+
+\subsection{Scalability: The Zebra Problem}
+
+\subsection{How Noise Addition Combats a DRA}
+
+
+Results are presented in Table~\ref{tab1}.
+\begin{table}[!htb]
+\caption{Sample table.}\label{tab1}
+\begin{tabular}{ccc}
+\hline\\[-1.5ex]
+AAA & BBB & CCC \\[0.5ex]
+\hline\\[-1.5ex]
+1.0 & 2.0 & 3.0\\[0.5ex]
+1.0 & 2.0 & 3.0\\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+
+\bibliography{sample}
+
 \end{document}
