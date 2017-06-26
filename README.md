@@ -1,9 +1,9 @@
 The purpose of this project is to teach data agency officials about the dangers
 of database reconstruction attacks. 
 
-The problem statement and white paper are found in problem_analysis.md.
+The problem statement and white paper are found in [problem_analysis.md](problem_analysis.md).
 
-.dimacs files contain CNF files to feed into the demo solver.
+`.dimacs` files contain [CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form) files to feed into the demo solver in the DIMACS file format.
 
 Demo program using pycoSAT can be found in satsolver_attack_example.py.
   
