@@ -27,7 +27,7 @@ import dimacs_processor
 # yields as many solutions as it finds until iterator is exhausted
 # allAns = pycosat.itersolve(myCNF)
 
-FILE_NAME = "zebra.dimacs"
+FILE_NAME = "examples/zebra.dimacs"
 
 if __name__ == '__main__':
     input = dimacs_processor.process_dimacs(FILE_NAME)

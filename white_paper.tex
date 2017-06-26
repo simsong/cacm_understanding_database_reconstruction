@@ -358,9 +358,9 @@ The mathematics behind this process are beyond the scope of this paper, but the 
 
 \section{Conclusion (needs better title)}
 
-\section{Appendix}
+\section{Appendices}
 
-\subsection{SAT and SAT Solvers}
+\subsection{Appendix 1: SAT and SAT Solvers}
 
 The boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete.\footnote{Search "Cook-Levin Theorem" for more information.} This problem asks, for a given boolean formula, whether replacing each variable with True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
 
@@ -377,11 +377,92 @@ Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learn
 
 This process is much faster at solving SAT problems than previous processes used in SAT solvers because adding conflicts as new clauses has the potential to avoid wasteful 'repeated backtracks'.
 
-There are a wide variety of SAT solvers available to the public for minimal or no cost. Little technical skill or mathematical knowledge is required to use a modern SAT solver, so the only issue that must be overcome is determining how to translate the problem into a boolean formula. Programs such as Naoyuki Tamura's Sugar make the use of SAT solvers even easier by allowing the user to input mathematical and even English constraints into a SAT solver, removing the often laborious work of translating complex constraints into boolean formulae.
+There are a wide variety of SAT solvers available to the public for minimal or no cost. Little technical computer skill or mathematical knowledge is required to use a modern SAT solver, so the only issue that must be overcome is determining how to translate the problem into a boolean formula. Programs such as Naoyuki Tamura's Sugar make the use of SAT solvers even easier by allowing the user to input mathematical and even English constraints into a SAT solver, removing the often laborious work of translating complex constraints into boolean formulae.
 
-\subsection{Scalability: The Zebra Problem}
+\subsection{Appendix 2: Scalability and The Zebra Problem}
 
-\subsection{How Noise Addition Combats a DRA}
+To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem \footnote{For more information: http://www.ics.uci.edu/~csp/r8.pdf}.
+This problem is appropriate because its structure closely models the current Census data collection and publication process. The writer receives the survey answers from the respondents, redacts much of the information to avoid giving away PII, and then publishes a data product.
 
+The size of this problem more closely approximates the number
+of variables an attacker would need to generate constraints for when performing a DRA through queries on a massive public data set. It is too complex for the vast majority of humans to solve in any reasonable time.
+
+This problem is stated as follows:
+
+\begin{enumerate}
+\item Five people have five different pets, smoke five different
+       brands of cigarettes, have five different favorite drinks and
+       live in five different houses.
+\item The Englishman lives in the red house.
+\item The Spaniard has a dog.
+\item The Ukranian drinks tea.
+\item The Norwegian lives in the leftmost house.
+\item The Japanese smokes Parliaments.
+\item The Norwegian lives next to the blue house.
+\item Coffee is drunk in the green house.
+\item The snail owner smokes Old Gold.
+\item The inhabitant of the yellow house smokes Kools.
+\item The Lucky Strikes smoker drinks orange juice.
+\item Milk is drunk in the middle house.
+\item The green house is immediately to the right of the ivory house.
+\item The Chesterfield smoker lives next door to the fox owner.
+\item The Kools smoker lives next door to where the horse is kept.
+\end{enumerate}
+
+
+\begin{itemize}
+\item Given these conditions, determine who owns the zebra and who drinks water.
+\item (The attacker is 'targeting' the water drinker and the zebra owner.)
+\end{itemize}
+
+Just as demonstrated in the previous example, this problem
+can be encoded as a large set of boolean equations. The problem
+gives 15 explicit constraints which allow the attacker to generate more constraints, and each of the combinations of variables (five people, five houses, five drinks, etc.) can be represented as a boolean variable, for example, "The Norwegian lives in the red house == False"
+
+Once the attacker has generated every constraint possible from the given information, he can input the constraints into a SAT solver. In this example, we run the zebra problem through PycoSAT, a free Python wrapper of PicoSAT.
+
+The results:
+
+\begin{verbatim}
+Solving for all solutions...
+Solution:  [-1, -2, 3, -4, -5, -6,
+-7, -8, -9, 10, 11, -12, -13, -14,
+-15, -16, -17, -18, 19, -20, -21,
+22, -23, -24, -25, -26, -27, -28,
+-29, 30, 31, -32, -33, -34, -35,
+-36, -37, -38, 39, -40, -41, 42,
+-43, -44, -45, -46, -47, 48, -49,
+-50, 51, -52, -53, -54, -55, -56,
+57, -58, -59, -60, -61, -62, -63,
+64, -65, -66, -67, 68, -69, -70,
+-71, -72, -73, -74, 75, 76, -77,
+-78, -79, -80, -81, 82, -83, -84,
+-85, -86, -87, 88, -89, -90, -91,
+-92, -93, 94, -95, -96, -97, -98,
+-99, 100, -101, -102, -103, -104,
+105, 106, -107, -108, -109, -110,
+-111, -112, -113, 114, -115, -116,
+-117, 118, -119, -120, -121, 122,
+-123, -124, -125, -126, -127, 128,
+-129, -130, -131, -132, -133, -134,
+-135, -136, 137, -138, 139, -140,
+-141, 142, -143, -144, -145, -146,
+-147, 148, 149, -150, 151, -152,
+-153, 154, -155]
+Number of solutions found in 0.00046s :  1
+\end{verbatim}
+Each of the 155 numbers represents one of the variables encoded in the formula input to the SAT solver.
+Positive integers correspond to True, while negative integers are False.
+PicoSAT is able to solve this very complex problem in a fraction of a second, and has reconstructed the entire database, thus obtaining the PII of all the residents of the village despite the fact that the vast majority of their information was redacted by the problem writer before release.
+
+The success of this attack demonstrates the inefficacy of
+cell suppression as a method for protecting PII against
+a SAT solver-driven DRA. This problem
+contained far more suppressed cells than unsuppressed ones, which is
+not realistic given that a real publishing agency would want to minimize
+the number of suppressed cells. Despite this over-suppression,
+the SAT solver was still able to easily solve for the values of all cells in the example.
+
+\section{Works Cited}
 
 \end{document}
