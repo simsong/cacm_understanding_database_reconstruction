@@ -274,10 +274,7 @@ system of constraint equations are:
 
 \end{enumerate}
 
-For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, optimizers and SAT solvers are both quite effective because they can reduce the runtime of the program to acceptable (linearly scaling) levels.
-Recent advances in SAT solver heuristics have enabled these programs to solve systems with even millions of variables in linear time.
-Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously. In later examples,
-we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
+For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, optimizers and SAT solvers are both quite effective because they can reduce the runtime of the program to acceptable (linearly scaling) levels. Recent advances in SAT solver heuristics have enabled these programs to solve systems with even millions of variables in linear time. Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
 
 \section{Revisiting the Example}
 
@@ -354,9 +351,7 @@ called PicoSAT written in C. Output is given from the Java program Sugar, which 
 
 \section{Defending Against a DRA}
 As demonstrated above, new techniques must be developed in
-order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise addition, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe.
-For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then publishes that number, there are now five elements in the solution universe for this value, where without noise addition there would be only one. Adding noise from a more complex distribution such as the Gaussian or Laplace distributions
-adds even more elements to the solution universe, since they are not discrete distributions like the example above. Noise addition allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
+order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise addition, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then publishes that number, there are now five elements in the solution universe for this value, where without noise addition there would be only one. Adding noise from a more complex distribution such as the Gaussian or Laplace distributions adds even more elements to the solution universe, since they are not discrete distributions like the example above. Noise addition allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
 
 Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism \footnote{More information on the Laplace Mechanism can be found at https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf)}.
 The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise addition without worrying that his privacy will be compromised by his choice to respond.
@@ -369,9 +364,20 @@ The mathematics behind this process are beyond the scope of this paper, but the 
 
 The boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete.\footnote{Search "Cook-Levin Theorem" for more information.} This problem asks, for a given boolean formula, whether replacing each variable with True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
 
-Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL
+Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL, at a high level, works by the following process:
 
-There are a wide variety of SAT solvers available to the public for minimal or no cost.
+\begin{enumerate}
+
+\item Assign values to a variable arbitrarily.
+\item Use this assignment to determine values for the other variables in the formula (a process known as unit propagation).
+\item If a conflict is found, backtrack to the clause that made the conflict occur and undo variable assignments made after that point.
+\item Add the negation of the conflict-causing clause as a new clause to the master formula and resume from step 1.
+
+\end{enumerate}
+
+This process is much faster at solving SAT problems than previous processes used in SAT solvers because adding conflicts as new clauses has the potential to avoid wasteful 'repeated backtracks'.
+
+There are a wide variety of SAT solvers available to the public for minimal or no cost. Little technical skill or mathematical knowledge is required to use a modern SAT solver, so the only issue that must be overcome is determining how to translate the problem into a boolean formula. Programs such as Naoyuki Tamura's Sugar make the use of SAT solvers even easier by allowing the user to input mathematical and even English constraints into a SAT solver, removing the often laborious work of translating complex constraints into boolean formulae.
 
 \subsection{Scalability: The Zebra Problem}
 

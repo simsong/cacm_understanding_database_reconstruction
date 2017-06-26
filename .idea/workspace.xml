@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/csp/simple_encoded_stats.csp" afterPath="$PROJECT_DIR$/csp/simple_encoded_stats.csp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/example_survey_responses.txt" afterPath="$PROJECT_DIR$/examples/example_survey_responses.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.tex" afterPath="$PROJECT_DIR$/white_paper.tex" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -27,12 +26,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="165">
-                <caret line="11" column="1" lean-forward="false" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="15" />
+              <first_editor relative-caret-position="250">
+                <caret line="18" column="109" lean-forward="false" selection-start-line="18" selection-start-column="109" selection-end-line="18" selection-end-column="109" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -40,7 +39,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="false">
+      <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/white_paper.tex">
           <provider selected="true" editor-type-id="LaTeXFileEditor">
             <state />
@@ -130,7 +129,6 @@
         <option value="$PROJECT_DIR$/zebra.c" />
         <option value="$PROJECT_DIR$/TODO.md" />
         <option value="$PROJECT_DIR$/dimacs_processor.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/example_survey_responses.txt" />
         <option value="$PROJECT_DIR$/examples/statistics_driver.py" />
         <option value="$PROJECT_DIR$/examples/statistics_generator.py" />
@@ -143,6 +141,7 @@
         <option value="$PROJECT_DIR$/statistics/statistics_driver.py" />
         <option value="$PROJECT_DIR$/examples/example_survey_responses.txt" />
         <option value="$PROJECT_DIR$/csp/simple_encoded_stats.csp" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/white_paper.tex" />
       </list>
     </option>
@@ -979,11 +978,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/white_paper.tex">
-      <provider selected="true" editor-type-id="LaTeXFileEditor">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/problem_analysis.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -1004,12 +998,17 @@
       </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="165">
-            <caret line="11" column="1" lean-forward="false" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="15" />
+          <first_editor relative-caret-position="250">
+            <caret line="18" column="109" lean-forward="false" selection-start-line="18" selection-start-column="109" selection-end-line="18" selection-end-column="109" />
             <folding />
           </first_editor>
           <second_editor />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/white_paper.tex">
+      <provider selected="true" editor-type-id="LaTeXFileEditor">
+        <state />
       </provider>
     </entry>
   </component>
