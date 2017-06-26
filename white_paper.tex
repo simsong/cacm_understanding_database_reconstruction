@@ -4,7 +4,7 @@
 \title{Analysis of a Database Reconstruction Attack on Public Data}
 \shorttitle{}
 
-\twoauthors{Simson Garfinkel}{Christian Martindale}
+\twoauthors{Christian Martindale}{Simson Garfinkel}
 \twoaffiliations{Center for Disclosure Avoidance, U.S. Census Bureau}{Center for Disclosure Avoidance, U.S. Census Bureau}
 
 \abstract{In recent years, a certain type of malicious database attack,
@@ -147,7 +147,7 @@ Households & 2 & 27.85 \\[0.5ex]
 Retabulating these results in a numerical format with the keys in Table 4 gives the results in Table 5.
 
 \begin{table}[!htb]
-\caption{Survey Results}\label{tab4}
+\caption{Tabulation Key}\label{tab4}
 \begin{tabular}{c|c}
 \hline\\[-1.5ex]
 Key & Value \\[0.5ex]
@@ -186,7 +186,7 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 The data in Table 5 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the following table of 45 unknowns:
 
 \begin{table}[!htb]
-\caption{Survey Results}\label{tab6}
+\caption{DRA Unknowns}\label{tab6}
 \begin{tabular}{c|c|c|c|c|c}
 \hline\\[-1.5ex]
 ID & Household & Age & Sex & Race & Generation \\[0.5ex]
@@ -234,12 +234,12 @@ Children 0-12: 2, 6.5
 \end{verbatim}
 
 Becomes the following two equations:
+
 \begin{align*}
 & (G1==0) + (G2==0) + (G3==0)+\\
 & (G4==0)+  (G5==0) + (G6==0) +\\
 & (G7==0) + (G8==0) + G9==0) = 2
 \end{align*}
-
 \begin{align*}
 & (A1 * (G1==0) + A2 * (G2==0) + A3 * (G3==0) +\\
 & A4 * (G4==0) +  A5 * (G5==0) + A6 * (G6==0) + \\
@@ -257,36 +257,125 @@ down the set of possible solutions. Eventually, the attacker
 will obtain $U = [S_g]$, at which point he has
 found the ground truth and reconstructed the database
 successfully. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives him one fewer constraint to work with per cell suppressed.
-Even if the number of constraints is insufficient to narrow down U
+Even if the number of constraints is insufficient to narrow down U to just one element, the attacker can still often identify personal data because of the high probability that all remaining solutions $S_n$ in $U$ share values for a set of people. For example, if
+$U = [S_1, S_2]$ and $S_1$ and $S_2$ both have values $[h_1, a_1, s_1, r_1, g_1]$ in common
+(represented mathematically by $S_1 \cap S_2 = [H_1=h_1, A_1=a_1, S_1=s_1, R_1=r_1, G_1=g_1]$),
+then we know that $[h_1, a_1, s_1, r_1, g_1]$ must be an actual person in the ground truth set. Thus, the database has failed to protect user privacy even though the attack did not fully reconstruct the database.
 
 \section{Methods of Attack}
 
+The three most common and effective ways of solving a
+system of constraint equations are:
+\begin{enumerate}
+
+\item \textbf{Brute Force} - trying every possible combination of solutions.\\
+\item \textbf{Optimization} - creating a single cost function from the constraints, and then solve the cost function using optimization software. \\
+\item \textbf{Using a SAT solver}, which are complex programs that solve Boolean algebra problems.
+
+\end{enumerate}
+
+For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, optimizers and SAT solvers are both quite effective because they can reduce the runtime of the program to acceptable (linearly scaling) levels.
+Recent advances in SAT solver heuristics have enabled these programs to solve systems with even millions of variables in linear time.
+Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously. In later examples,
+we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
+
 \section{Revisiting the Example}
 
-\section{Defending Against a DRA}
+In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new set of responses to the survey given earlier.
 
+The ground truth responses from two new households are given below.
+\begin{table}[!htb]
+\caption{Survey Results}\label{tab7}
+\begin{tabular}{c|c|c|c|c|c}
+\hline\\[-1.5ex]
+ID & Household & Age & Sex & Race & Generation \\[0.5ex]
+\hline\\[-1.5ex]
+1 & 1 & 80 & 1 & 1 & 2  \\[0.5ex]
+2 & 1 & 40 & 0 & 0 & 1  \\[0.5ex]
+3 & 2 & 70 & 1 & 0 & 2  \\[0.5ex]
+4 & 2 & 30 & 1 & 1 & 1  \\[0.5ex]
+5 & 2 & 90 & 0 & 0 & 2  \\[0.5ex]
+6 & 3 & 10 & 0 & 1 & 0  \\[0.5ex]
+7 & 3 & 10 & 0 & 1 & 0  \\[0.5ex]
+8 & 3 & 10 & 1 & 0 & 0  \\[0.5ex]
+9 & 4 & 40 & 1 & 0 & 1 \\[0.5ex]
+10 & 4 & 20 & 0 & 1 & 1 \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+The statistical agency again publishes the following statistics after processing the ground truth responses:
+
+\begin{table}[!htb]
+\caption{Data Publication}\label{tab8}
+\begin{tabular}{ccc}
+\hline\\[-1.5ex]
+Group & Number & Average Age \\[0.5ex]
+\hline\\[-1.5ex]
+Individuals & 10 & 40 \\[0.5ex]
+Males & 5 & 34 \\[0.5ex]
+Females & 5 & 46 \\[0.5ex]
+Parents & 4 & 32.5 \\[0.5ex]
+Grandparents & 3 & 80 \\[0.5ex]
+Children (total) & 3 & 10 \\[0.5ex]
+Children (0-12) & XXXX & XXXX \\[0.5ex]
+Children (13-17) & XXXX & XXXX \\[0.5ex]
+Whites & 5 & 50 \\[0.5ex]
+Blacks & 5 & 30 \\[0.5ex]
+Black parents & 2 & AAAA \\[0.5ex]
+Black children & 2 & AAAA\\[0.5ex]
+White parents & 2 & AAAA \\[0.5ex]
+White children & 1 & XXXX \\[0.5ex]
+Households & 2 & AAAA \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+**GENERATION STATS**
+Number of male children is 2
+Number of female children is 1
+Average age of male children is 10.0
+Number of male parents is 2
+Number of female parents is 2
+**MISCELLANEOUS STATS**
+Total number of people is 10
+Total number of children is 3
+Total number of parents is 4
+Total number of grandparents is 3
+Average household size is 5
+
+From this data, the attacker generates many constraint equations as demonstrated earlier,
+and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
+called PicoSAT written in C. Output is given from the Java program Sugar, which wraps PicoSAT for usability improvements.
+\newline Output is as follows:
+\begin{verbatim}
+--Program output and runtime here--
+\end{verbatim}
+
+\section{Defending Against a DRA}
+As demonstrated above, new techniques must be developed in
+order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise addition, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe.
+For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then publishes that number, there are now five elements in the solution universe for this value, where without noise addition there would be only one. Adding noise from a more complex distribution such as the Gaussian or Laplace distributions
+adds even more elements to the solution universe, since they are not discrete distributions like the example above. Noise addition allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
+
+Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism \footnote{More information on the Laplace Mechanism can be found at https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf)}.
+The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise addition without worrying that his privacy will be compromised by his choice to respond.
+
+\section{Conclusion (needs better title)}
 
 \section{Appendix}
 
-\subsection{SAT Solvers}
+\subsection{SAT and SAT Solvers}
+
+The boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete.\footnote{Search "Cook-Levin Theorem" for more information.} This problem asks, for a given boolean formula, whether replacing each variable with True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
+
+Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL
+
+There are a wide variety of SAT solvers available to the public for minimal or no cost.
 
 \subsection{Scalability: The Zebra Problem}
 
 \subsection{How Noise Addition Combats a DRA}
-
-
-Results are presented in Table~\ref{tab1}.
-\begin{table}[!htb]
-\caption{Sample table.}\label{tab1}
-\begin{tabular}{ccc}
-\hline\\[-1.5ex]
-AAA & BBB & CCC \\[0.5ex]
-\hline\\[-1.5ex]
-1.0 & 2.0 & 3.0\\[0.5ex]
-1.0 & 2.0 & 3.0\\[0.5ex]
-\hline
-\end{tabular}
-\end{table}
 
 
 \end{document}
