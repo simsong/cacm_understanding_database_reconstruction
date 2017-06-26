@@ -212,7 +212,7 @@ Individuals: 9, 27.44
 \end{verbatim}
 
 This can be written as a linear constraint equation: \footnote{In the actual calculation, mathematical transformations must be applied to avoid floating point rounding errors, but that is beyond the scope of this paper.}
-\[(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)*100/9 = 27.44\]
+\[\frac{100(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)}{9} = 27.44\]
 
 This equation is in 9 unknowns, and so is unsolvable alone.
 However, the attacker can write more constraint equations.
@@ -280,7 +280,7 @@ For large data sets such as the U.S. Census, performing a brute-force attack is 
 
 In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new set of responses to the survey given earlier.
 
-The ground truth responses from two new households are given below.
+The ground truth responses from two new households are given below in Table 7.
 \begin{table}[!htb]
 \caption{Survey Results}\label{tab7}
 \begin{tabular}{c|c|c|c|c|c}
@@ -301,7 +301,7 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 \end{tabular}
 \end{table}
 
-The statistical agency again publishes the following statistics after processing the ground truth responses:
+The statistical agency publishes the statistics in Table 8 after processing the ground truth responses.
 
 \begin{table}[!htb]
 \caption{Data Publication}\label{tab8}
@@ -327,19 +327,6 @@ Households & 2 & AAAA \\[0.5ex]
 \hline
 \end{tabular}
 \end{table}
-
-**GENERATION STATS**
-Number of male children is 2
-Number of female children is 1
-Average age of male children is 10.0
-Number of male parents is 2
-Number of female parents is 2
-**MISCELLANEOUS STATS**
-Total number of people is 10
-Total number of children is 3
-Total number of parents is 4
-Total number of grandparents is 3
-Average household size is 5
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
@@ -368,7 +355,7 @@ Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learn
 
 \begin{enumerate}
 
-\item Assign values to a variable arbitrarily.
+\item Assign a value to a variable arbitrarily.
 \item Use this assignment to determine values for the other variables in the formula (a process known as unit propagation).
 \item If a conflict is found, backtrack to the clause that made the conflict occur and undo variable assignments made after that point.
 \item Add the negation of the conflict-causing clause as a new clause to the master formula and resume from step 1.
@@ -451,18 +438,26 @@ Solution:  [-1, -2, 3, -4, -5, -6,
 -153, 154, -155]
 Number of solutions found in 0.00046s :  1
 \end{verbatim}
+
 Each of the 155 numbers represents one of the variables encoded in the formula input to the SAT solver.
-Positive integers correspond to True, while negative integers are False.
+Positive integers correspond to True, while negative integers are False. For example, $118$ in the solution output means that the boolean variable "The Spaniard drinks orange juice" is True.
 PicoSAT is able to solve this very complex problem in a fraction of a second, and has reconstructed the entire database, thus obtaining the PII of all the residents of the village despite the fact that the vast majority of their information was redacted by the problem writer before release.
 
 The success of this attack demonstrates the inefficacy of
 cell suppression as a method for protecting PII against
 a SAT solver-driven DRA. This problem
-contained far more suppressed cells than unsuppressed ones, which is
-not realistic given that a real publishing agency would want to minimize
-the number of suppressed cells. Despite this over-suppression,
-the SAT solver was still able to easily solve for the values of all cells in the example.
+contained far more suppressed cells than unsuppressed ones, which is not realistic given that a real publishing agency would want to minimize the number of suppressed cells. Despite this over-suppression, the SAT solver was still able to easily solve for the values of all cells in the example.
 
-\section{Works Cited}
+
+\begin{thebibliography}{9}
+\bibitem{latexcompanion}
+Michel Goossens, Frank Mittelbach, and Alexander Samarin.
+\textit{The \LaTeX\ Companion}.
+Addison-Wesley, Reading, Massachusetts, 1993.
+
+
+\end{thebibliography}
+
+Naoyuki Tamura, Akiko Taga, Satoshi Kitagawa, Mutsunori Banbara: Compiling Finite Linear CSP into SAT, Constraints, Volume 14, Number 2, pp.254--272, June, 2009.
 
 \end{document}
