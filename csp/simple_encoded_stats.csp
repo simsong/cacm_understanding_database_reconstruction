@@ -85,6 +85,13 @@
 (= (+ (if (and (= G1 0) (= S1 0 )) 1 0) (if (and (= G2 0) (= S2 0 )) 1 0) (if (and (= G3 0) (= S3 0 )) 1 0) (if (and (= G4 0) (= S4 0 )) 1 0) (if (and (= G5 0) (= S5 0 )) 1 0) (if (and (= G6 0) (= S6 0 )) 1 0) (if (and (= G7 0) (= S7 0 )) 1 0) (if (and (= G8 0) (= S8 0 )) 1 0) (if (and (= G9 0) (= S9 0 )) 1 0) (if (and (= G10 0) (= S10 0 )) 1 0) ) 2)
 ;number of female children
 (= (+ (if (and (= G1 0) (= S1 1 )) 1 0) (if (and (= G2 0) (= S2 1 )) 1 0) (if (and (= G3 0) (= S3 1 )) 1 0) (if (and (= G4 0) (= S4 1 )) 1 0) (if (and (= G5 0) (= S5 1 )) 1 0) (if (and (= G6 0) (= S6 1 )) 1 0) (if (and (= G7 0) (= S7 1 )) 1 0) (if (and (= G8 0) (= S8 1 )) 1 0) (if (and (= G9 0) (= S9 1 )) 1 0) (if (and (= G10 0) (= S10 1 )) 1 0) ) 1)
+;number of children 0-12: 3 completed
+(= (+ (if (and (>= A1 1) (<= A1 12)) 1 0) (if (and (>= A2 1) (<= A2 12)) 1 0) (if (and (>= A3 1) (<= A3 12)) 1 0) (if (and (>= A4 1) (<= A4 12)) 1 0) (if (and (>= A5 1) (<= A5 12)) 1 0) (if (and (>= A6 1) (<= A6 12)) 1 0) (if (and (>= A7 1) (<= A7 12)) 1 0) (if (and (>= A8 1) (<= A8 12)) 1 0) (if (and (>= A9 1) (<= A9 12)) 1 0) (if (and (>= A10 1) (<= A10 12)) 1 0) ) 3)
+;number of children 13-17: 0 completed
+(= (+ (if (and (>= A1 13) (<= A1 17)) 1 0) (if (and (>= A2 13) (<= A2 17)) 1 0) (if (and (>= A3 13) (<= A3 17)) 1 0) (if (and (>= A4 13) (<= A4 17)) 1 0) (if (and (>= A5 13) (<= A5 17)) 1 0) (if (and (>= A6 13) (<= A6 17)) 1 0) (if (and (>= A7 13) (<= A7 17)) 1 0) (if (and (>= A8 13) (<= A8 17)) 1 0) (if (and (>= A9 13) (<= A9 17)) 1 0) (if (and (>= A10 13) (<= A10 17)) 1 0) ) 0)
+;average age of children 0-12: 10 completed
+(= (/ (+ (* A1 (if (and (>= A1 1) (<= A1 12)) 1 0)) (* A2 (if (and (>= A2 1) (<= A2 12)) 1 0)) (* A3 (if (and (>= A3 1) (<= A3 12)) 1 0)) (* A4 (if (and (>= A4 1) (<= A4 12)) 1 0)) (* A5 (if (and (>= A5 1) (<= A5 12)) 1 0)) (* A6 (if (and (>= A6 1) (<= A6 12)) 1 0)) (* A7 (if (and (>= A7 1) (<= A7 12)) 1 0)) (* A8 (if (and (>= A8 1) (<= A8 12)) 1 0)) (* A9 (if (and (>= A9 1) (<= A9 12)) 1 0)) (* A10 (if (and (>= A10 1) (<= A10 12)) 1 0)) ) 3) 10)
+
 ;ideas on constraints to narrow down possibilities:
 ;avg age of male children
 ;avg age of female children: cannot display due to rule of 2
