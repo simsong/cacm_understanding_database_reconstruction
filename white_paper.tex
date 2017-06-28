@@ -270,7 +270,7 @@ system of constraint equations are:
 
 \item \textbf{Brute Force} - trying every possible combination of solutions.\\
 \item \textbf{Optimization} - creating a single cost function from the constraints, and then solve the cost function using optimization software such as IBM's CPLEX. \\
-\item \textbf{Using a SAT solver}, which are complex programs that solve Boolean algebra problems.
+\item \textbf{SAT Solvers} - are complex programs that solve Boolean algebra problems.
 
 \end{enumerate}
 
@@ -366,7 +366,7 @@ Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learn
 
 \end{enumerate}
 
-This process is much faster at solving SAT problems than previous processes used in SAT solvers because adding conflicts as new clauses has the potential to avoid wasteful 'repeated backtracks'.
+This process is much faster at solving SAT problems than previous processes used in SAT solvers because adding conflicts as new clauses has the potential to avoid wasteful 'repeated backtracks'. Additionally, CDCL and its predecessor algorithm, DPLL, are both provably complete algorithms and will always return either a solution or "Unsatisfiable" if given enough time and memory.
 
 There are a wide variety of SAT solvers available to the public for minimal or no cost. Little technical computer skill or mathematical knowledge is required to use a modern SAT solver, so the only issue that must be overcome is determining how to translate the problem into a boolean formula. Programs such as Naoyuki Tamura's Sugar make the use of SAT solvers even easier by allowing the user to input mathematical and even English constraints into a SAT solver, removing the often laborious work of translating complex constraints into boolean formulae.
 
