@@ -14,10 +14,10 @@ sophistication. Here, we will discuss how these attacks
 function, demonstrate their effectiveness and efficiency,
 and provide solutions for defending against such an attack.
 
-This paper will answer the following questions:
+This paper answers the following questions:
 \begin{enumerate}
     \item What is a database reconstruction attack (DRA)?
-    \item To what extent are modern DRAs effective in reconstructing the ground truth data?
+    \item To what extent are modern DRAs effective in reconstructing confidential data?
     \item How scalable are DRAs with database size?
     \item How can a statistical agency guard public data against a DRA without significantly impacting the accuracy of the data?
 \end{enumerate}
@@ -89,7 +89,7 @@ Age, Sex, Race, Generation.
 \end{verbatim}
 Tables 1 and 2 summarize the survey responses for the two households surveyed.
 \begin{table}[!htb]
-\caption{Household 1}\label{tab1}
+\caption{Household 1 Responses (Not published)}\label{tab1}
 \begin{tabular}{cccc}
 \hline\\[-1.5ex]
 Age & Sex & Race & Gen \\[0.5ex]
@@ -104,7 +104,7 @@ Age & Sex & Race & Gen \\[0.5ex]
 \end{table}
 
 \begin{table}[!htb]
-\caption{Household 2}\label{tab2}
+\caption{Household 2 Responses (Not published)}\label{tab2}
 \begin{tabular}{cccc}
 \hline\\[-1.5ex]
 Age & Sex & Race & Gen \\[0.5ex]
@@ -117,11 +117,10 @@ Age & Sex & Race & Gen \\[0.5ex]
 \end{tabular}
 \end{table}
 
-The statistical agency then publishes the following data based
-on the survey results: \footnote {Note that statistics formed from groups made up of only one individual are redacted with "XXXX". This is an example of cell suppression used to protect the privacy of those individuals.}
+The statistical agency then publishes the data product in Table 3 based on the survey results: \footnote {Note that statistics formed from groups made up of only one individual are redacted with "XXXX". This is an example of cell suppression used to protect the privacy of those individuals.}
 
 \begin{table}[!htb]
-\caption{Survey Results}\label{tab3}
+\caption{Published Survey Results}\label{tab3}
 \begin{tabular}{ccc}
 \hline\\[-1.5ex]
 Group & Number & Average Age \\[0.5ex]
@@ -164,7 +163,7 @@ Grandparent & 2 \\[0.5ex]
 \end{table}
 
 \begin{table}[!htb]
-\caption{Survey Results}\label{tab5}
+\caption{Encoded Published Survey Results}\label{tab5}
 \begin{tabular}{c|c|c|c|c|c}
 \hline\\[-1.5ex]
 ID & Household & Age & Sex & Race & Generation \\[0.5ex]
@@ -249,7 +248,7 @@ Once the attacker has converted all the published statistics
 into equations like the ones above, he will have a system
 of a large number of equations in 45 unknowns. This system has one 'true' solution, $S_g$, equivalent to the
 ground truth, and possibly many other 'false' solutions, $[S_1...S_n]$.
-The Solution Universe, U, is potentially originally quite large, with $U = [S_1...S_n]$
+The 'solution universe', U, is originally potentially  quite large, with $U = [S_1...S_n]$
 
 However, each time the agency publishes a new statistic, the attacker
 can generate new constraints and therefore narrow
