@@ -7,25 +7,13 @@
 \twoauthors{Christian Martindale}{Simson Garfinkel}
 \twoaffiliations{Center for Disclosure Avoidance, U.S. Census Bureau}{Center for Disclosure Avoidance, U.S. Census Bureau}
 
-\abstract{In recent years, a certain type of malicious database attack,
+\abstract{In recent years, a certain type of database attack,
 the database reconstruction attack, has become increasingly
 more feasible due to rapid advances in attack algorithm
 sophistication. We discuss how these attacks
-function, demonstrate their effectiveness and efficiency,
-and provide solutions for defending against such an attack.
+function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that Laplace noise addition is much more effective at defending against database attacks by SAT solvers and linear optimizers.
 
-This paper answers the following questions:
-\begin{enumerate}
-    \item What is a database reconstruction attack (DRA)?
-    \item To what extent are modern DRAs effective in reconstructing confidential statistical databases?
-    \item How scalable are DRAs with database size?
-    \item How can a modern statistical agency avoid disclosure of confidential data without significantly impacting the accuracy of the data?
-\end{enumerate}
-
-We will also develop a vocabulary to facilitate the discussion
-of database privacy and formally define some important terms.
-
-\textbf{Keywords: database reconstruction attack, SAT solver, privacy,
+\textbf{Keywords: database reconstruction attack, SAT solver, linear optimization, privacy,
 disclosure avoidance}}
 
 
@@ -38,7 +26,7 @@ available data products such as tables and graphs.
 Defending against such privacy breaches is
 a high priority for statistical agencies, and so researchers
 have developed a variety of techniques to prevent database users
-from identifying any Personally Identifiable Information (PII)
+from identifying any individual's personal information.
 
 These techniques include:
 \begin{enumerate}
@@ -63,32 +51,9 @@ While the above techniques are not without merit, this paper will
 demonstrate that they alone are insufficient in guarding data against
 a modern DRA.
 
-\section{Vocabulary}
-
-\begin{itemize}
-\item Database Reconstruction Attack (DRA) - An attempt to determine survey response information from a publicly available data set which has had disclosure avoidance techniques applied to it.
-
-\item Personally Identifiable Information (PII) - Data that can be used to identify a single person.
-
-\item Constraint Equation - A mathematical equation that represents information known to be true for a set of data.
-
-\item Solution Universe (U) - The set of all combinations of a
-group of variables that satisfies a certain set of constraint equations.
-
-\item SAT Solver - A program that uses a complex set of heuristics to find the solution universe given a set of constraint equations.
-
-\item Noise Addition - The addition of small random numbers to statistical table values before publication for the purpose of protecting respondent privacy.
-\end{itemize}
-
 \section{The Database Reconstruction Attack: An Example}
-This section shows how the DRA works by applying the technique to successively more complex scenarios. First, we consider a survey given to one household by a statistical agency. Table 1 shows the responses to the following survey:
-\begin{verbatim}
-Please provide the following for each member
-of your family:
-Age, Sex, Race, Generation.
-\end{verbatim}
-Tables 1 and 2 summarize the survey responses for the two households surveyed.
-\begin{table}[!htb]
+
+\begin{table}[b]
 \caption{Household 1 Responses (Not published)}\label{tab1}
 \begin{tabular}{cccc}
 \hline\\[-1.5ex]
@@ -103,50 +68,43 @@ Age & Sex & Race & Gen \\[0.5ex]
 \end{tabular}
 \end{table}
 
-\begin{table}[!htb]
-\caption{Household 2 Responses (Not published)}\label{tab2}
-\begin{tabular}{cccc}
-\hline\\[-1.5ex]
-Age & Sex & Race & Gen \\[0.5ex]
-\hline\\[-1.5ex]
-50 & Male & White & Parent\\[0.5ex]
-45 & Male & White & Parent\\[0.5ex]
-15 & Female & White & Child\\[0.5ex]
-17 & Female & White & Child\\[0.5ex]
-\hline
-\end{tabular}
-\end{table}
-
-The statistical agency then publishes the data product in Table 3 based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy, indicated in the table by an entry of '---'.
-
-\begin{table}[!htb]
-\caption{Published Survey Results}\label{tab3}
+\begin{table}[h]
+\caption{Published Survey Results}\label{tab2}
 \begin{tabular}{ccc}
 \hline\\[-1.5ex]
-Group & Number & Average Age \\[0.5ex]
+Group & Number & Average Age \\[0.25ex]
 \hline\\[-1.5ex]
-Individuals & 9 & 27.44 \\[0.5ex]
-Males & 4 & 31.75 \\[0.5ex]
-Females & 5 & 24 \\[0.5ex]
-Parents & 4 & 36.75 \\[0.5ex]
-Grandparents & 1 & --- \\[0.5ex]
-Children (0-12) & 2 & 6.5 \\[0.5ex]
-Children (13-17) & 2 & 16 \\[0.5ex]
-Whites & 7 & 30.57 \\[0.5ex]
-Blacks & 2 & 24 \\[0.5ex]
-Black parents & 1 & --- \\[0.5ex]
-Black children & 1 & ---\\[0.5ex]
-White parents & 3 & 39.66 \\[0.5ex]
-White children & 3 & 13.33 \\[0.5ex]
-Households & 2 & 27.85 \\[0.5ex]
+Individuals & 9 & 27.44 \\[0.25ex]
+Males & 4 & 31.75 \\[0.25ex]
+Females & 5 & 24 \\[0.25ex]
+Parents & 4 & 36.75 \\[0.25ex]
+Grandparents & 1 & --- \\[0.25ex]
+Children (0-12) & 2 & 6.5 \\[0.25ex]
+Children (13-17) & 2 & 16 \\[0.25ex]
+Whites & 7 & 30.57 \\[0.25ex]
+Blacks & 2 & 24 \\[0.25ex]
+Black parents & 1 & --- \\[0.25ex]
+Black children & 1 & ---\\[0.25ex]
+White parents & 3 & 39.66 \\[0.25ex]
+White children & 3 & 13.33 \\[0.25ex]
+Households & 2 & 27.85 \\[0.25ex]
 \hline
 \end{tabular}
 \end{table}
 
-Retabulating these results in a numerical format with the keys in Table 4 gives the results in Table 5.
+This section shows how the DRA works by applying the technique to successively more complex scenarios. First, we consider a survey given to one household by a statistical agency. Table 1 shows the responses to the following survey:
+\begin{verbatim}
+Please provide the following for each member
+of your family:
+Age, Sex, Race, Generation.
+\end{verbatim}
 
-\begin{table}[!htb]
-\caption{Tabulation Key}\label{tab4}
+The statistical agency then publishes the data product in Table 2 based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy, indicated in the table by an entry of '---'.
+
+Retabulating these results in a numerical format with the keys in Table 3 gives the results in Table 4.
+
+\begin{table}[t]
+\caption{Tabulation Key}\label{tab3}
 \begin{tabular}{c|c}
 \hline\\[-1.5ex]
 Key & Value \\[0.5ex]
@@ -162,8 +120,8 @@ Grandparent & 2 \\[0.5ex]
 \end{tabular}
 \end{table}
 
-\begin{table}[!htb]
-\caption{Encoded Published Survey Results}\label{tab5}
+\begin{table}[t]
+\caption{Encoded Published Survey Results}\label{tab4}
 \begin{tabular}{c|c|c|c|c|c}
 \hline\\[-1.5ex]
 ID & Household & Age & Sex & Race & Generation \\[0.5ex]
@@ -182,10 +140,10 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 \end{table}
 
 
-The data in Table 5 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the following table of 45 unknowns:
+The data in Table 4 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 45 unknowns given in Table 5.
 
-\begin{table}[!htb]
-\caption{DRA Unknowns}\label{tab6}
+\begin{table}[t]
+\caption{DRA Unknowns}\label{tab5}
 \begin{tabular}{c|c|c|c|c|c}
 \hline\\[-1.5ex]
 ID & Household & Age & Sex & Race & Generation \\[0.5ex]
@@ -204,7 +162,7 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 \end{table}
 
 The reconstruction attack works by identifying constraint
-equations given by the data table. For example, we have the
+equations given by the data table. Constraint equations are  mathematical formulae representing rules that the ground truth satisfies. For example, we have the
 following statistic:
 \begin{verbatim}
 Individuals: 9, 27.44
@@ -275,9 +233,9 @@ For large data sets such as the U.S. Census, performing a brute-force attack is 
 
 In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new set of responses to the survey given earlier.
 
-The ground truth responses from two new households are given below in Table 7.
-\begin{table}[!htb]
-\caption{Survey Results}\label{tab7}
+The ground truth responses from two new households are given below in Table 6.
+\begin{table}[b]
+\caption{Survey Results}\label{tab6}
 \begin{tabular}{c|c|c|c|c|c}
 \hline\\[-1.5ex]
 ID & Household & Age & Sex & Race & Generation \\[0.5ex]
@@ -296,10 +254,10 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 \end{tabular}
 \end{table}
 
-The statistical agency publishes the statistics in Table 8 after processing the ground truth responses(SHOULD WE SHOW ALL CONSTRAINT STATS OR JUST A SAMPLE?).
+The statistical agency publishes the statistics in Table 7 after processing the ground truth responses(SHOULD WE SHOW ALL CONSTRAINT STATS OR JUST A SAMPLE?).
 
-\begin{table}[!htb]
-\caption{Data Publication}\label{tab8}
+\begin{table}[b]
+\caption{Data Publication}\label{tab7}
 \begin{tabular}{ccc}
 \hline\\[-1.5ex]
 Group & Number & Average Age \\[0.5ex]
@@ -340,11 +298,29 @@ Households $\geq 40\% $ black & 2 & 32.5 \\[0.5ex]
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
-called PicoSAT written in C. Output is given from the Java program Sugar, which wraps PicoSAT for usability improvements.
-\newline Output is as follows:
-\begin{verbatim}
---Program output and runtime here--
-\end{verbatim}
+called PicoSAT written in C. Output is given from the Java program Sugar, which wraps PicoSAT for usability improvements. Output is given in Table 8 and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table 6, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35.51 seconds.
+
+\begin{table}[b]
+\caption{Sugar Output}\label{tab8}
+\begin{tabular}{c|c|c|c|c|c}
+\hline\\[-1.5ex]
+ID & Household & Age & Sex & Race & Generation \\[0.5ex]
+\hline\\[-1.5ex]
+1 & 2 & 10 & 1 & 0 & 0  \\[0.5ex]
+2 & 2 & 20 & 0 & 1 & 1  \\[0.5ex]
+3 & 1 & 30 & 1 & 1 & 1  \\[0.5ex]
+4 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
+5 & 2 & 40 & 1 & 0 & 1  \\[0.5ex]
+6 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
+7 & 1 & 40 & 0 & 0 & 1  \\[0.5ex]
+8 & 1 & 80 & 1 & 1 & 2  \\[0.5ex]
+9 & 1 & 90 & 0 & 0 & 2 \\[0.5ex]
+10 & 1 & 70 & 1 & 0 & 2 \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+\pagebreak
 
 \section{Defending Against a DRA}
 As demonstrated above, new techniques must be developed in

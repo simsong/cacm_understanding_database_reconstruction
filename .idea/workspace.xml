@@ -18,10 +18,11 @@
       <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/white_paper.tex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="472" column="30" lean-forward="false" selection-start-line="472" selection-start-column="30" selection-end-line="472" selection-end-column="30" />
+            <state relative-caret-position="250">
+              <caret line="446" column="20" lean-forward="true" selection-start-line="446" selection-start-column="20" selection-end-line="446" selection-end-column="20" />
               <folding>
-                <element signature="e#711#779#0" expanded="true" />
+                <element signature="e#1085#2140#0" expanded="true" />
+                <element signature="e#1514#2140#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -715,7 +716,7 @@
         <state relative-caret-position="120">
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="9" selection-end-column="21" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#14#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -950,7 +951,7 @@
         <state relative-caret-position="113">
           <caret line="29" column="22" lean-forward="false" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#14#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -992,10 +993,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/white_paper.tex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="472" column="30" lean-forward="false" selection-start-line="472" selection-start-column="30" selection-end-line="472" selection-end-column="30" />
+        <state relative-caret-position="250">
+          <caret line="446" column="20" lean-forward="true" selection-start-line="446" selection-start-column="20" selection-end-line="446" selection-end-column="20" />
           <folding>
-            <element signature="e#711#779#0" expanded="true" />
+            <element signature="e#1085#2140#0" expanded="true" />
+            <element signature="e#1514#2140#0" expanded="true" />
           </folding>
         </state>
       </provider>
