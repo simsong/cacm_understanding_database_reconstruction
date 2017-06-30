@@ -3,3 +3,11 @@
 pbsugar-v1-1-1
 picosat-965
 sugar-v2-3-2
+*.aux
+*.bbl
+*.blg
+*.bdb_latexmk
+*.fls
+*.log
+white_paper.pdf
+*.fdb_latexmk

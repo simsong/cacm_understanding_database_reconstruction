@@ -329,7 +329,7 @@ Households & 2 & AAAA \\[0.5ex]
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
-called PicoSAT written in C. Output is given from the Java program Sugar, which wraps PicoSAT for usability improvements.
+called PicoSAT written in C. Output is given from the Java program Sugar\cite{sugar}, which wraps PicoSAT for usability improvements.
 \newline Output is as follows:
 \begin{verbatim}
 --Program output and runtime here--
@@ -371,7 +371,7 @@ There are a wide variety of SAT solvers available to the public for minimal or n
 
 \subsection{Appendix 2: Scalability and The Zebra Problem}
 
-To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem \footnote{For more information: http://www.ics.uci.edu/~csp/r8.pdf}.
+To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem\cite{zebra}\footnote{For more information: http://www.ics.uci.edu/~csp/r8.pdf}.
 This problem is appropriate because its structure closely models the current Census data collection and publication process. The writer receives the survey answers from the respondents, redacts much of the information to avoid giving away PII, and then publishes a data product.
 
 The size of this problem more closely approximates the number
@@ -451,15 +451,9 @@ a SAT solver-driven DRA. This problem
 contained far more suppressed cells than unsuppressed ones, which is not realistic given that a real publishing agency would want to minimize the number of suppressed cells. Despite this over-suppression, the SAT solver was still able to easily solve for the values of all cells in the example.
 
 
-\begin{thebibliography}{1}
-\bibitem{diffprivacy} Cynthia Dwork, Aaron Roth.
-\textit{The Algorithmic Foundations of Differential Privacy}, Foundations and Trends in Theoretical Computer Science, Volume 9, Nos. 3--4, pp. 211-407, 2014
-\bibitem{sugar} Naoyuki Tamura, Akiko Taga, Satoshi Kitagawa, Mutsunori Banbara.
-\textit{Compiling Finite Linear CSP into SAT}, Constraints, Volume 14, No. 2, pp.254--272, 2009.
-\bibitem{zebra} Rina Dechter.
-\textit{Enhancement Schemes for Constraint Processing: Backjumping, Learning, and Cutset Decomposition}, Artificial\\ Intelligence, No. 41, pp. 273-312, 1990
-\bibitem{blank}
-\end{thebibliography}
+
+\bibliographystyle{IEEEtran}
+\bibliography{white_paper}
 
 
 \end{document}
