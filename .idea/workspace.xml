@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/white_paper.bib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.tex" afterPath="$PROJECT_DIR$/white_paper.tex" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -18,8 +22,8 @@
       <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/white_paper.tex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="446" column="20" lean-forward="true" selection-start-line="446" selection-start-column="20" selection-end-line="446" selection-end-column="20" />
+            <state relative-caret-position="280">
+              <caret line="441" column="35" lean-forward="false" selection-start-line="441" selection-start-column="35" selection-end-line="441" selection-end-column="35" />
               <folding>
                 <element signature="e#1085#2140#0" expanded="true" />
                 <element signature="e#1514#2140#0" expanded="true" />
@@ -122,7 +126,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="134" />
+    <option name="x" value="14" />
     <option name="y" value="23" />
     <option name="width" value="1240" />
     <option name="height" value="713" />
@@ -624,7 +628,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="134" y="23" width="1240" height="713" extended-state="0" />
+    <frame x="14" y="23" width="1240" height="713" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -993,8 +997,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/white_paper.tex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="446" column="20" lean-forward="true" selection-start-line="446" selection-start-column="20" selection-end-line="446" selection-end-column="20" />
+        <state relative-caret-position="280">
+          <caret line="441" column="35" lean-forward="false" selection-start-line="441" selection-start-column="35" selection-end-line="441" selection-end-column="35" />
           <folding>
             <element signature="e#1085#2140#0" expanded="true" />
             <element signature="e#1514#2140#0" expanded="true" />

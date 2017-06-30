@@ -131,16 +131,12 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 3 & 1 & 55 & 1 & 0 & 2  \\[0.5ex]
 4 & 1 & 5 & 1 & 1 & 0  \\[0.5ex]
 5 & 1 & 8 & 0 & 0 & 0  \\[0.5ex]
-6 & 2 & 50 & 0 & 0 & 1  \\[0.5ex]
-7 & 2 & 45 & 1 & 0 & 0  \\[0.5ex]
-8 & 2 & 15 & 1 & 0 & 0  \\[0.5ex]
-9 & 2 & 17 & 1 & 0 & 0 \\[0.5ex]
 \hline
 \end{tabular}
 \end{table}
 
 
-The data in Table 4 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 45 unknowns given in Table 5.
+The data in Table 4 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 25 unknowns given in Table 5.
 
 \begin{table}[t]
 \caption{DRA Unknowns}\label{tab5}
@@ -153,10 +149,6 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 3 & H3 & A3 & S3 & R3 & G3  \\[0.5ex]
 4 & H4 & A4 & S4 & R4 & G4  \\[0.5ex]
 5 & H5 & A5 & S5 & R5 & G5  \\[0.5ex]
-6 & H6 & A6 & S6 & R6 & G6  \\[0.5ex]
-7 & H7 & A7 & S7 & R7 & G7  \\[0.5ex]
-8 & H8 & A8 & S8 & R8 & G8  \\[0.5ex]
-9 & H9 & A9 & S9 & R9 & G9  \\[0.5ex]
 \hline
 \end{tabular}
 \end{table}
@@ -168,7 +160,7 @@ following statistic:
 Individuals: 9, 27.44
 \end{verbatim}
 
-This can be written as a linear constraint equation: \footnote{Multiplication by 100 is used to avoid floating-point rounding errors.}
+This can be written as a linear constraint equation using the symbols for age, A1...10 given in Table 5: \footnote{Multiplication by 100 is used to avoid floating-point rounding errors.}
 \[\frac{100(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)}{9} = 2744\]
 
 This equation is in 9 unknowns, and so is unsolvable alone.
@@ -211,6 +203,7 @@ However, each time the agency publishes a new statistic, the attacker can genera
 down the set of possible solutions. Eventually, the attacker
 will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
 the ground truth. At this point, the attack has succeeded, and the statistical agency has failed to protect its respondents' privacy. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
+
 Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been completely reconstructed. Thus, the database has failed to protect user privacy even though the attack did not fully reconstruct the database.
 
 \section{Methods of Attack}
