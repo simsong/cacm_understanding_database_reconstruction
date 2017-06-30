@@ -10,7 +10,7 @@
 \abstract{In recent years, a certain type of malicious database attack,
 the database reconstruction attack, has become increasingly
 more feasible due to rapid advances in attack algorithm
-sophistication. Here, we will discuss how these attacks
+sophistication. We discuss how these attacks
 function, demonstrate their effectiveness and efficiency,
 and provide solutions for defending against such an attack.
 
@@ -25,7 +25,7 @@ This paper answers the following questions:
 We will also develop a vocabulary to facilitate the discussion
 of database privacy and formally define some important terms.
 
-\textbf{Keywords: Database Reconstruction Attack, SAT solver, privacy,
+\textbf{Keywords: database reconstruction attack, SAT solver, privacy,
 disclosure avoidance}}
 
 
@@ -33,7 +33,7 @@ disclosure avoidance}}
 \maketitle
 
 \section{Problem Background}
-Malicious people often seek to identify individuals from publicly
+Database intruders often seek to identify individuals from publicly
 available data products such as tables and graphs.
 Defending against such privacy breaches is
 a high priority for statistical agencies, and so researchers
@@ -46,17 +46,17 @@ These techniques include:
         generating combinations are removed from the published table
   \item Row Swapping, where the data rows corresponding to individuals
         with similar values in certain key cells are switched
-  \item Bucketing, where numerical values are grouped into
+  \item Generalization, where numerical values are grouped into
         buckets corresponding to ranges, instead of giving the exact
         values for each entry in the table
-  \item Topcoding, where the buckets at the high and low ends
+  \item Top-and-bottom-coding, where the statistical groups at the high and low ends
         of the table are given without upper or lower bound (e.g.
-        reporting the highest bucket for age as "80+" instead of
+        reporting the highest group for age as "80+" instead of
         "80-90" and "90-100")
 \end{enumerate}
 
-The goal of a Database Reconstruction Attack is to
-use public data to create a mathematical system of equations,
+The goal of a database reconstruction attack is to
+use public statistics released about confidential data to create a mathematical system of equations,
 which then can be used to reconstruct the original (before the disclosure
 avoidance techniques were applied) data set.
 While the above techniques are not without merit, this paper will
@@ -81,7 +81,7 @@ group of variables that satisfies a certain set of constraint equations.
 \end{itemize}
 
 \section{The Database Reconstruction Attack: An Example}
-To understand how a DRA works, let us consider a simple example data table generated from the following survey given to two households:
+This section shows how the DRA works by applying the technique to successively more complex scenarios. First, we consider a survey given to one household by a statistical agency. Table 1 shows the responses to the following survey:
 \begin{verbatim}
 Please provide the following for each member
 of your family:
@@ -117,7 +117,7 @@ Age & Sex & Race & Gen \\[0.5ex]
 \end{tabular}
 \end{table}
 
-The statistical agency then publishes the data product in Table 3 based on the survey results: \footnote {Note that statistics formed from groups made up of only one individual are redacted with "XXXX". This is an example of cell suppression used to protect the privacy of those individuals.}
+The statistical agency then publishes the data product in Table 3 based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy, indicated in the table by an entry of '---'.
 
 \begin{table}[!htb]
 \caption{Published Survey Results}\label{tab3}
@@ -129,13 +129,13 @@ Individuals & 9 & 27.44 \\[0.5ex]
 Males & 4 & 31.75 \\[0.5ex]
 Females & 5 & 24 \\[0.5ex]
 Parents & 4 & 36.75 \\[0.5ex]
-Grandparents & 1 & XXXX \\[0.5ex]
+Grandparents & 1 & --- \\[0.5ex]
 Children (0-12) & 2 & 6.5 \\[0.5ex]
 Children (13-17) & 2 & 16 \\[0.5ex]
 Whites & 7 & 30.57 \\[0.5ex]
 Blacks & 2 & 24 \\[0.5ex]
-Black parents & 1 & XXXX \\[0.5ex]
-Black children & 1 & XXXX\\[0.5ex]
+Black parents & 1 & --- \\[0.5ex]
+Black children & 1 & ---\\[0.5ex]
 White parents & 3 & 39.66 \\[0.5ex]
 White children & 3 & 13.33 \\[0.5ex]
 Households & 2 & 27.85 \\[0.5ex]
@@ -210,18 +210,19 @@ following statistic:
 Individuals: 9, 27.44
 \end{verbatim}
 
-This can be written as a linear constraint equation: \footnote{In the actual calculation, mathematical transformations must be applied to avoid floating point rounding errors, but that is beyond the scope of this paper.}
-\[\frac{100(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)}{9} = 27.44\]
+This can be written as a linear constraint equation: \footnote{Multiplication by 100 is used to avoid floating-point rounding errors.}
+\[\frac{100(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)}{9} = 2744\]
 
 This equation is in 9 unknowns, and so is unsolvable alone.
 However, the attacker can write more constraint equations.
+Note that the Boolean expression $(A == B)$ is True if $A = B$ and False otherwise.
 
 \begin{verbatim}
 Grandparents: 1, XXX
 \end{verbatim}
 
 
-Becomes: \footnote{X==Y evaluates to 0 if X!=Y and 1 if $X=Y$.}
+Becomes:
 \begin{align*}
 & (G1==2) + (G2==2) + (G3==2) + (G4==2) + \\
 & (G5==2)+ (G6==2) + (G7==2) +\\
@@ -245,21 +246,14 @@ Becomes the following two equations:
 & A7 * (G7==0) + A8 * (G8==0) + A9 * (G9==0)) = 13
 \end{align*}
 Once the attacker has converted all the published statistics
-into equations like the ones above, he will have a system
-of a large number of equations in 45 unknowns. This system has one 'true' solution, $S_g$, equivalent to the
-ground truth, and possibly many other 'false' solutions, $[S_1...S_n]$.
-The 'solution universe', U, is originally potentially  quite large, with $U = [S_1...S_n]$
-
-However, each time the agency publishes a new statistic, the attacker
-can generate new constraints and therefore narrow
+into equations like the ones above, the equations together form a system of many equations in 45 unknowns. This system has one 'true' solution, equivalent to the
+ground truth, and possibly many other 'false' solutions, which fit the constraints but are not equivalent to the ground truth.
+The \textit{solution universe}, the set of all solutions that fit the encoded set of constraints, is originally potentially  quite large, containing many false solutions along with the true solution.
+However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
 down the set of possible solutions. Eventually, the attacker
-will obtain $U = [S_g]$, at which point he has
-found the ground truth and reconstructed the database
-successfully. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives him one fewer constraint to work with per cell suppressed.
-Even if the number of constraints is insufficient to narrow down U to just one element, the attacker can still often identify personal data because of the high probability that all remaining solutions $S_n$ in $U$ share values for a set of people. For example, if
-$U = [S_1, S_2]$ and $S_1$ and $S_2$ both have values $[h_1, a_1, s_1, r_1, g_1]$ in common
-(represented mathematically by $S_1 \cap S_2 = [H_1=h_1, A_1=a_1, S_1=s_1, R_1=r_1, G_1=g_1]$),
-then we know that $[h_1, a_1, s_1, r_1, g_1]$ must be an actual person in the ground truth set. Thus, the database has failed to protect user privacy even though the attack did not fully reconstruct the database.
+will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
+the ground truth. At this point, the attack has succeeded, and the statistical agency has failed to protect its respondents' privacy. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
+Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been completely reconstructed. Thus, the database has failed to protect user privacy even though the attack did not fully reconstruct the database.
 
 \section{Methods of Attack}
 
@@ -268,12 +262,14 @@ system of constraint equations are:
 \begin{enumerate}
 
 \item \textbf{Brute Force} - trying every possible combination of solutions.\\
-\item \textbf{Optimization} - creating a single cost function from the constraints, and then solve the cost function using optimization software such as IBM's CPLEX. \\
-\item \textbf{SAT Solvers} - are complex programs that solve Boolean algebra problems.
+
+\item \textbf{SAT Solvers} - applying programs that quickly solve Boolean algebra problems.\\
+
+\item \textbf{Optimization} -  using optimization software such as IBM's CPLEX to solve systems of linear constraints.
 
 \end{enumerate}
 
-For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, optimizers and SAT solvers are both quite effective because they can reduce the runtime of the program to acceptable (linearly scaling) levels. Recent advances in SAT solver heuristics have enabled these programs to solve systems with even millions of variables in linear time. Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
+For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, optimizers and SAT solvers are both quite effective because they can reconstruct databases much more quickly than can a brute-force approach. Recent advances in SAT solver heuristics have enabled these programs to frequently solve systems with even millions of variables in a matter of minutes. Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
 
 \section{Revisiting the Example}
 
@@ -288,19 +284,19 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 \hline\\[-1.5ex]
 1 & 1 & 80 & 1 & 1 & 2  \\[0.5ex]
 2 & 1 & 40 & 0 & 0 & 1  \\[0.5ex]
-3 & 2 & 70 & 1 & 0 & 2  \\[0.5ex]
-4 & 2 & 30 & 1 & 1 & 1  \\[0.5ex]
-5 & 2 & 90 & 0 & 0 & 2  \\[0.5ex]
-6 & 3 & 10 & 0 & 1 & 0  \\[0.5ex]
-7 & 3 & 10 & 0 & 1 & 0  \\[0.5ex]
-8 & 3 & 10 & 1 & 0 & 0  \\[0.5ex]
-9 & 4 & 40 & 1 & 0 & 1 \\[0.5ex]
-10 & 4 & 20 & 0 & 1 & 1 \\[0.5ex]
+3 & 1 & 70 & 1 & 0 & 2  \\[0.5ex]
+4 & 1 & 30 & 1 & 1 & 1  \\[0.5ex]
+5 & 1 & 90 & 0 & 0 & 2  \\[0.5ex]
+6 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
+7 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
+8 & 2 & 10 & 1 & 0 & 0  \\[0.5ex]
+9 & 2 & 40 & 1 & 0 & 1 \\[0.5ex]
+10 & 2 & 20 & 0 & 1 & 1 \\[0.5ex]
 \hline
 \end{tabular}
 \end{table}
 
-The statistical agency publishes the statistics in Table 8 after processing the ground truth responses.
+The statistical agency publishes the statistics in Table 8 after processing the ground truth responses(SHOULD WE SHOW ALL CONSTRAINT STATS OR JUST A SAMPLE?).
 
 \begin{table}[!htb]
 \caption{Data Publication}\label{tab8}
@@ -311,18 +307,33 @@ Group & Number & Average Age \\[0.5ex]
 Individuals & 10 & 40 \\[0.5ex]
 Males & 5 & 34 \\[0.5ex]
 Females & 5 & 46 \\[0.5ex]
-Parents & 4 & 32.5 \\[0.5ex]
-Grandparents & 3 & 80 \\[0.5ex]
-Children (total) & 3 & 10 \\[0.5ex]
-Children (0-12) & XXXX & XXXX \\[0.5ex]
-Children (13-17) & XXXX & XXXX \\[0.5ex]
 Whites & 5 & 50 \\[0.5ex]
 Blacks & 5 & 30 \\[0.5ex]
-Black parents & 2 & AAAA \\[0.5ex]
-Black children & 2 & AAAA\\[0.5ex]
-White parents & 2 & AAAA \\[0.5ex]
-White children & 1 & XXXX \\[0.5ex]
-Households & 2 & AAAA \\[0.5ex]
+\hline\\[-1.5ex]
+Children (0-12) & 3 & 10 \\[0.5ex]
+White children & 1 & --- \\[0.5ex]
+Black children & 2 & 10 \\[0.5ex]
+\hline\\[-1.5ex]
+Parents & 4 & 32.5 \\[0.5ex]
+Male parents & 2 & 30 \\[0.5ex]
+Female parents & 2 & 35 \\[0.5ex]
+Parents over 40 & 0 & N/A \\[0.5ex]
+\hline\\[-1.5ex]
+Grandparents & 3 & 80 \\[0.5ex]
+White grandparents & 2 & 80 \\[0.5ex]
+Black grandparents & 1 & --- \\[0.5ex]
+Male grandparents & 1 & --- \\[0.5ex]
+Female grandparents & 2 & 75 \\[0.5ex]
+\hline\\[-1.5ex]
+Households & 2 & 40 \\[0.5ex]
+Households with 3+ generations & 0 & N/A \\[0.5ex]
+Single-parent households & 0 & N/A \\[0.5ex]
+Childless households & 1 & --- \\[0.5ex]
+Interracial married couples & 2 & 32.5 \\[0.5ex]
+Same-sex married couples & 0 & N/A \\[0.5ex]
+Households $\geq 40\% $ female & 2 & 32.5 \\[0.5ex]
+Households $\geq 40\% $ black & 2 & 32.5 \\[0.5ex]
+
 \hline
 \end{tabular}
 \end{table}
@@ -339,7 +350,7 @@ called PicoSAT written in C. Output is given from the Java program Sugar, which 
 As demonstrated above, new techniques must be developed in
 order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise addition, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then publishes that number, there are now five elements in the solution universe for this value, where without noise addition there would be only one. Adding noise from a more complex distribution such as the Gaussian or Laplace distributions adds even more elements to the solution universe, since they are not discrete distributions like the example above. Noise addition allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
 
-Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism \footnote{More information on the Laplace Mechanism can be found at https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf)}.
+Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism CITATION HERE.
 The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise addition without worrying that his privacy will be compromised by his choice to respond.
 
 \section{Problem Analysis}
@@ -352,9 +363,9 @@ The most effective technique for defending against a DRA is the addition of nois
 
 \subsection{Appendix 1: SAT and SAT Solvers}
 
-The boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete.\footnote{Search "Cook-Levin Theorem" for more information.} This problem asks, for a given boolean formula, whether replacing each variable with either True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
+The Boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete.CITATION COOK-LEVIN HERE This problem asks, for a given Boolean formula, whether replacing each variable with either True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
 
-Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL, at a high level, works by the following process:
+Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL works by the following process:
 
 \begin{enumerate}
 
@@ -367,11 +378,11 @@ Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learn
 
 This process is much faster at solving SAT problems than previous processes used in SAT solvers because adding conflicts as new clauses has the potential to avoid wasteful 'repeated backtracks'. Additionally, CDCL and its predecessor algorithm, DPLL, are both provably complete algorithms and will always return either a solution or "Unsatisfiable" if given enough time and memory.
 
-There are a wide variety of SAT solvers available to the public for minimal or no cost. Little technical computer skill or mathematical knowledge is required to use a modern SAT solver, so the only issue that must be overcome is determining how to translate the problem into a boolean formula. Programs such as Naoyuki Tamura's Sugar make the use of SAT solvers even easier by allowing the user to input mathematical and even English constraints into a SAT solver, removing the often laborious work of translating complex constraints into boolean formulae.
+There are a wide variety of SAT solvers available to the public for minimal or no cost. Although a SAT solver requires the user to translate the problem into Boolean formulae before use,  programs such as Naoyuki Tamura's Sugar facilitate this process by translating user-input mathematical and English constraints into Boolean formulae automatically.
 
 \subsection{Appendix 2: Scalability and The Zebra Problem}
 
-To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem \footnote{For more information: http://www.ics.uci.edu/~csp/r8.pdf}.
+To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 Boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem CITATION HERE.
 This problem is appropriate because its structure closely models the current Census data collection and publication process. The writer receives the survey answers from the respondents, redacts much of the information to avoid giving away PII, and then publishes a data product.
 
 The size of this problem more closely approximates the number
@@ -406,8 +417,8 @@ This problem is stated as follows:
 \end{itemize}
 
 Just as demonstrated in the previous example, this problem
-can be encoded as a large set of boolean equations. The problem
-gives 15 explicit constraints which allow the attacker to generate more constraints, and each of the combinations of variables (five people, five houses, five drinks, etc.) can be represented as a boolean variable, for example, "The Norwegian lives in the red house == False"
+can be encoded as a large set of Boolean equations. The problem
+gives 15 explicit constraints which allow the attacker to generate more constraints, and each of the combinations of variables (five people, five houses, five drinks, etc.) can be represented as a Boolean variable, for example, "The Norwegian lives in the red house == False"
 
 Once the attacker has generated every constraint possible from the given information, he can input the constraints into a SAT solver. In this example, we run the zebra problem through PycoSAT, a free Python wrapper of PicoSAT.
 
@@ -442,13 +453,15 @@ Number of solutions found in 0.00046s :  1
 \end{verbatim}
 
 Each of the 155 numbers represents one of the variables encoded in the formula input to the SAT solver.
-Positive integers correspond to True, while negative integers are False. For example, $118$ in the solution output means that the boolean variable "The Spaniard drinks orange juice" is True.
+Positive integers correspond to True, while negative integers are False. For example, $118$ in the solution output means that the Boolean variable "The Spaniard drinks orange juice" is True.
 PicoSAT is able to solve this very complex problem in a fraction of a second, and has reconstructed the entire database, thus obtaining the PII of all the residents of the village despite the fact that the vast majority of their information was redacted by the problem writer before release.
 
 The success of this attack demonstrates the inefficacy of
 cell suppression as a method for protecting PII against
 a SAT solver-driven DRA. This problem
 contained far more suppressed cells than unsuppressed ones, which is not realistic given that a real publishing agency would want to minimize the number of suppressed cells. Despite this over-suppression, the SAT solver was still able to easily solve for the values of all cells in the example.
+
+\subsection{Appendix 3: Linear Optimizers}
 
 
 \begin{thebibliography}{1}
