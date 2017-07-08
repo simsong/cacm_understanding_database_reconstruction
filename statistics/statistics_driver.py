@@ -4,7 +4,7 @@
 import statistics_generator
 
 if __name__ == '__main__':
-    filename ="example_survey_responses.txt"
+    filename ="survey_responses_noise_added.txt"
     data = statistics_generator.read_file(filename)
 
     print("**RACIAL STATS**")

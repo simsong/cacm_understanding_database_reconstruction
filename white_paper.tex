@@ -1,24 +1,29 @@
-\documentclass[jou,apacite]{apa6}
+\documentclass[5p,times,11pt]{elsarticle}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{siunitx}
 
+\begin{document}
+\begin{frontmatter}
 \title{Analysis of a Database Reconstruction Attack on Public Data}
-\shorttitle{}
 
-\twoauthors{Christian Martindale}{Simson Garfinkel}
-\twoaffiliations{Center for Disclosure Avoidance, U.S. Census Bureau}{Center for Disclosure Avoidance, U.S. Census Bureau}
+\author{Christian Martindale and Simson Garfinkel}
+\address{Center for Disclosure Avoidance, U.S. Census Bureau}
 
-\abstract{In recent years, a certain type of database attack,
+\begin{abstract}
+In recent years, a certain type of database attack,
 the database reconstruction attack, has become increasingly
 more feasible due to rapid advances in attack algorithm
 sophistication. We discuss how these attacks
-function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that Laplace noise addition is much more effective at defending against database attacks by SAT solvers and linear optimizers.
-
-\textbf{Keywords: database reconstruction attack, SAT solver, linear optimization, privacy,
-disclosure avoidance}}
+function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is much more effective at defending against database attacks by SAT solvers and optimizers.
+\end{abstract}
 
 
-\begin{document}
-\maketitle
+\begin{keyword}
+database reconstruction attack, SAT solver, linear optimization, privacy, disclosure avoidance
+\end{keyword}
+\end{frontmatter}
+
 
 \section{Problem Background}
 Database intruders often seek to identify individuals from publicly
@@ -53,150 +58,147 @@ a modern DRA.
 
 \section{The Database Reconstruction Attack: An Example}
 
-\begin{table}[b]
-\caption{Household 1 Responses (Not published)}\label{tab1}
-\begin{tabular}{cccc}
-\hline\\[-1.5ex]
-Age & Sex & Race & Gen \\[0.5ex]
-\hline\\[-1.5ex]
-55 & Female & White & Grandparent\\[0.5ex]
-24 & Male & White & Parent\\[0.5ex]
-28 & Female & Black & Parent\\[0.5ex]
-5 & Female & Black & Child\\[0.5ex]
-8 & Male & White & Child\\[0.5ex]
-\hline
-\end{tabular}
-\end{table}
 
-\begin{table}[h]
-\caption{Published Survey Results}\label{tab2}
-\begin{tabular}{ccc}
-\hline\\[-1.5ex]
-Group & Number & Average Age \\[0.25ex]
-\hline\\[-1.5ex]
-Individuals & 9 & 27.44 \\[0.25ex]
-Males & 4 & 31.75 \\[0.25ex]
-Females & 5 & 24 \\[0.25ex]
-Parents & 4 & 36.75 \\[0.25ex]
-Grandparents & 1 & --- \\[0.25ex]
-Children (0-12) & 2 & 6.5 \\[0.25ex]
-Children (13-17) & 2 & 16 \\[0.25ex]
-Whites & 7 & 30.57 \\[0.25ex]
-Blacks & 2 & 24 \\[0.25ex]
-Black parents & 1 & --- \\[0.25ex]
-Black children & 1 & ---\\[0.25ex]
-White parents & 3 & 39.66 \\[0.25ex]
-White children & 3 & 13.33 \\[0.25ex]
-Households & 2 & 27.85 \\[0.25ex]
-\hline
-\end{tabular}
-\end{table}
 
-This section shows how the DRA works by applying the technique to successively more complex scenarios. First, we consider a survey given to one household by a statistical agency. Table 1 shows the responses to the following survey:
-\begin{verbatim}
-Please provide the following for each member
+To conceptually understand a DRA, we first consider a survey given to one household by a statistical agency. Table~\ref{groundtruthsmall} shows the responses to the following survey:
+
+\textit{Please provide the following for each member
 of your family:
-Age, Sex, Race, Generation.
-\end{verbatim}
+Age, Sex, Race, Generation.}
 
-The statistical agency then publishes the data product in Table 2 based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy, indicated in the table by an entry of '---'.
 
-Retabulating these results in a numerical format with the keys in Table 3 gives the results in Table 4.
+The statistical agency then publishes the data product in Table~\ref{resultssmall} based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy.
 
-\begin{table}[t]
-\caption{Tabulation Key}\label{tab3}
+Retabulating these results in a numerical format with the keys in Table~\ref{tabulationkey} gives the results in Table~\ref{resultsencodedsmall}.
+
+\begin{table*}
+\begin{minipage}[t]{\columnwidth}
+\begin{tabular}{rlll}
+Age & Sex & Race & Gen \\
+\hline
+55 & Female & White & Grandparent\\
+24 & Male & White & Parent\\
+28 & Female & Black & Parent\\
+5 & Female & Black & Child\\
+8 & Male & White & Child\\
+\\
+\\
+\\
+\\
+\\
+\hline
+\end{tabular}
+\caption{Sample survey responses for a single fictional household (Not published)}\label{groundtruthsmall}
+\end{minipage}
+\hspace{\columnsep}
+\begin{minipage}[t]{\columnwidth}
+\begin{tabular}{llS[table-format=2.2]}
+Group & Number & \multicolumn{1}{c}{Average Age} \\
+\hline
+Individuals & 5 & 24 \\
+Males & 2 & 16 \\
+Females & 3 & 29.33 \\
+Parents & 2 & 26 \\
+Grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Children & 2 & 6.5 \\
+Whites & 3 & 29 \\
+Blacks & 2 & 16.5 \\
+Households & 1 & 24 \\
+\\
+\hline
+\end{tabular}
+\caption{Published sample statistical findings for the fictional household in Table~\ref{groundtruthsmall}}\label{resultssmall}
+\end{minipage}
+\end{table*}
+
+\begin{table}
 \begin{tabular}{c|c}
-\hline\\[-1.5ex]
-Key & Value \\[0.5ex]
-\hline\\[-1.5ex]
-Male & 0 \\[0.5ex]
-Female & 1 \\[0.5ex]
-White & 0 \\[0.5ex]
-Black & 1 \\[0.5ex]
-Child & 0 \\[0.5ex]
-Parent & 1 \\[0.5ex]
-Grandparent & 2 \\[0.5ex]
+Key & Value \\
+\hline
+Male & 0 \\
+Female & 1 \\
+White & 0 \\
+Black & 1 \\
+Child & 0 \\
+Parent & 1 \\
+Grandparent & 2 \\
 \hline
 \end{tabular}
+\caption{Tabulation key}\label{tabulationkey}
 \end{table}
 
 \begin{table}[t]
-\caption{Encoded Published Survey Results}\label{tab4}
 \begin{tabular}{c|c|c|c|c|c}
-\hline\\[-1.5ex]
-ID & Household & Age & Sex & Race & Generation \\[0.5ex]
-\hline\\[-1.5ex]
-1 & 1 & 24 & 0 & 0 & 1  \\[0.5ex]
-2 & 1 & 28 & 1 & 1 & 1  \\[0.5ex]
-3 & 1 & 55 & 1 & 0 & 2  \\[0.5ex]
-4 & 1 & 5 & 1 & 1 & 0  \\[0.5ex]
-5 & 1 & 8 & 0 & 0 & 0  \\[0.5ex]
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & 1 & 24 & 0 & 0 & 1  \\
+2 & 1 & 28 & 1 & 1 & 1  \\
+3 & 1 & 55 & 1 & 0 & 2  \\
+4 & 1 & 5 & 1 & 1 & 0  \\
+5 & 1 & 8 & 0 & 0 & 0  \\
 \hline
 \end{tabular}
+\caption{Encoded published survey results}\label{resultsencodedsmall}
 \end{table}
 
 
-The data in Table 4 is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 25 unknowns given in Table 5.
+The data in Table~\ref{resultsencodedsmall} is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall}.
 
 \begin{table}[t]
-\caption{DRA Unknowns}\label{tab5}
 \begin{tabular}{c|c|c|c|c|c}
-\hline\\[-1.5ex]
-ID & Household & Age & Sex & Race & Generation \\[0.5ex]
-\hline\\[-1.5ex]
-1 & H1 & A1 & S1 & R1 & G1  \\[0.5ex]
-2 & H2 & A2 & S2 & R2 & G2  \\[0.5ex]
-3 & H3 & A3 & S3 & R3 & G3  \\[0.5ex]
-4 & H4 & A4 & S4 & R4 & G4  \\[0.5ex]
-5 & H5 & A5 & S5 & R5 & G5  \\[0.5ex]
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & H1 & A1 & S1 & R1 & G1  \\
+2 & H2 & A2 & S2 & R2 & G2  \\
+3 & H3 & A3 & S3 & R3 & G3  \\
+4 & H4 & A4 & S4 & R4 & G4  \\
+5 & H5 & A5 & S5 & R5 & G5  \\
 \hline
 \end{tabular}
+\caption{DRA unknowns}\label{unknownssmall}
 \end{table}
 
 The reconstruction attack works by identifying constraint
 equations given by the data table. Constraint equations are  mathematical formulae representing rules that the ground truth satisfies. For example, we have the
 following statistic:
-\begin{verbatim}
-Individuals: 9, 27.44
-\end{verbatim}
 
-This can be written as a linear constraint equation using the symbols for age, A1...10 given in Table 5: \footnote{Multiplication by 100 is used to avoid floating-point rounding errors.}
-\[\frac{100(A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9)}{9} = 2744\]
+\textit{Individuals: Number = 5, Average Age = 24}
 
-This equation is in 9 unknowns, and so is unsolvable alone.
-However, the attacker can write more constraint equations.
+
+This can be written as a linear constraint equation using the symbols for age, $A1...A5$ given in Table~\ref{unknownssmall}:
+\[\frac{A1 + A2 + A3 + A4 + A5}{5} = 24\]
+
+This equation is in 5 unknowns, and so has many possible solutions alone.
+However, the attacker can write more constraint equations to further constrain the values of the unknowns.
 Note that the Boolean expression $(A == B)$ is True if $A = B$ and False otherwise.
 
-\begin{verbatim}
-Grandparents: 1, XXX
-\end{verbatim}
+
+\textit{Number of Grandparents: 1}
+
 
 
 Becomes:
 \begin{align*}
-& (G1==2) + (G2==2) + (G3==2) + (G4==2) + \\
-& (G5==2)+ (G6==2) + (G7==2) +\\
-& (G8==2) + (G9==2) = 1
+& (G1==2) + (G2==2) + (G3==2) + \\
+& (G4==2) + (G5==2) = 1
 \end{align*}
 
-\begin{verbatim}
-Children 0-12: 2, 6.5
-\end{verbatim}
+
+\textit{Children: Number = 2, Average Age = 6.5}
+
 
 Becomes the following two equations:
 
 \begin{align*}
 & (G1==0) + (G2==0) + (G3==0)+\\
-& (G4==0)+  (G5==0) + (G6==0) +\\
-& (G7==0) + (G8==0) + G9==0) = 2
+& (G4==0)+  (G5==0) = 2
 \end{align*}
 \begin{align*}
 & (A1 * (G1==0) + A2 * (G2==0) + A3 * (G3==0) +\\
-& A4 * (G4==0) +  A5 * (G5==0) + A6 * (G6==0) + \\
-& A7 * (G7==0) + A8 * (G8==0) + A9 * (G9==0)) = 13
+& A4 * (G4==0) +  A5 * (G5==0)) = 13
 \end{align*}
 Once the attacker has converted all the published statistics
-into equations like the ones above, the equations together form a system of many equations in 45 unknowns. This system has one 'true' solution, equivalent to the
+into equations like the ones above, the equations together form a system of many equations in 25 unknowns. This system has one 'true' solution, equivalent to the
 ground truth, and possibly many other 'false' solutions, which fit the constraints but are not equivalent to the ground truth.
 The \textit{solution universe}, the set of all solutions that fit the encoded set of constraints, is originally potentially  quite large, containing many false solutions along with the true solution.
 However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
@@ -216,7 +218,7 @@ system of constraint equations are:
 
 \item \textbf{SAT Solvers} - applying programs that quickly solve Boolean algebra problems.\\
 
-\item \textbf{Optimization} -  using optimization software such as IBM's CPLEX to solve systems of linear constraints.
+\item \textbf{Optimization} -  using optimization software such as IBM's CPLEX to solve systems of constraints.
 
 \end{enumerate}
 
@@ -224,93 +226,101 @@ For large data sets such as the U.S. Census, performing a brute-force attack is 
 
 \section{Revisiting the Example}
 
-In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new set of responses to the survey given earlier.
+In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new, larger set of responses to the survey given earlier.
 
-The ground truth responses from two new households are given below in Table 6.
-\begin{table}[b]
-\caption{Survey Results}\label{tab6}
+The ground truth responses from two new households are given in Table~\ref{resultsbig}.
+\begin{table}
 \begin{tabular}{c|c|c|c|c|c}
-\hline\\[-1.5ex]
-ID & Household & Age & Sex & Race & Generation \\[0.5ex]
-\hline\\[-1.5ex]
-1 & 1 & 80 & 1 & 1 & 2  \\[0.5ex]
-2 & 1 & 40 & 0 & 0 & 1  \\[0.5ex]
-3 & 1 & 70 & 1 & 0 & 2  \\[0.5ex]
-4 & 1 & 30 & 1 & 1 & 1  \\[0.5ex]
-5 & 1 & 90 & 0 & 0 & 2  \\[0.5ex]
-6 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
-7 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
-8 & 2 & 10 & 1 & 0 & 0  \\[0.5ex]
-9 & 2 & 40 & 1 & 0 & 1 \\[0.5ex]
-10 & 2 & 20 & 0 & 1 & 1 \\[0.5ex]
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & 1 & 80 & 1 & 1 & 2  \\
+2 & 1 & 40 & 0 & 0 & 1  \\
+3 & 1 & 70 & 1 & 0 & 2  \\
+4 & 1 & 30 & 1 & 1 & 1  \\
+5 & 1 & 90 & 0 & 0 & 2  \\
+6 & 2 & 10 & 0 & 1 & 0  \\
+7 & 2 & 10 & 0 & 1 & 0  \\
+8 & 2 & 10 & 1 & 0 & 0  \\
+9 & 2 & 40 & 1 & 0 & 1 \\
+10 & 2 & 20 & 0 & 1 & 1 \\
 \hline
 \end{tabular}
+\caption{Survey results}\label{resultsbig}
 \end{table}
 
-The statistical agency publishes the statistics in Table 7 after processing the ground truth responses(SHOULD WE SHOW ALL CONSTRAINT STATS OR JUST A SAMPLE?).
+The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
 
-\begin{table}[b]
-\caption{Data Publication}\label{tab7}
-\begin{tabular}{ccc}
-\hline\\[-1.5ex]
-Group & Number & Average Age \\[0.5ex]
-\hline\\[-1.5ex]
-Individuals & 10 & 40 \\[0.5ex]
-Males & 5 & 34 \\[0.5ex]
-Females & 5 & 46 \\[0.5ex]
-Whites & 5 & 50 \\[0.5ex]
-Blacks & 5 & 30 \\[0.5ex]
-\hline\\[-1.5ex]
-Children (0-12) & 3 & 10 \\[0.5ex]
-White children & 1 & --- \\[0.5ex]
-Black children & 2 & 10 \\[0.5ex]
-\hline\\[-1.5ex]
-Parents & 4 & 32.5 \\[0.5ex]
-Male parents & 2 & 30 \\[0.5ex]
-Female parents & 2 & 35 \\[0.5ex]
-Parents over 40 & 0 & N/A \\[0.5ex]
-\hline\\[-1.5ex]
-Grandparents & 3 & 80 \\[0.5ex]
-White grandparents & 2 & 80 \\[0.5ex]
-Black grandparents & 1 & --- \\[0.5ex]
-Male grandparents & 1 & --- \\[0.5ex]
-Female grandparents & 2 & 75 \\[0.5ex]
-\hline\\[-1.5ex]
-Households & 2 & 40 \\[0.5ex]
-Households with 3+ generations & 0 & N/A \\[0.5ex]
-Single-parent households & 0 & N/A \\[0.5ex]
-Childless households & 1 & --- \\[0.5ex]
-Interracial married couples & 2 & 32.5 \\[0.5ex]
-Same-sex married couples & 0 & N/A \\[0.5ex]
-Households $\geq 40\% $ female & 2 & 32.5 \\[0.5ex]
-Households $\geq 40\% $ black & 2 & 32.5 \\[0.5ex]
+\begin{table}
+\begin{tabular}{c|c|c}
+Group & Number & Average Age \\
+\hline
+Individuals & 10 & 40 \\
+Males & 5 & 34 \\
+Females & 5 & 46 \\
+Whites & 5 & 50 \\
+Blacks & 5 & 30 \\
+\hline
+Children (0-12) & 3 & 10 \\
+White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Black children & 2 & 10 \\
+\hline
+Parents & 4 & 32.5 \\
+Male parents & 2 & 30 \\
+Female parents & 2 & 35 \\
+Parents over 40 & 0 & N/A \\
+\hline
+Grandparents & 3 & 80 \\
+White grandparents & 2 & 80 \\
+Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Female grandparents & 2 & 75 \\
+\hline
+Households & 2 & 40 \\
+Tri-generational households & 0 & N/A \\
+Single-parent households & 0 & N/A \\
+Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Interracial married couples & 2 & 32.5 \\
+Same-sex married couples & 0 & N/A \\
+Households $\geq 40\% $ female & 2 & 40 \\
+Households $\geq 40\% $ black & 2 & 40 \\
 
 \hline
 \end{tabular}
+\caption{Data publication}\label{publishedstatsbig}
 \end{table}
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
-called PicoSAT written in C. Output is given from the Java program Sugar, which wraps PicoSAT for usability improvements. Output is given in Table 8 and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table 6, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35.51 seconds.
+called PicoSAT written in C. Input and output is given to and from the open-source Java program Sugar \cite{sugar}, which wraps SAT solvers for usability improvements. In Sugar, constraints are given to the SAT solver through \textit{s-expressions}, which are mathematical expressions written in a special nested prefix form. For example, the constraint "Average total age (in a population of size 5): 40" is encoded as the following s-expression:
 
-\begin{table}[b]
-\caption{Sugar Output}\label{tab8}
+(= (/ (+ A1 A2 A3 A4 A5) 5) 40)
+
+S-expressions are evaluated from the innermost parentheses to the outermost, with the operator at the left of the parenthetic expression being applied to the rest of the arguments in that expression. The above expression is evaluated using the following steps:
+\begin{enumerate}
+    \item Take the sum of variables A1...A5.
+    \item Divide the result of Step 1 by 5.
+    \item The result of Step 2 must equal 40.
+\end{enumerate}
+
+Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35.51 seconds.
+
+\begin{table}
 \begin{tabular}{c|c|c|c|c|c}
-\hline\\[-1.5ex]
-ID & Household & Age & Sex & Race & Generation \\[0.5ex]
-\hline\\[-1.5ex]
-1 & 2 & 10 & 1 & 0 & 0  \\[0.5ex]
-2 & 2 & 20 & 0 & 1 & 1  \\[0.5ex]
-3 & 1 & 30 & 1 & 1 & 1  \\[0.5ex]
-4 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
-5 & 2 & 40 & 1 & 0 & 1  \\[0.5ex]
-6 & 2 & 10 & 0 & 1 & 0  \\[0.5ex]
-7 & 1 & 40 & 0 & 0 & 1  \\[0.5ex]
-8 & 1 & 80 & 1 & 1 & 2  \\[0.5ex]
-9 & 1 & 90 & 0 & 0 & 2 \\[0.5ex]
-10 & 1 & 70 & 1 & 0 & 2 \\[0.5ex]
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & 2 & 10 & 1 & 0 & 0  \\
+2 & 2 & 20 & 0 & 1 & 1  \\
+3 & 1 & 30 & 1 & 1 & 1  \\
+4 & 2 & 10 & 0 & 1 & 0  \\
+5 & 2 & 40 & 1 & 0 & 1  \\
+6 & 2 & 10 & 0 & 1 & 0  \\
+7 & 1 & 40 & 0 & 0 & 1  \\
+8 & 1 & 80 & 1 & 1 & 2  \\
+9 & 1 & 90 & 0 & 0 & 2 \\
+10 & 1 & 70 & 1 & 0 & 2 \\
 \hline
 \end{tabular}
+\caption{Sugar output when run on the encoded statistics in Appendix 4}\label{sugarbig}
 \end{table}
 
 \pagebreak
@@ -319,22 +329,64 @@ ID & Household & Age & Sex & Race & Generation \\[0.5ex]
 As demonstrated above, new techniques must be developed in
 order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise addition, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then publishes that number, there are now five elements in the solution universe for this value, where without noise addition there would be only one. Adding noise from a more complex distribution such as the Gaussian or Laplace distributions adds even more elements to the solution universe, since they are not discrete distributions like the example above. Noise addition allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
 
-Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism CITATION HERE.
+Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism \cite{Dwork:2006:CNS:2180286.2180305}
 The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise addition without worrying that his privacy will be compromised by his choice to respond.
+
+To demonstrate how effective adding Laplace noise is against the DRA, we reconsider the example from the previous section. This time, the statistical agency applies the Laplace transformation with mean 0 and exponential decay 3 to the survey responses to the ages before publishing any statistical products. The new published data product, analogous to Table~\ref{publishedstatsbig}, is shown in Table~\ref{publishedstatsnoise}.
+
+\begin{table}
+\begin{tabular}{c|c|c}
+Group & Number & Average Age \\
+\hline
+Individuals & 10 & 38.57 \\
+Males & 5 & 33.21 \\
+Females & 5 & 43.92 \\
+Whites & 5 & 47.82 \\
+Blacks & 5 & 29.31 \\
+\hline
+Children (0-12) & 3 & 8.50 \\
+White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Black children & 2 & 8.75 \\
+\hline
+Parents & 4 & 31.41 \\
+Male parents & 2 & 29.77 \\
+Female parents & 2 & 33.06 \\
+Parents over 40 & 0 & N/A \\
+\hline
+Grandparents & 3 & 78.18 \\
+White grandparents & 2 & 77.64 \\
+Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Female grandparents & 2 & 72.76 \\
+\hline
+Households & 2 & 38.57 \\
+Tri-generational households & 0 & N/A \\
+Single-parent households & 0 & N/A \\
+Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Interracial married couples & 2 & 31.41 \\
+Same-sex married couples & 0 & N/A \\
+Households $\geq 40\% $ female & 2 & 38.57 \\
+Households $\geq 40\% $ black & 2 & 38.57 \\
+
+\hline
+\end{tabular}
+\caption{Data publication with added Laplace noise}\label{publishedstatsnoise}
+\end{table}
+It is important to note that the addition of the noise did not significantly impact the reported statistics, thus preserving their utility to nonintrusive users. However, when the attacker attempts to perform the DRA using the same process as before, Sugar returns "Unsatisfiable". The noise addition has defeated the DRA, and the statistical agency has upheld its legal obligation to protect respondent privacy.
 
 \section{Problem Analysis}
 
-With the dramatic improvement in the efficiency of optimizers and SAT solvers in the last decade, the database reconstruction attack is no longer a solely theoretical danger. The vast amount of data products the Census publishes each year gives a determined and informed attacker more than enough constraints to reconstruct some or all of a target database and breach the privacy of millions of people. Although the Census Bureau's current disclosure avoidance technique suite is often sufficient to defend against a cursory attempt at an identification attack, we have demonstrated through attack simulations that cell suppression and bucketing are not completely against the power of more sophisticated forms of attack.
+With the dramatic improvement in the efficiency of optimizers and SAT solvers in the last decade, the database reconstruction attack is no longer a solely theoretical danger. The vast amount of data products the Census publishes each year gives a determined and informed attacker more than enough constraints to reconstruct some or all of a target database and breach the privacy of millions of people. Although the Census Bureau's current disclosure avoidance technique suite is often sufficient to defend against a cursory attempt at an identification attack, we have demonstrated through attack simulations that cell suppression and grouping are not completely against the power of more sophisticated forms of attack.
 
-The most effective technique for defending against a DRA is the addition of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In addition to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise addition a required part of the pre-publication disclosure review process in order to protect respondents from the database reconstruction attack.
+The most effective technique for defending against a DRA is the addition of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In addition to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise addition a required part of the pre-publication disclosure review process in order to protect respondent privacy.
 
 \section{Appendices}
 
-\subsection{Appendix 1: SAT and SAT Solvers}
+\subsection{SAT and SAT Solvers}
 
-The Boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete.CITATION COOK-LEVIN HERE This problem asks, for a given Boolean formula, whether replacing each variable with either True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
+The Boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete \cite{cooklevin}. This problem asks, for a given Boolean formula, whether replacing each variable with either True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
 
-Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL works by the following process:
+Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL works by the following process \cite{cdcl}:
 
 \begin{enumerate}
 
@@ -349,9 +401,9 @@ This process is much faster at solving SAT problems than previous processes used
 
 There are a wide variety of SAT solvers available to the public for minimal or no cost. Although a SAT solver requires the user to translate the problem into Boolean formulae before use,  programs such as Naoyuki Tamura's Sugar facilitate this process by translating user-input mathematical and English constraints into Boolean formulae automatically.
 
-\subsection{Appendix 2: Scalability and The Zebra Problem}
+\subsection{Scalability and The Zebra Problem}
 
-To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 Boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem CITATION HERE.
+To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 Boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem \cite{zebra}.
 This problem is appropriate because its structure closely models the current Census data collection and publication process. The writer receives the survey answers from the respondents, redacts much of the information to avoid giving away PII, and then publishes a data product.
 
 The size of this problem more closely approximates the number
@@ -389,9 +441,9 @@ Just as demonstrated in the previous example, this problem
 can be encoded as a large set of Boolean equations. The problem
 gives 15 explicit constraints which allow the attacker to generate more constraints, and each of the combinations of variables (five people, five houses, five drinks, etc.) can be represented as a Boolean variable, for example, "The Norwegian lives in the red house == False"
 
-Once the attacker has generated every constraint possible from the given information, he can input the constraints into a SAT solver. In this example, we run the zebra problem through PycoSAT, a free Python wrapper of PicoSAT.
+Once the attacker has generated every constraint possible from the given information, he can input the constraints into a SAT solver. In this example, we run the zebra problem's CNF encoding through PycoSAT, a free Python wrapper of PicoSAT.
 
-The results:
+The program identifies that the variables "Norwegian drinks water" and the "Japanese owns the zebra" are true in only 0.00046s.
 
 \begin{verbatim}
 Solution:  [-1, -2, 3, -4, -5, -6,
@@ -430,18 +482,597 @@ cell suppression as a method for protecting PII against
 a SAT solver-driven DRA. This problem
 contained far more suppressed cells than unsuppressed ones, which is not realistic given that a real publishing agency would want to minimize the number of suppressed cells. Despite this over-suppression, the SAT solver was still able to easily solve for the values of all cells in the example.
 
-\subsection{Appendix 3: Linear Optimizers}
+\subsection{Optimizers}
 
+The goal of optimization software is to minimize or maximize the value of a function in any number of variables given a set of constraints on the values of those variables.\cite{lpintro} This function, known as the \textit{objective function}, is a function that a certain number of inputs and returns a single output, or, formally, is a function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$.
 
-\begin{thebibliography}{1}
-\bibitem{diffprivacy} Cynthia Dwork, Aaron Roth.
-\textit{The Algorithmic Foundations of Differential Privacy}, Foundations and Trends in Theoretical Computer Science, Volume 9, Nos. 3--4, pp. 211-407, 2014
-\bibitem{sugar} Naoyuki Tamura, Akiko Taga, Satoshi Kitagawa, Mutsunori Banbara.
-\textit{Compiling Finite Linear CSP into SAT}, Constraints, Volume 14, No. 2, pp.254--272, 2009.
-\bibitem{zebra} Rina Dechter.
-\textit{Enhancement Schemes for Constraint Processing: Backjumping, Learning, and Cutset Decomposition}, Artificial\\ Intelligence, No. 41, pp. 273-312, 1990
-\bibitem{blank}
-\end{thebibliography}
+For example, imagine a fast food restaurant owner wants to maximize his profits by deciding how many hot dogs and tacos to produce each day. If the price of a hot dog is \$5, and the price of a taco is \$3, then the owner's objective function can be written as, "Maximize profit where profit = 5H + 7T" where H is the number of hot dogs sold and T the number of tacos sold. Constraints the owner may face include the costs to produce a hot dog or taco, the maximum number of hours the restaurant's employees can work, and the maximum amount of raw food ingredients the restaurant can obtain in a day. If a hot dog or taco can be produced in 5 minutes, and state law mandates that an employee can only work 8 hours a day maximum, then a constraint the owner faces can be written as $\frac{H}{12} + \frac{T}{12} \leq 8$. If a hot dog costs \$1 to make, a taco costs \$0.50 to make, and the owner can only purchase up to \$80 worth of ingredients per day, then another constraint is $H + 0.5T = 80$.
+
+The owner can draw his objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}. From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
+
+In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has three constraints [x, y, z] in terms of the decision variables, then the objective function would be "Maximize a if a = "x is met" + "y is met" + "z is met", where "x is met" returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher 'score' a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
+
+\subsection{Sugar Input}
+
+Sugar input is given in a standard Constraint Satisfaction Problem (CSP) file format. A constraint must be given on a single line of the file, but here we separate most constraints into multiple lines for readability. Constraint equations are separated by comments describing what statistics they encode.
+
+Input for the mock survey from Section 4 is as follows:
+
+\begin{verbatim}
+(int H1 1 2)
+(int H2 1 2)
+(int H3 1 2)
+(int H4 1 2)
+(int H5 1 2)
+(int H6 1 2)
+(int H7 1 2)
+(int H8 1 2)
+(int H9 1 2)
+(int H10 1 2)
+(int A1 1 90)
+(int A2 1 90)
+(int A3 1 90)
+(int A4 1 90)
+(int A5 1 90)
+(int A6 1 90)
+(int A7 1 90)
+(int A8 1 90)
+(int A9 1 90)
+(int A10 1 90)
+(int S1 0 1)
+(int S2 0 1)
+(int S3 0 1)
+(int S4 0 1)
+(int S5 0 1)
+(int S6 0 1)
+(int S7 0 1)
+(int S8 0 1)
+(int S9 0 1)
+(int S10 0 1)
+(int R1 0 1)
+(int R2 0 1)
+(int R3 0 1)
+(int R4 0 1)
+(int R5 0 1)
+(int R6 0 1)
+(int R7 0 1)
+(int R8 0 1)
+(int R9 0 1)
+(int R10 0 1)
+(int G1 0 2)
+(int G2 0 2)
+(int G3 0 2)
+(int G4 0 2)
+(int G5 0 2)
+(int G6 0 2)
+(int G7 0 2)
+(int G8 0 2)
+(int G9 0 2)
+(int G10 0 2)
+;
+;avg age total
+(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 10) 40)
+;household sizes
+(<= (+ (if (= H1 1) 1 0) (if (= H2 1) 1 0)
+(if (= H3 1) 1 0) (if (= H4 1) 1 0)
+(if (= H5 1) 1 0) (if (= H6 1) 1 0)
+(if (= H7 1) 1 0) (if (= H8 1) 1 0)
+(if (= H9 1) 1 0) (if (= H10 1) 1 0) ) 5)
+(>= (+ (if (= H1 1) 1 0) (if (= H2 1) 1 0)
+(if (= H3 1) 1 0) (if (= H4 1) 1 0)
+(if (= H5 1) 1 0) (if (= H6 1) 1 0)
+(if (= H7 1) 1 0) (if (= H8 1) 1 0)
+(if (= H9 1) 1 0) (if (= H10 1) 1 0) ) 5)
+;number of children
+(= (+ (if (= G1 0) 1 0) (if (= G2 0) 1 0)
+(if (= G3 0) 1 0) (if (= G4 0) 1 0)
+(if (= G5 0) 1 0) (if (= G6 0) 1 0)
+(if (= G7 0) 1 0) (if (= G8 0) 1 0)
+(if (= G9 0) 1 0) (if (= G10 0) 1 0) ) 3)
+;number of parents
+(= (+ (if (= G1 1) 1 0) (if (= G2 1) 1 0)
+(if (= G3 1) 1 0) (if (= G4 1) 1 0)
+(if (= G5 1) 1 0) (if (= G6 1) 1 0)
+(if (= G7 1) 1 0) (if (= G8 1) 1 0)
+(if (= G9 1) 1 0) (if (= G10 1) 1 0) ) 4)
+;number of grandparents
+(= (+ (if (= G1 2) 1 0) (if (= G2 2) 1 0)
+(if (= G3 2) 1 0) (if (= G4 2) 1 0)
+(if (= G5 2) 1 0) (if (= G6 2) 1 0)
+(if (= G7 2) 1 0) (if (= G8 2) 1 0)
+(if (= G9 2) 1 0) (if (= G10 2) 1 0) ) 3)
+;number of males
+(= (+ (if (= S1 0) 1 0) (if (= S2 0) 1 0)
+(if (= S3 0) 1 0) (if (= S4 0) 1 0)
+(if (= S5 0) 1 0) (if (= S6 0) 1 0)
+(if (= S7 0) 1 0) (if (= S8 0) 1 0)
+(if (= S9 0) 1 0) (if (= S10 0) 1 0) ) 5)
+;number of females
+(= (+ (if (= S1 1) 1 0) (if (= S2 1) 1 0)
+(if (= S3 1) 1 0) (if (= S4 1) 1 0)
+(if (= S5 1) 1 0) (if (= S6 1) 1 0)
+(if (= S7 1) 1 0) (if (= S8 1) 1 0)
+(if (= S9 1) 1 0) (if (= S10 1) 1 0) ) 5)
+;number blacks
+(= (+ (if (= R1 1) 1 0) (if (= R2 1) 1 0)
+(if (= R3 1) 1 0) (if (= R4 1) 1 0)
+(if (= R5 1) 1 0) (if (= R6 1) 1 0)
+(if (= R7 1) 1 0) (if (= R8 1) 1 0)
+(if (= R9 1) 1 0) (if (= R10 1) 1 0) ) 5)
+;number whites
+(= (+ (if (= R1 0) 1 0) (if (= R2 0) 1 0)
+(if (= R3 0) 1 0) (if (= R4 0) 1 0)
+(if (= R5 0) 1 0) (if (= R6 0) 1 0)
+(if (= R7 0) 1 0) (if (= R8 0) 1 0)
+(if (= R9 0) 1 0) (if (= R10 0) 1 0) ) 5)
+;avg age blacks
+(= (/ (* (+ (* A1 (if (= R1 1) 1 0))
+(* A2 (if (= R2 1) 1 0))
+(* A3 (if (= R3 1) 1 0))
+(* A4 (if (= R4 1) 1 0))
+(* A5 (if (= R5 1) 1 0))
+(* A6 (if (= R6 1) 1 0))
+(* A7 (if (= R7 1) 1 0))
+(* A8 (if (= R8 1) 1 0))
+(* A9 (if (= R9 1) 1 0))
+(* A10 (if (= R10 1) 1 0))) 10) 5) 300)
+;avg age whites
+(= (/ (* (+ (* A1 (if (= R1 0) 1 0))
+(* A2 (if (= R2 0) 1 0))
+(* A3 (if (= R3 0) 1 0))
+(* A4 (if (= R4 0) 1 0))
+(* A5 (if (= R5 0) 1 0))
+(* A6 (if (= R6 0) 1 0))
+(* A7 (if (= R7 0) 1 0))
+(* A8 (if (= R8 0) 1 0))
+(* A9 (if (= R9 0) 1 0))
+(* A10 (if (= R10 0) 1 0)))  10) 5) 500)
+;avg age children
+(= (/ (* (+ (* A1 (if (= G1 0) 1 0))
+(* A2 (if (= G2 0) 1 0))
+(* A3 (if (= G3 0) 1 0))
+(* A4 (if (= G4 0) 1 0))
+(* A5 (if (= G5 0) 1 0))
+(* A6 (if (= G6 0) 1 0))
+(* A7 (if (= G7 0) 1 0))
+(* A8 (if (= G8 0) 1 0))
+(* A9 (if (= G9 0) 1 0))
+(* A10 (if (= G10 0) 1 0)) ) 10) 3) 100)
+;avg age parents
+(= (/ (* (+ (* A1 (if (= G1 1) 1 0))
+(* A2 (if (= G2 1) 1 0))
+(* A3 (if (= G3 1) 1 0))
+(* A4 (if (= G4 1) 1 0))
+(* A5 (if (= G5 1) 1 0))
+(* A6 (if (= G6 1) 1 0))
+(* A7 (if (= G7 1) 1 0))
+(* A8 (if (= G8 1) 1 0))
+(* A9 (if (= G9 1) 1 0))
+(* A10 (if (= G10 1) 1 0))) 10) 4) 325)
+;avg age grandparents
+(= (/ (* (+ (* A1 (if (= G1 2) 1 0))
+(* A2 (if (= G2 2) 1 0))
+(* A3 (if (= G3 2) 1 0))
+(* A4 (if (= G4 2) 1 0))
+(* A5 (if (= G5 2) 1 0))
+(* A6 (if (= G6 2) 1 0))
+(* A7 (if (= G7 2) 1 0))
+(* A8 (if (= G8 2) 1 0))
+(* A9 (if (= G9 2) 1 0))
+(* A10 (if (= G10 2) 1 0)) ) 10) 3) 800)
+;avg age males
+(= (/ (* (+ (* A1 (if (= S1 0) 1 0))
+(* A2 (if (= S2 0) 1 0))
+(* A3 (if (= S3 0) 1 0))
+(* A4 (if (= S4 0) 1 0))
+(* A5 (if (= S5 0) 1 0))
+(* A6 (if (= S6 0) 1 0))
+(* A7 (if (= S7 0) 1 0))
+(* A8 (if (= S8 0) 1 0))
+(* A9 (if (= S9 0) 1 0))
+(* A10 (if (= S10 0) 1 0)) ) 10) 5) 340)
+;avg age females
+(= (/ (* (+ (* A1 (if (= S1 1) 1 0))
+(* A2 (if (= S2 1) 1 0))
+(* A3 (if (= S3 1) 1 0))
+(* A4 (if (= S4 1) 1 0))
+(* A5 (if (= S5 1) 1 0))
+(* A6 (if (= S6 1) 1 0))
+(* A7 (if (= S7 1) 1 0))
+(* A8 (if (= S8 1) 1 0))
+(* A9 (if (= S9 1) 1 0))
+(* A10 (if (= S10 1) 1 0)) ) 10) 5) 460)
+;number of households
+(nvalue 2 (H1 H2 H3 H4 H5 H6 H7 H8 H9 H10))
+;number of male children
+(= (+ (if (and (= G1 0) (= S1 0 )) 1 0)
+(if (and (= G2 0) (= S2 0 )) 1 0)
+(if (and (= G3 0) (= S3 0 )) 1 0)
+(if (and (= G4 0) (= S4 0 )) 1 0)
+(if (and (= G5 0) (= S5 0 )) 1 0)
+(if (and (= G6 0) (= S6 0 )) 1 0)
+(if (and (= G7 0) (= S7 0 )) 1 0)
+(if (and (= G8 0) (= S8 0 )) 1 0)
+(if (and (= G9 0) (= S9 0 )) 1 0)
+(if (and (= G10 0) (= S10 0 )) 1 0) ) 2)
+;number of female children
+(= (+ (if (and (= G1 0) (= S1 1 )) 1 0)
+(if (and (= G2 0) (= S2 1 )) 1 0)
+(if (and (= G3 0) (= S3 1 )) 1 0)
+(if (and (= G4 0) (= S4 1 )) 1 0)
+(if (and (= G5 0) (= S5 1 )) 1 0)
+(if (and (= G6 0) (= S6 1 )) 1 0)
+(if (and (= G7 0) (= S7 1 )) 1 0)
+(if (and (= G8 0) (= S8 1 )) 1 0)
+(if (and (= G9 0) (= S9 1 )) 1 0)
+(if (and (= G10 0) (= S10 1 )) 1 0) ) 1)
+;number of children 0-12: 3
+(= (+ (if (and (>= A1 1) (<= A1 12)) 1 0)
+(if (and (>= A2 1) (<= A2 12)) 1 0)
+(if (and (>= A3 1) (<= A3 12)) 1 0)
+(if (and (>= A4 1) (<= A4 12)) 1 0)
+(if (and (>= A5 1) (<= A5 12)) 1 0)
+(if (and (>= A6 1) (<= A6 12)) 1 0)
+(if (and (>= A7 1) (<= A7 12)) 1 0)
+(if (and (>= A8 1) (<= A8 12)) 1 0)
+(if (and (>= A9 1) (<= A9 12)) 1 0)
+(if (and (>= A10 1) (<= A10 12)) 1 0) ) 3)
+;number of children 13-17: 0
+(= (+ (if (and (>= A1 13) (<= A1 17)) 1 0)
+(if (and (>= A2 13) (<= A2 17)) 1 0)
+(if (and (>= A3 13) (<= A3 17)) 1 0)
+(if (and (>= A4 13) (<= A4 17)) 1 0)
+(if (and (>= A5 13) (<= A5 17)) 1 0)
+(if (and (>= A6 13) (<= A6 17)) 1 0)
+(if (and (>= A7 13) (<= A7 17)) 1 0)
+(if (and (>= A8 13) (<= A8 17)) 1 0)
+(if (and (>= A9 13) (<= A9 17)) 1 0)
+(if (and (>= A10 13) (<= A10 17)) 1 0) ) 0)
+;avg age of children 0-12: 10
+(= (/ (* (+
+(* A1 (if (and (>= A1 1) (<= A1 12)) 1 0))
+(* A2 (if (and (>= A2 1) (<= A2 12)) 1 0))
+(* A3 (if (and (>= A3 1) (<= A3 12)) 1 0))
+(* A4 (if (and (>= A4 1) (<= A4 12)) 1 0))
+(* A5 (if (and (>= A5 1) (<= A5 12)) 1 0))
+(* A6 (if (and (>= A6 1) (<= A6 12)) 1 0))
+(* A7 (if (and (>= A7 1) (<= A7 12)) 1 0))
+(* A8 (if (and (>= A8 1) (<= A8 12)) 1 0))
+(* A9 (if (and (>= A9 1) (<= A9 12)) 1 0))
+(* A10 (if (and (>= A10 1) (<= A10 12)) 1 0)))
+10) 3) 100)
+;number of hh with 3 or more generations: 1
+(xor (nvalue 3 (G1 G2 G3 G4 G5))
+(nvalue 3(G6 G7 G8 G9 G10)))
+;number of male parents
+(= (+ (if (and (= G1 1) (= S1 0 )) 1 0)
+(if (and (= G2 1) (= S2 0 )) 1 0)
+(if (and (= G3 1) (= S3 0 )) 1 0)
+(if (and (= G4 1) (= S4 0 )) 1 0)
+(if (and (= G5 1) (= S5 0 )) 1 0)
+(if (and (= G6 1) (= S6 0 )) 1 0)
+(if (and (= G7 1) (= S7 0 )) 1 0)
+(if (and (= G8 1) (= S8 0 )) 1 0)
+(if (and (= G9 1) (= S9 0 )) 1 0)
+(if (and (= G10 1) (= S10 0 )) 1 0) ) 2)
+;number of female parents
+(= (+ (if (and (= G1 1) (= S1 1 )) 1 0)
+(if (and (= G2 1) (= S2 1 )) 1 0)
+(if (and (= G3 1) (= S3 1 )) 1 0)
+(if (and (= G4 1) (= S4 1 )) 1 0)
+(if (and (= G5 1) (= S5 1 )) 1 0)
+(if (and (= G6 1) (= S6 1 )) 1 0)
+(if (and (= G7 1) (= S7 1 )) 1 0)
+(if (and (= G8 1) (= S8 1 )) 1 0)
+(if (and (= G9 1) (= S9 1 )) 1 0)
+(if (and (= G10 1) (= S10 1 )) 1 0) ) 2)
+;number of single-parent households: 0
+(< (+ (if (and (= H1 1) (= G1 1)) 1 0)
+(if (and (= H2 1) (= G2 1)) 1 0)
+(if (and (= H3 1) (= G3 1)) 1 0)
+(if (and (= H4 1) (= G4 1)) 1 0)
+(if (and (= H5 1) (= G5 1)) 1 0)
+(if (and (= H6 1) (= G6 1)) 1 0)
+(if (and (= H7 1) (= G7 1)) 1 0)
+(if (and (= H8 1) (= G8 1)) 1 0)
+(if (and (= H9 1) (= G9 1)) 1 0)
+(if (and (= H10 1) (= G10 1)) 1 0) ) 3)
+(< (+ (if (and (= H1 2) (= G1 1)) 1 0)
+(if (and (= H2 2) (= G2 1)) 1 0)
+(if (and (= H3 2) (= G3 1)) 1 0)
+(if (and (= H4 2) (= G4 1)) 1 0)
+(if (and (= H5 2) (= G5 1)) 1 0)
+(if (and (= H6 2) (= G6 1)) 1 0)
+(if (and (= H7 2) (= G7 1)) 1 0)
+(if (and (= H8 2) (= G8 1)) 1 0)
+(if (and (= H9 2) (= G9 1)) 1 0)
+(if (and (= H10 2) (= G10 1)) 1 0) ) 3)
+;total number of black children: 2
+(= (+ (if (and (= G1 0) (= R1 1)) 1 0)
+(if (and (= G2 0) (= R2 1)) 1 0)
+(if (and (= G3 0) (= R3 1)) 1 0)
+(if (and (= G4 0) (= R4 1)) 1 0)
+(if (and (= G5 0) (= R5 1)) 1 0)
+(if (and (= G6 0) (= R6 1)) 1 0)
+(if (and (= G7 0) (= R7 1)) 1 0)
+(if (and (= G8 0) (= R8 1)) 1 0)
+(if (and (= G9 0) (= R9 1)) 1 0)
+(if (and (= G10 0) (= R10 1)) 1 0) ) 2)
+;total number of black females: 2
+(= (+ (if (and (= S1 1) (= R1 1)) 1 0)
+(if (and (= S2 1) (= R2 1)) 1 0)
+(if (and (= S3 1) (= R3 1)) 1 0)
+(if (and (= S4 1) (= R4 1)) 1 0)
+(if (and (= S5 1) (= R5 1)) 1 0)
+(if (and (= S6 1) (= R6 1)) 1 0)
+(if (and (= S7 1) (= R7 1)) 1 0)
+(if (and (= S8 1) (= R8 1)) 1 0)
+(if (and (= S9 1) (= R9 1)) 1 0)
+(if (and (= S10 1) (= R10 1)) 1 0) ) 2)
+;all households are at least 40% minority
+(>= (+ (if (and (= H1 1) (= R1 1)) 1 0)
+(if (and (= H2 1) (= R2 1)) 1 0)
+(if (and (= H3 1) (= R3 1)) 1 0)
+(if (and (= H4 1) (= R4 1)) 1 0)
+(if (and (= H5 1) (= R5 1)) 1 0)
+(if (and (= H6 1) (= R6 1)) 1 0)
+(if (and (= H7 1) (= R7 1)) 1 0)
+(if (and (= H8 1) (= R8 1)) 1 0)
+(if (and (= H9 1) (= R9 1)) 1 0)
+(if (and (= H10 1) (= R10 1)) 1 0) ) 2)
+(>= (+ (if (and (= H1 2) (= R1 1)) 1 0)
+(if (and (= H2 2) (= R2 1)) 1 0)
+(if (and (= H3 2) (= R3 1)) 1 0)
+(if (and (= H4 2) (= R4 1)) 1 0)
+(if (and (= H5 2) (= R5 1)) 1 0)
+(if (and (= H6 2) (= R6 1)) 1 0)
+(if (and (= H7 2) (= R7 1)) 1 0)
+(if (and (= H8 2) (= R8 1)) 1 0)
+(if (and (= H9 2) (= R9 1)) 1 0)
+(if (and (= H10 2) (= R10 1)) 1 0) ) 2)
+;all households are at least 40% female
+(>= (+ (if (and (= H1 1) (= S1 1)) 1 0)
+(if (and (= H2 1) (= S2 1)) 1 0)
+(if (and (= H3 1) (= S3 1)) 1 0)
+(if (and (= H4 1) (= S4 1)) 1 0)
+(if (and (= H5 1) (= S5 1)) 1 0)
+(if (and (= H6 1) (= S6 1)) 1 0)
+(if (and (= H7 1) (= S7 1)) 1 0)
+(if (and (= H8 1) (= S8 1)) 1 0)
+(if (and (= H9 1) (= S9 1)) 1 0)
+(if (and (= H10 1) (= S10 1)) 1 0) ) 2)
+(>= (+ (if (and (= H1 2) (= S1 1)) 1 0)
+(if (and (= H2 2) (= S2 1)) 1 0)
+(if (and (= H3 2) (= S3 1)) 1 0)
+(if (and (= H4 2) (= S4 1)) 1 0)
+(if (and (= H5 2) (= S5 1)) 1 0)
+(if (and (= H6 2) (= S6 1)) 1 0)
+(if (and (= H7 2) (= S7 1)) 1 0)
+(if (and (= H8 2) (= S8 1)) 1 0)
+(if (and (= H9 2) (= S9 1)) 1 0)
+(if (and (= H10 2) (= S10 1)) 1 0) ) 2)
+;number of households with
+same-sex married couples: 0
+(= 1 (+
+(if (and (= H1 1)
+(and (= G1 1) (= S1 0))) 1 0)
+(if (and (= H2 1)
+(and (= G2 1) (= S2 0))) 1 0)
+(if (and (= H3 1)
+(and (= G3 1) (= S3 0))) 1 0)
+(if (and (= H4 1)
+(and (= G4 1) (= S4 0))) 1 0)
+(if (and (= H5 1)
+(and (= G5 1) (= S5 0))) 1 0)
+(if (and (= H6 1)
+(and (= G6 1) (= S6 0))) 1 0)
+(if (and (= H7 1)
+(and (= G7 1) (= S7 0))) 1 0)
+(if (and (= H8 1)
+(and (= G8 1) (= S8 0))) 1 0)
+(if (and (= H9 1)
+(and (= G9 1) (= S9 0))) 1 0)
+(if (and (= H10 1)
+(and (= G10 1) (= S10 0)))
+1 0)))
+(= 1 (+ (if (and (= H1 2)
+(and (= G1 1) (= S1 0))) 1 0)
+(if (and (= H2 2)
+(and (= G2 1) (= S2 0))) 1 0)
+(if (and (= H3 2)
+(and (= G3 1) (= S3 0))) 1 0)
+(if (and (= H4 2)
+(and (= G4 1) (= S4 0))) 1 0)
+(if (and (= H5 2)
+(and (= G5 1) (= S5 0))) 1 0)
+(if (and (= H6 2)
+(and (= G6 1) (= S6 0))) 1 0)
+(if (and (= H7 2)
+(and (= G7 1) (= S7 0))) 1 0)
+(if (and (= H8 2)
+(and (= G8 1) (= S8 0))) 1 0)
+(if (and (= H9 2)
+(and (= G9 1) (= S9 0))) 1 0)
+(if (and (= H10 2)
+(and (= G10 1) (= S10 0))) 1 0)))
+;avg age of male parents: 30
+(= (/ (* (+ (* (if (and (= G1 1)
+(= S1 0)) 1 0) A1)
+(* (if (and (= G2 1)
+(= S2 0)) 1 0) A2)
+(* (if (and (= G3 1)
+(= S3 0)) 1 0) A3)
+(* (if (and (= G4 1)
+(= S4 0)) 1 0) A4)
+(* (if (and (= G5 1)
+(= S5 0)) 1 0) A5)
+(* (if (and (= G6 1)
+(= S6 0)) 1 0) A6)
+(* (if (and (= G7 1)
+(= S7 0)) 1 0) A7)
+(* (if (and (= G8 1)
+(= S8 0)) 1 0) A8)
+(* (if (and (= G9 1)
+(= S9 0)) 1 0) A9)
+(* (if (and (= G10 1)
+(= S10 0)) 1 0) A10)) 10) 2) 300)
+;avg age of female parents: 35
+(= (/ (* (+ (* (if (and (= G1 1)
+(= S1 1)) 1 0) A1)
+(* (if (and (= G2 1)
+(= S2 1)) 1 0) A2)
+(* (if (and (= G3 1)
+(= S3 1)) 1 0) A3)
+(* (if (and (= G4 1)
+(= S4 1)) 1 0) A4)
+(* (if (and (= G5 1)
+(= S5 1)) 1 0) A5)
+(* (if (and (= G6 1)
+(= S6 1)) 1 0) A6)
+(* (if (and (= G7 1)
+(= S7 1)) 1 0) A7)
+(* (if (and (= G8 1)
+(= S8 1)) 1 0) A8)
+(* (if (and (= G9 1)
+(= S9 1)) 1 0) A9)
+(* (if (and (= G10 1)
+(= S10 1)) 1 0) A10)) 10) 2) 350)
+;avg age of female grandparents: 75
+(= (/ (* (+ (* (if (and (= G1 2)
+(= S1 1)) 1 0) A1)
+(* (if (and (= G2 2) (= S2 1)) 1 0) A2)
+(* (if (and (= G3 2) (= S3 1)) 1 0) A3)
+(* (if (and (= G4 2) (= S4 1)) 1 0) A4)
+(* (if (and (= G5 2) (= S5 1)) 1 0) A5)
+(* (if (and (= G6 2) (= S6 1)) 1 0) A6)
+(* (if (and (= G7 2) (= S7 1)) 1 0) A7)
+(* (if (and (= G8 2) (= S8 1)) 1 0) A8)
+(* (if (and (= G9 2) (= S9 1)) 1 0) A9)
+(* (if (and (= G10 2) (= S10 1)) 1 0) A10))
+10) 2) 750)
+;number of parents over 40: 0
+(= 0 (+ (if (and(= G1 1) (> A1 40)) 1 0)
+(if (and(= G2 1) (> A2 40)) 1 0)
+(if (and(= G3 1) (> A3 40)) 1 0)
+(if (and(= G4 1) (> A4 40)) 1 0)
+(if (and(= G5 1) (> A5 40)) 1 0)
+(if (and(= G6 1) (> A6 40)) 1 0)
+(if (and(= G7 1) (> A7 40)) 1 0)
+(if (and(= G8 1) (> A8 40)) 1 0)
+(if (and(= G9 1) (> A9 40)) 1 0)
+(if (and(= G10 1) (> A10 40)) 1 0)))
+;number of children over 10: 0
+(= 0 (+ (if (and (= G1 0) (> A1 10)) 1 0)
+(if (and (= G2 0) (> A2 10)) 1 0)
+(if (and (= G3 0) (> A3 10)) 1 0)
+(if (and (= G4 0) (> A4 10)) 1 0)
+(if (and (= G5 0) (> A5 10)) 1 0)
+(if (and (= G6 0) (> A6 10)) 1 0)
+(if (and (= G7 0) (> A7 10)) 1 0)
+(if (and (= G8 0) (> A8 10)) 1 0)
+(if (and (= G9 0) (> A9 10)) 1 0)
+(if (and (= G10 0) (> A10 10)) 1 0)) )
+;number of female grandparents: 2
+(= (+ (if (and (= G1 2) (= S1 1 )) 1 0)
+(if (and (= G2 2) (= S2 1 )) 1 0)
+(if (and (= G3 2) (= S3 1 )) 1 0)
+(if (and (= G4 2) (= S4 1 )) 1 0)
+(if (and (= G5 2) (= S5 1 )) 1 0)
+(if (and (= G6 2) (= S6 1 )) 1 0)
+(if (and (= G7 2) (= S7 1 )) 1 0)
+(if (and (= G8 2) (= S8 1 )) 1 0)
+(if (and (= G9 2) (= S9 1 )) 1 0)
+(if (and (= G10 2) (= S10 1 )) 1 0) ) 2)
+;avg age white grandparents: 80
+(= (/ (* (+ (* (if (and (= G1 2)
+(= R1 0)) 1 0) A1)
+(* (if (and (= G2 2) (= R2 0)) 1 0) A2)
+(* (if (and (= G3 2) (= R3 0)) 1 0) A3)
+(* (if (and (= G4 2) (= R4 0)) 1 0) A4)
+(* (if (and (= G5 2) (= R5 0)) 1 0) A5)
+(* (if (and (= G6 2) (= R6 0)) 1 0) A6)
+(* (if (and (= G7 2) (= R7 0)) 1 0) A7)
+(* (if (and (= G8 2) (= R8 0)) 1 0) A8)
+(* (if (and (= G9 2) (= R9 0)) 1 0) A9)
+(* (if (and (= G10 2) (= R10 0)) 1 0) A10))
+10) 2) 800)
+;number of childless households: 1
+(xor (= (+ (if (and (= H1 1) (= G1 0)) 1 0)
+(if (and (= H2 1) (= G2 0)) 1 0)
+(if (and (= H3 1) (= G3 0)) 1 0)
+(if (and (= H4 1) (= G4 0)) 1 0)
+(if (and (= H5 1) (= G5 0)) 1 0)
+(if (and (= H6 1) (= G6 0)) 1 0)
+(if (and (= H7 1) (= G7 0)) 1 0)
+(if (and (= H8 1) (= G8 0)) 1 0)
+(if (and (= H9 1) (= G9 0)) 1 0)
+(if (and (= H10 1) (= G10 0)) 1 0) ) 3)
+(= (+ (if (and (= H1 2) (= G1 0)) 1 0)
+(if (and (= H2 2) (= G2 0)) 1 0)
+(if (and (= H3 2) (= G3 0)) 1 0)
+(if (and (= H4 2) (= G4 0)) 1 0)
+(if (and (= H5 2) (= G5 0)) 1 0)
+(if (and (= H6 2) (= G6 0)) 1 0)
+(if (and (= H7 2) (= G7 0)) 1 0)
+(if (and (= H8 2) (= G8 0)) 1 0)
+(if (and (= H9 2) (= G9 0)) 1 0)
+(if (and (= H10 2) (= G10 0)) 1 0) ) 3))
+;number of interracial married couples: 2
+(= 1 (+ (if (and (= H1 1)
+(and (= G1 1) (= R1 0))) 1 0)
+(if (and (= H2 1) (and (= G2 1)
+(= R2 0))) 1 0)
+(if (and (= H3 1) (and (= G3 1)
+(= R3 0))) 1 0)
+(if (and (= H4 1) (and (= G4 1)
+(= R4 0))) 1 0)
+(if (and (= H5 1) (and (= G5 1)
+(= R5 0))) 1 0)
+(if (and (= H6 1) (and (= G6 1)
+(= R6 0))) 1 0)
+(if (and (= H7 1) (and (= G7 1)
+(= R7 0))) 1 0)
+(if (and (= H8 1) (and (= G8 1)
+(= R8 0))) 1 0)
+(if (and (= H9 1) (and (= G9 1)
+(= R9 0))) 1 0)
+(if (and (= H10 1) (and (= G10 1)
+(= R10 0))) 1 0)))
+(= 1 (+ (if (and (= H1 2)
+(and (= G1 1) (= R1 0))) 1 0)
+(if (and (= H2 2)
+(and (= G2 1) (= R2 0))) 1 0)
+(if (and (= H3 2)
+(and (= G3 1) (= R3 0))) 1 0)
+(if (and (= H4 2)
+(and (= G4 1) (= R4 0))) 1 0)
+(if (and (= H5 2)
+(and (= G5 1) (= R5 0))) 1 0)
+(if (and (= H6 2)
+(and (= G6 1) (= R6 0))) 1 0)
+(if (and (= H7 2)
+(and (= G7 1) (= R7 0))) 1 0)
+(if (and (= H8 2)
+(and (= G8 1) (= R8 0))) 1 0)
+(if (and (= H9 2)
+(and (= G9 1) (= R9 0))) 1 0)
+(if (and (= H10 2)
+(and (= G10 1) (= R10 0))) 1 0)))
+;household average ages: 62, 18
+(= 620 (/ (* 10 (+
+(* A1 (if (= H1 1) 1 0))
+(* A2 (if (= H2 1) 1 0))
+(* A3 (if (= H3 1) 1 0))
+(* A4 (if (= H4 1) 1 0))
+(* A5 (if (= H5 1) 1 0))
+(* A6 (if (= H6 1) 1 0))
+(* A7 (if (= H7 1) 1 0))
+(* A8 (if (= H8 1) 1 0))
+(* A9 (if (= H9 1) 1 0))
+(* A10 (if (= H10 1) 1 0)))) 5))
+
+\end{verbatim}
+
 
 
 \end{document}

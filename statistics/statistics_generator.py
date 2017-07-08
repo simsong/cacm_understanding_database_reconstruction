@@ -5,6 +5,7 @@
     # 1 categories (in order)
     # 2-N each line represents a person, data values are ints separated by spaces
 
+
 #Categories (update as new categories are added):
 categories = {"id":0, "hh": 1, "age":2, "sex":3, "race":4, "gen":5}
 
@@ -27,19 +28,19 @@ def filter_data(data, param_name, value, comparator):
     for line in data:
         person = line.split()
         if comparator == "=":
-            if int(person[categories[param_name]]) == value:
+            if float(person[categories[param_name]]) == value:
                 filtered.append(line)
         elif comparator == "<":
-            if int(person[categories[param_name]]) < value:
+            if float(person[categories[param_name]]) < value:
                 filtered.append(line)
         elif comparator == ">":
-            if int(person[categories[param_name]]) > value:
+            if float(person[categories[param_name]]) > value:
                 filtered.append(line)
         elif comparator == "<=":
-            if int(person[categories[param_name]]) <= value:
+            if float(person[categories[param_name]]) <= value:
                 filtered.append(line)
         elif comparator == ">=":
-            if int(person[categories[param_name]]) >= value:
+            if float(person[categories[param_name]]) >= value:
                 filtered.append(line)
     return filtered
 
@@ -66,7 +67,7 @@ def calc_avg(filtered_data, param_name):
     running_total = 0
     for line in filtered_data:
         person = line.split()
-        running_total += int(person[categories[param_name]])
+        running_total += float(person[categories[param_name]])
     return running_total / population_size
 
 #calculates the average household size for a set of people
@@ -74,7 +75,7 @@ def calc_avg_hh_size(filtered_data):
     households = set([])
     for line in filtered_data:
         person = line.split()
-        households.add(int(person[categories["hh"]]))
+        households.add(float(person[categories["hh"]]))
     return len(filtered_data) / len(households)
 
 
