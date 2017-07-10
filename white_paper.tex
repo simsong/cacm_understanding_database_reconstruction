@@ -56,6 +56,18 @@ While the above techniques are not without merit, this paper will
 demonstrate that they alone are insufficient in guarding data against
 a modern DRA.
 
+\section{Related Work}
+
+
+In this section we examine the most relevant literature regarding the DRA. Although this attack is relatively new due to the aforementioned recent development of attack technology, several groups have performed research on important concepts used in the DRA such as database inference from statistics and query overlap.
+
+\subsection{Identifying Properties of a Database from Published Statistics}
+Brown and Heathers \cite{grim} developed the granularity-related inconsistency of means (GRIM) test in response to observed inconsistencies in published data from psychological journals. This test is centered around the premise that, for statistics drawn from integer data, only certain means are possible. The GRIM test determines whether reported means could possibly have come from data sets with a certain size, granularity, and group number. In surveying 71 published articles, the authors found 36 papers with one inconsistency and 16 with two or more inconsistencies. Although this test was intended to detect possible errors or mean falsification in published articles, the concept of drawing inferential conclusions about a data set based only off of published statistics is a key concept behind the DRA.
+
+\subsection{Linear Reconstruction}
+
+Kasiviswanathan, Rudelson, and Smith \cite{linearattack} introduced the concept of the linear reconstruction attack which is the root behind the generic DRA. The key in this paper is the concept that, when given 'nonsensitive' data such as zip code or gender, an attacker can construct a matrix of linear equalities which can often be solved in polynomial time. The paper also analyzes a common reconstruction technique known as least squares decoding, where the attacker sets up a goal function to minimize the square of the distance between two databases in order to reconstruct the original database. Although the modern DRA is much more powerful due to solvers' abilities to support constraints besides simple equalities, the core concept of the matrix construction from this paper is still applicable.
+
 \section{The Database Reconstruction Attack: An Example}
 
 
@@ -474,7 +486,7 @@ Number of solutions found in 0.00046s :  1
 \end{verbatim}
 
 Each of the 155 numbers represents one of the variables encoded in the formula input to the SAT solver.
-Positive integers correspond to True, while negative integers are False. For example, $118$ in the solution output means that the Boolean variable "The Spaniard drinks orange juice" is True.
+Positive integers correspond to True, while negative integers are False. For example, $118$ in the solution output means that the Boolean variable "The Spaniard drinks orange juice" is True. The full set of variable encodings is given in Appendix 5.
 PicoSAT is able to solve this very complex problem in a fraction of a second, and has reconstructed the entire database, thus obtaining the PII of all the residents of the village despite the fact that the vast majority of their information was redacted by the problem writer before release.
 
 The success of this attack demonstrates the inefficacy of
@@ -1071,6 +1083,215 @@ same-sex married couples: 0
 (* A9 (if (= H9 1) 1 0))
 (* A10 (if (= H10 1) 1 0)))) 5))
 
+\end{verbatim}
+
+\subsection{Zebra Problem Variable Encodings}
+
+Below are the variable encodings in C for the zebra problem. Each variable is a boolean represented in the output by a negative number if it is false and a positive number if it is true.
+
+\begin{verbatim}
+#define englishman_house0 1
+#define englishman_house1 2
+#define englishman_house2 3
+#define englishman_house3 4
+#define englishman_house4 5
+
+#define japanese_house0   6
+#define japanese_house1   7
+#define japanese_house2   8
+#define japanese_house3   9
+#define japanese_house4   10
+
+#define norwegian_house0  11
+#define norwegian_house1  12
+#define norwegian_house2  13
+#define norwegian_house3  14
+#define norwegian_house4  15
+
+#define spaniard_house0   16
+#define spaniard_house1   17
+#define spaniard_house2   18
+#define spaniard_house3   19
+#define spaniard_house4   20
+
+#define ukranian_house0   21
+#define ukranian_house1   22
+#define ukranian_house2   23
+#define ukranian_house3   24
+#define ukranian_house4   25
+
+#define englishman_zebra  26
+#define englishman_dog    27
+#define englishman_horse  28
+#define englishman_fox    29
+#define englishman_snails 30
+
+#define japanese_zebra    31
+#define japanese_dog      32
+#define japanese_horse    33
+#define japanese_fox      34
+#define japanese_snails   35
+
+#define norwegian_zebra   36
+#define norwegian_dog     37
+#define norwegian_horse   38
+#define norwegian_fox     39
+#define norwegian_snails  40
+
+#define spaniard_zebra    41
+#define spaniard_dog      42
+#define spaniard_horse    43
+#define spaniard_fox      44
+#define spaniard_snails   45
+
+#define ukranian_zebra    46
+#define ukranian_dog      47
+#define ukranian_horse    48
+#define ukranian_fox      49
+#define ukranian_snails   50
+
+#define englishman_redHouse    51
+#define englishman_greenHouse  52
+#define englishman_ivoryHouse  53
+#define englishman_yellowHouse 54
+#define englishman_blueHouse   55
+
+#define japanese_redHouse      56
+#define japanese_greenHouse    57
+#define japanese_ivoryHouse    58
+#define japanese_yellowHouse   59
+#define japanese_blueHouse     60
+
+#define norwegian_redHouse     61
+#define norwegian_greenHouse   62
+#define norwegian_ivoryHouse   63
+#define norwegian_yellowHouse  64
+#define norwegian_blueHouse    65
+
+#define spaniard_redHouse      66
+#define spaniard_greenHouse    67
+#define spaniard_ivoryHouse    68
+#define spaniard_yellowHouse   69
+#define spaniard_blueHouse     70
+
+#define ukranian_redHouse      71
+#define ukranian_greenHouse    72
+#define ukranian_ivoryHouse    73
+#define ukranian_yellowHouse   74
+#define ukranian_blueHouse     75
+
+#define englishman_oldGold      76
+#define englishman_parliament   77
+#define englishman_kools        78
+#define englishman_lucky        79
+#define englishman_chesterfield 80
+
+#define japanese_oldGold        81
+#define japanese_parliament     82
+#define japanese_kools          83
+#define japanese_lucky          84
+#define japanese_chesterfield   85
+
+#define norwegian_oldGold       86
+#define norwegian_parliament    87
+#define norwegian_kools         88
+#define norwegian_lucky         89
+#define norwegian_chesterfield  90
+
+#define spaniard_oldGold        91
+#define spaniard_parliament     92
+#define spaniard_kools          93
+#define spaniard_lucky          94
+#define spaniard_chesterfield   95
+
+#define ukranian_oldGold        96
+#define ukranian_parliament     97
+#define ukranian_kools          98
+#define ukranian_lucky          99
+#define ukranian_chesterfield   100
+
+
+#define englishman_coffee      101
+#define englishman_tea         102
+#define englishman_orangeJuice 103
+#define englishman_water       104
+#define englishman_milk        105
+
+#define japanese_coffee        106
+#define japanese_tea           107
+#define japanese_orangeJuice   108
+#define japanese_water         109
+#define japanese_milk          110
+
+#define norwegian_coffee       111
+#define norwegian_tea          112
+#define norwegian_orangeJuice  113
+#define norwegian_water        114
+#define norwegian_milk         115
+
+#define spaniard_coffee        116
+#define spaniard_tea           117
+#define spaniard_orangeJuice   118
+#define spaniard_water         119
+#define spaniard_milk          120
+
+#define ukranian_coffee        121
+#define ukranian_tea           122
+#define ukranian_orangeJuice   123
+#define ukranian_water         124
+#define ukranian_milk          125
+
+
+#define E_immLeft_J 126
+#define E_immLeft_N 127
+#define E_immLeft_S 128
+#define E_immLeft_U 129
+
+#define J_immLeft_E 130
+#define J_immLeft_N 131
+#define J_immLeft_S 132
+#define J_immLeft_U 133
+
+#define N_immLeft_E 134
+#define N_immLeft_J 135
+#define N_immLeft_S 136
+#define N_immLeft_U 137
+
+#define S_immLeft_E 138
+#define S_immLeft_J 139
+#define S_immLeft_N 140
+#define S_immLeft_U 141
+
+#define U_immLeft_E 142
+#define U_immLeft_J 143
+#define U_immLeft_N 144
+#define U_immLeft_S 145
+
+
+#define E_nextTo_J 146
+#define E_nextTo_N 147
+#define E_nextTo_S 148
+#define E_nextTo_U 149
+
+#define J_nextTo_E E_nextTo_J
+#define J_nextTo_N 150
+#define J_nextTo_S 151
+#define J_nextTo_U 152
+
+#define N_nextTo_E E_nextTo_N
+#define N_nextTo_J J_nextTo_N
+#define N_nextTo_S 153
+#define N_nextTo_U 154
+
+#define S_nextTo_E E_nextTo_S
+#define S_nextTo_J J_nextTo_S
+#define S_nextTo_N N_nextTo_S
+#define S_nextTo_U 155
+
+#define U_nextTo_E E_nextTo_U
+#define U_nextTo_J J_nextTo_U
+#define U_nextTo_N N_nextTo_U
+#define U_nextTo_S S_nextTo_U
 \end{verbatim}
 
 
