@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/notes.md" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.bib" afterPath="$PROJECT_DIR$/white_paper.bib" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.tex" afterPath="$PROJECT_DIR$/white_paper.tex" />
-    </list>
+    <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
