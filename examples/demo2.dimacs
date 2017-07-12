@@ -1,35 +1,202 @@
-c https://en.wikipedia.org/wiki/Tseytin_transformation
-c x1 = 9
-c x2 = 10
-c x3 = 11
-c line 1
-p cnf 11 22
-1 9 0 
--1 -9 0
--2 1 0
--2 10 0
-c line 2
--10 2 -1 0
-3 10 0
--3 -10 0
--4 9 0
-c line 3
--4 3 0
--3 4 -9 0
-5 10 0
-c line 4
--5 -10 0
--6 5 0
--6 11 0
-c line 5
--11 6 5 0
-7 -2 0
-7 -4 0
-c line 6
-2 -7 4 0
-8 -6 0
-8 -7 0
-c line 7
-6 -8 7 0
-8 0
+(bool englishman_house0 )
+(bool englishman_house1 )
+(bool englishman_house2 )
+(bool englishman_house3 )
+(bool englishman_house4 )
 
+(bool japanese_house0   )
+(bool japanese_house1   )
+(bool japanese_house2   )
+(bool japanese_house3   )
+(bool japanese_house4   )
+
+(bool norwegian_house0  )
+(bool norwegian_house1  )
+(bool norwegian_house2  )
+(bool norwegian_house3  )
+(bool norwegian_house4  )
+
+(bool spaniard_house0   )
+(bool spaniard_house1   )
+(bool spaniard_house2   )
+(bool spaniard_house3   19
+(bool spaniard_house4   20
+
+(bool ukranian_house0   21
+(bool ukranian_house1   22
+(bool ukranian_house2   23
+(bool ukranian_house3   24
+(bool ukranian_house4   25
+
+(bool englishman_zebra  26
+(bool englishman_dog    27
+(bool englishman_horse  28
+(bool englishman_fox    29
+(bool englishman_snails 30
+
+(bool japanese_zebra    31
+(bool japanese_dog      32
+(bool japanese_horse    33
+(bool japanese_fox      34
+(bool japanese_snails   35
+
+(bool norwegian_zebra   36
+(bool norwegian_dog     37
+(bool norwegian_horse   38
+(bool norwegian_fox     39
+(bool norwegian_snails  40
+
+(bool spaniard_zebra    41
+(bool spaniard_dog      42
+(bool spaniard_horse    43
+(bool spaniard_fox      44
+(bool spaniard_snails   45
+
+(bool ukranian_zebra    46
+(bool ukranian_dog      47
+(bool ukranian_horse    48
+(bool ukranian_fox      49
+(bool ukranian_snails   50
+
+(bool englishman_redHouse    51
+(bool englishman_greenHouse  52
+(bool englishman_ivoryHouse  53
+(bool englishman_yellowHouse 54
+(bool englishman_blueHouse   55
+
+(bool japanese_redHouse      56
+(bool japanese_greenHouse    57
+(bool japanese_ivoryHouse    58
+(bool japanese_yellowHouse   59
+(bool japanese_blueHouse     60
+
+(bool norwegian_redHouse     61
+(bool norwegian_greenHouse   62
+(bool norwegian_ivoryHouse   63
+(bool norwegian_yellowHouse  64
+(bool norwegian_blueHouse    65
+
+(bool spaniard_redHouse      66
+(bool spaniard_greenHouse    67
+(bool spaniard_ivoryHouse    68
+(bool spaniard_yellowHouse   69
+(bool spaniard_blueHouse     70
+
+(bool ukranian_redHouse      71
+(bool ukranian_greenHouse    72
+(bool ukranian_ivoryHouse    73
+(bool ukranian_yellowHouse   74
+(bool ukranian_blueHouse     75
+
+(bool englishman_oldGold      76
+(bool englishman_parliament   77
+(bool englishman_kools        78
+(bool englishman_lucky        79
+(bool englishman_chesterfield 80
+
+(bool japanese_oldGold        81
+(bool japanese_parliament     82
+(bool japanese_kools          83
+(bool japanese_lucky          84
+(bool japanese_chesterfield   85
+
+(bool norwegian_oldGold       86
+(bool norwegian_parliament    87
+(bool norwegian_kools         88
+(bool norwegian_lucky         89
+(bool norwegian_chesterfield  90
+
+(bool spaniard_oldGold        91
+(bool spaniard_parliament     92
+(bool spaniard_kools          93
+(bool spaniard_lucky          94
+(bool spaniard_chesterfield   95
+
+(bool ukranian_oldGold        96
+(bool ukranian_parliament     97
+(bool ukranian_kools          98
+(bool ukranian_lucky          99
+(bool ukranian_chesterfield   100
+
+
+(bool englishman_coffee      101
+(bool englishman_tea         102
+(bool englishman_orangeJuice 103
+(bool englishman_water       104
+(bool englishman_milk        105
+
+(bool japanese_coffee        106
+(bool japanese_tea           107
+(bool japanese_orangeJuice   108
+(bool japanese_water         109
+(bool japanese_milk          110
+
+(bool norwegian_coffee       111
+(bool norwegian_tea          112
+(bool norwegian_orangeJuice  113
+(bool norwegian_water        114
+(bool norwegian_milk         115
+
+(bool spaniard_coffee        116
+(bool spaniard_tea           117
+(bool spaniard_orangeJuice   118
+(bool spaniard_water         119
+(bool spaniard_milk          120
+
+(bool ukranian_coffee        121
+(bool ukranian_tea           122
+(bool ukranian_orangeJuice   123
+(bool ukranian_water         124
+(bool ukranian_milk          125
+
+
+(bool E_immLeft_J 126
+(bool E_immLeft_N 127
+(bool E_immLeft_S 128
+(bool E_immLeft_U 129
+
+(bool J_immLeft_E 130
+(bool J_immLeft_N 131
+(bool J_immLeft_S 132
+(bool J_immLeft_U 133
+
+(bool N_immLeft_E 134
+(bool N_immLeft_J 135
+(bool N_immLeft_S 136
+(bool N_immLeft_U 137
+
+(bool S_immLeft_E 138
+(bool S_immLeft_J 139
+(bool S_immLeft_N 140
+(bool S_immLeft_U 141
+
+(bool U_immLeft_E 142
+(bool U_immLeft_J 143
+(bool U_immLeft_N 144
+(bool U_immLeft_S 145
+
+
+(bool E_nextTo_J 146
+(bool E_nextTo_N 147
+(bool E_nextTo_S 148
+(bool E_nextTo_U 149
+
+(bool J_nextTo_E E_nextTo_J
+(bool J_nextTo_N 150
+(bool J_nextTo_S 151
+(bool J_nextTo_U 152
+
+(bool N_nextTo_E E_nextTo_N
+(bool N_nextTo_J J_nextTo_N
+(bool N_nextTo_S 153
+(bool N_nextTo_U 154
+
+(bool S_nextTo_E E_nextTo_S
+(bool S_nextTo_J J_nextTo_S
+(bool S_nextTo_N N_nextTo_S
+(bool S_nextTo_U 155
+
+(bool U_nextTo_E E_nextTo_U
+(bool U_nextTo_J J_nextTo_U
+(bool U_nextTo_N N_nextTo_U
+(bool U_nextTo_S S_nextTo_U

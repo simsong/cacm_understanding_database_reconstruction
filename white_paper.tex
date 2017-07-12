@@ -3,6 +3,7 @@
 \usepackage{amssymb}
 \usepackage{siunitx}
 
+
 \begin{document}
 \begin{frontmatter}
 \title{Analysis of a Database Reconstruction Attack on Public Data}
@@ -11,9 +12,8 @@
 \address{Center for Disclosure Avoidance, U.S. Census Bureau}
 
 \begin{abstract}
-In recent years, a certain type of database attack,
-the database reconstruction attack, has become increasingly
-more feasible due to rapid advances in attack algorithm
+In recent years, a certain type of attack on confidential survey data,
+the database reconstruction attack, has become increasingly feasible due to rapid advances in attack algorithm
 sophistication. We discuss how these attacks
 function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is much more effective at defending against database attacks by SAT solvers and optimizers.
 \end{abstract}
@@ -59,22 +59,27 @@ a modern DRA.
 \section{Related Work}
 
 
-In this section we examine the most relevant literature regarding the DRA. Although this attack is relatively new due to the aforementioned recent development of attack technology, several groups have performed research on important concepts used in the DRA such as database inference from statistics and query overlap.
+In this section we examine the most relevant literature regarding the DRA. Although this attack is relatively new due to the aforementioned recent development of attack technology, several groups have performed research on important concepts used in the DRA such as database inference from statistics and linear reconstruction.
 
-\subsection{Identifying Properties of a Database from Published Statistics}
-Brown and Heathers \cite{grim} developed the granularity-related inconsistency of means (GRIM) test in response to observed inconsistencies in published data from psychological journals. This test is centered around the premise that, for statistics drawn from integer data, only certain means are possible. The GRIM test determines whether reported means could possibly have come from data sets with a certain size, granularity, and group number. In surveying 71 published articles, the authors found 36 papers with one inconsistency and 16 with two or more inconsistencies. Although this test was intended to detect possible errors or mean falsification in published articles, the concept of drawing inferential conclusions about a data set based only off of published statistics is a key concept behind the DRA.
+\subsection{Noise Addition and Query Restriction}
+Dinur and Nissim \cite{noise} proposed in 2003 that seemingly innocuous queries to a statistical database could be used to compromise individuals' sensitive data through obtaining indirectly identifying information. They further demonstrated that restricting the number or type of queries is often insufficient to prevent access to indirectly identifying information, since the system's refusal to answer a 'dangerous' query itself gives the user information. The authors found that noise addition on the order of $\Omega(\sqrt{n})$ for a database of size n is necessary to fully protect individuals from being identified.
+
 
 \subsection{Linear Reconstruction}
 
 Kasiviswanathan, Rudelson, and Smith \cite{linearattack} introduced the concept of the linear reconstruction attack which is the root behind the generic DRA. The key in this paper is the concept that, when given 'nonsensitive' data such as zip code or gender, an attacker can construct a matrix of linear equalities which can often be solved in polynomial time. The paper also analyzes a common reconstruction technique known as least squares decoding, where the attacker sets up a goal function to minimize the square of the distance between two databases in order to reconstruct the original database. Although the modern DRA is much more powerful due to solvers' abilities to support constraints besides simple equalities, the core concept of the matrix construction from this paper is still applicable.
 
-\section{The Database Reconstruction Attack: An Example}
+\subsection{Identifying Properties of a Database from Published Statistics}
+Brown and Heathers \cite{grim} developed the granularity-related inconsistency of means (GRIM) test in response to observed inconsistencies in published data from psychological journals. This test is centered around the premise that, for statistics drawn from integer data, only certain means are possible. The GRIM test determines whether reported means could possibly have come from data sets with a certain size, granularity, and group number. In surveying 71 published articles, the authors found 36 papers with one inconsistency and 16 with two or more inconsistencies. Although this test was intended to detect possible errors or mean falsification in published articles, the concept of drawing inferential conclusions about a data set based only off of published statistics is a key concept behind the DRA.
 
+
+
+\section{The Database Reconstruction Attack: An Example}
 
 
 To conceptually understand a DRA, we first consider a survey given to one household by a statistical agency. Table~\ref{groundtruthsmall} shows the responses to the following survey:
 
-\textit{Please provide the following for each member
+\textbf{Please provide the following for each member
 of your family:
 Age, Sex, Race, Generation.}
 
@@ -82,6 +87,8 @@ Age, Sex, Race, Generation.}
 The statistical agency then publishes the data product in Table~\ref{resultssmall} based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy.
 
 Retabulating these results in a numerical format with the keys in Table~\ref{tabulationkey} gives the results in Table~\ref{resultsencodedsmall}.
+
+
 
 \begin{table*}
 \begin{minipage}[t]{\columnwidth}
@@ -123,6 +130,8 @@ Households & 1 & 24 \\
 \end{minipage}
 \end{table*}
 
+
+
 \begin{table}
 \begin{tabular}{c|c}
 Key & Value \\
@@ -139,24 +148,8 @@ Grandparent & 2 \\
 \caption{Tabulation key}\label{tabulationkey}
 \end{table}
 
-\begin{table}[t]
-\begin{tabular}{c|c|c|c|c|c}
-ID & Household & Age & Sex & Race & Generation \\
-\hline
-1 & 1 & 24 & 0 & 0 & 1  \\
-2 & 1 & 28 & 1 & 1 & 1  \\
-3 & 1 & 55 & 1 & 0 & 2  \\
-4 & 1 & 5 & 1 & 1 & 0  \\
-5 & 1 & 8 & 0 & 0 & 0  \\
-\hline
-\end{tabular}
-\caption{Encoded published survey results}\label{resultsencodedsmall}
-\end{table}
 
-
-The data in Table~\ref{resultsencodedsmall} is the 'ground truth' database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall}.
-
-\begin{table}[t]
+\begin{table}[h]
 \begin{tabular}{c|c|c|c|c|c}
 ID & Household & Age & Sex & Race & Generation \\
 \hline
@@ -170,11 +163,46 @@ ID & Household & Age & Sex & Race & Generation \\
 \caption{DRA unknowns}\label{unknownssmall}
 \end{table}
 
+\begin{table}[h]
+\begin{tabular}{c|c|c|c|c|c}
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & 1 & 24 & 0 & 0 & 1  \\
+2 & 1 & 28 & 1 & 1 & 1  \\
+3 & 1 & 55 & 1 & 0 & 2  \\
+4 & 1 & 5 & 1 & 1 & 0  \\
+5 & 1 & 8 & 0 & 0 & 0  \\
+\hline
+\end{tabular}
+\\
+\\
+\\
+
+\caption{Encoded published survey results}\label{resultsencodedsmall}
+\end{table}
+
+\begin{table}[t]
+\begin{tabular}{cc|c}
+A & B & A==B  \\
+\hline
+True & True & 1   \\
+True & False & 0  \\
+False & True & 0  \\
+False & False & 1  \\
+\hline
+\end{tabular}
+\caption{Truth table for the == operator}\label{truthtable}
+\end{table}
+
+The data in Table~\ref{resultsencodedsmall} is the 'ground truth' (original) database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall}.
+
+
+
 The reconstruction attack works by identifying constraint
 equations given by the data table. Constraint equations are  mathematical formulae representing rules that the ground truth satisfies. For example, we have the
 following statistic:
 
-\textit{Individuals: Number = 5, Average Age = 24}
+\textbf{Individuals: Number = 5, Average Age = 24}
 
 
 This can be written as a linear constraint equation using the symbols for age, $A1...A5$ given in Table~\ref{unknownssmall}:
@@ -182,21 +210,11 @@ This can be written as a linear constraint equation using the symbols for age, $
 
 This equation is in 5 unknowns, and so has many possible solutions alone.
 However, the attacker can write more constraint equations to further constrain the values of the unknowns.
-Note that the Boolean expression $(A == B)$ is True if $A = B$ and False otherwise.
+
+Here, the == operator is a test for equivalence. A truth table for this operator is shown in Table~\ref{truthtable}. Additionally, the = operator is used to show that the right-hand side and left-hand side of this operator must be equal in the constraint expression.
 
 
-\textit{Number of Grandparents: 1}
-
-
-
-Becomes:
-\begin{align*}
-& (G1==2) + (G2==2) + (G3==2) + \\
-& (G4==2) + (G5==2) = 1
-\end{align*}
-
-
-\textit{Children: Number = 2, Average Age = 6.5}
+\textbf{Children: Number = 2, Average Age = 6.5}
 
 
 Becomes the following two equations:
@@ -214,11 +232,16 @@ into equations like the ones above, the equations together form a system of many
 ground truth, and possibly many other 'false' solutions, which fit the constraints but are not equivalent to the ground truth.
 The \textit{solution universe}, the set of all solutions that fit the encoded set of constraints, is originally potentially  quite large, containing many false solutions along with the true solution.
 However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
-down the set of possible solutions. Eventually, the attacker
+down the set of possible solutions.
+
+Eventually, the attacker
 will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
 the ground truth. At this point, the attack has succeeded, and the statistical agency has failed to protect its respondents' privacy. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
 
 Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been completely reconstructed. Thus, the database has failed to protect user privacy even though the attack did not fully reconstruct the database.
+\\
+\\
+
 
 \section{Methods of Attack}
 
@@ -240,8 +263,8 @@ For large data sets such as the U.S. Census, performing a brute-force attack is 
 
 In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new, larger set of responses to the survey given earlier.
 
-The ground truth responses from two new households are given in Table~\ref{resultsbig}.
-\begin{table}
+The ground truth responses from two new households are given in Table~\ref{resultsbig}. The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
+\begin{table}[t]
 \begin{tabular}{c|c|c|c|c|c}
 ID & Household & Age & Sex & Race & Generation \\
 \hline
@@ -260,9 +283,9 @@ ID & Household & Age & Sex & Race & Generation \\
 \caption{Survey results}\label{resultsbig}
 \end{table}
 
-The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
 
-\begin{table}
+
+\begin{table}[t]
 \begin{tabular}{c|c|c}
 Group & Number & Average Age \\
 \hline
@@ -314,7 +337,7 @@ S-expressions are evaluated from the innermost parentheses to the outermost, wit
     \item The result of Step 2 must equal 40.
 \end{enumerate}
 
-Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35.51 seconds.
+Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35 seconds.
 
 \begin{table}
 \begin{tabular}{c|c|c|c|c|c}
@@ -346,7 +369,7 @@ The mathematics behind this process are beyond the scope of this paper, but the 
 
 To demonstrate how effective adding Laplace noise is against the DRA, we reconsider the example from the previous section. This time, the statistical agency applies the Laplace transformation with mean 0 and exponential decay 3 to the survey responses to the ages before publishing any statistical products. The new published data product, analogous to Table~\ref{publishedstatsbig}, is shown in Table~\ref{publishedstatsnoise}.
 
-\begin{table}
+\begin{table}[t]
 \begin{tabular}{c|c|c}
 Group & Number & Average Age \\
 \hline
@@ -392,6 +415,12 @@ With the dramatic improvement in the efficiency of optimizers and SAT solvers in
 
 The most effective technique for defending against a DRA is the addition of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In addition to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise addition a required part of the pre-publication disclosure review process in order to protect respondent privacy.
 
+\section{References}
+
+\bibliography{refs}
+\bibliographystyle{ieeetr}
+
+
 \section{Appendices}
 
 \subsection{SAT and SAT Solvers}
@@ -413,94 +442,14 @@ This process is much faster at solving SAT problems than previous processes used
 
 There are a wide variety of SAT solvers available to the public for minimal or no cost. Although a SAT solver requires the user to translate the problem into Boolean formulae before use,  programs such as Naoyuki Tamura's Sugar facilitate this process by translating user-input mathematical and English constraints into Boolean formulae automatically.
 
-\subsection{Scalability and The Zebra Problem}
-
-To demonstrate the real capabilities of the SAT solver when faced with a very large constraint system, in contrast to our above relatively small examples, we will use a system with 155 variables and 1135 Boolean clauses. This system results from the CNF encoding of a famous problem known as the Zebra Problem \cite{zebra}.
-This problem is appropriate because its structure closely models the current Census data collection and publication process. The writer receives the survey answers from the respondents, redacts much of the information to avoid giving away PII, and then publishes a data product.
-
-The size of this problem more closely approximates the number
-of variables an attacker would need to generate constraints for when performing a DRA through queries on a massive public data set. It is too complex for the vast majority of humans to solve in any reasonable time.
-
-This problem is stated as follows:
-
-\begin{enumerate}
-\item Five people have five different pets, smoke five different
-       brands of cigarettes, have five different favorite drinks and
-       live in five different houses.
-\item The Englishman lives in the red house.
-\item The Spaniard has a dog.
-\item The Ukranian drinks tea.
-\item The Norwegian lives in the leftmost house.
-\item The Japanese smokes Parliaments.
-\item The Norwegian lives next to the blue house.
-\item Coffee is drunk in the green house.
-\item The snail owner smokes Old Gold.
-\item The inhabitant of the yellow house smokes Kools.
-\item The Lucky Strikes smoker drinks orange juice.
-\item Milk is drunk in the middle house.
-\item The green house is immediately to the right of the ivory house.
-\item The Chesterfield smoker lives next door to the fox owner.
-\item The Kools smoker lives next door to where the horse is kept.
-\end{enumerate}
-
-
-\begin{itemize}
-\item Given these conditions, determine who owns the zebra and who drinks water.
-\item (The attacker is 'targeting' the water drinker and the zebra owner.)
-\end{itemize}
-
-Just as demonstrated in the previous example, this problem
-can be encoded as a large set of Boolean equations. The problem
-gives 15 explicit constraints which allow the attacker to generate more constraints, and each of the combinations of variables (five people, five houses, five drinks, etc.) can be represented as a Boolean variable, for example, "The Norwegian lives in the red house == False"
-
-Once the attacker has generated every constraint possible from the given information, he can input the constraints into a SAT solver. In this example, we run the zebra problem's CNF encoding through PycoSAT, a free Python wrapper of PicoSAT.
-
-The program identifies that the variables "Norwegian drinks water" and the "Japanese owns the zebra" are true in only 0.00046s.
-
-\begin{verbatim}
-Solution:  [-1, -2, 3, -4, -5, -6,
--7, -8, -9, 10, 11, -12, -13, -14,
--15, -16, -17, -18, 19, -20, -21,
-22, -23, -24, -25, -26, -27, -28,
--29, 30, 31, -32, -33, -34, -35,
--36, -37, -38, 39, -40, -41, 42,
--43, -44, -45, -46, -47, 48, -49,
--50, 51, -52, -53, -54, -55, -56,
-57, -58, -59, -60, -61, -62, -63,
-64, -65, -66, -67, 68, -69, -70,
--71, -72, -73, -74, 75, 76, -77,
--78, -79, -80, -81, 82, -83, -84,
--85, -86, -87, 88, -89, -90, -91,
--92, -93, 94, -95, -96, -97, -98,
--99, 100, -101, -102, -103, -104,
-105, 106, -107, -108, -109, -110,
--111, -112, -113, 114, -115, -116,
--117, 118, -119, -120, -121, 122,
--123, -124, -125, -126, -127, 128,
--129, -130, -131, -132, -133, -134,
--135, -136, 137, -138, 139, -140,
--141, 142, -143, -144, -145, -146,
--147, 148, 149, -150, 151, -152,
--153, 154, -155]
-Number of solutions found in 0.00046s :  1
-\end{verbatim}
-
-Each of the 155 numbers represents one of the variables encoded in the formula input to the SAT solver.
-Positive integers correspond to True, while negative integers are False. For example, $118$ in the solution output means that the Boolean variable "The Spaniard drinks orange juice" is True. The full set of variable encodings is given in Appendix 5.
-PicoSAT is able to solve this very complex problem in a fraction of a second, and has reconstructed the entire database, thus obtaining the PII of all the residents of the village despite the fact that the vast majority of their information was redacted by the problem writer before release.
-
-The success of this attack demonstrates the inefficacy of
-cell suppression as a method for protecting PII against
-a SAT solver-driven DRA. This problem
-contained far more suppressed cells than unsuppressed ones, which is not realistic given that a real publishing agency would want to minimize the number of suppressed cells. Despite this over-suppression, the SAT solver was still able to easily solve for the values of all cells in the example.
 
 \subsection{Optimizers}
 
 The goal of optimization software is to minimize or maximize the value of a function in any number of variables given a set of constraints on the values of those variables.\cite{lpintro} This function, known as the \textit{objective function}, is a function that a certain number of inputs and returns a single output, or, formally, is a function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$.
 
-For example, imagine a fast food restaurant owner wants to maximize his profits by deciding how many hot dogs and tacos to produce each day. If the price of a hot dog is \$5, and the price of a taco is \$3, then the owner's objective function can be written as, "Maximize profit where profit = 5H + 7T" where H is the number of hot dogs sold and T the number of tacos sold. Constraints the owner may face include the costs to produce a hot dog or taco, the maximum number of hours the restaurant's employees can work, and the maximum amount of raw food ingredients the restaurant can obtain in a day. If a hot dog or taco can be produced in 5 minutes, and state law mandates that an employee can only work 8 hours a day maximum, then a constraint the owner faces can be written as $\frac{H}{12} + \frac{T}{12} \leq 8$. If a hot dog costs \$1 to make, a taco costs \$0.50 to make, and the owner can only purchase up to \$80 worth of ingredients per day, then another constraint is $H + 0.5T = 80$.
+For example, imagine a fast food restaurant owner wants to maximize profit by deciding how many hot dogs and tacos to produce each day. If the price of a hot dog is \$5, and the price of a taco is \$3, then the owner's objective function can be written as, "Maximize profit where profit = 5H + 7T" where H is the number of hot dogs sold and T the number of tacos sold. Constraints the owner may face include the costs to produce a hot dog or taco, the maximum number of hours the restaurant's employees can work, and the maximum amount of raw food ingredients the restaurant can obtain in a day. If a hot dog or taco can be produced in 5 minutes, and state law mandates that an employee can only work 8 hours a day maximum, then a constraint the owner faces can be written as $\frac{H}{12} + \frac{T}{12} \leq 8$. If a hot dog costs \$1 to make, a taco costs \$0.50 to make, and the owner can only purchase up to \$80 worth of ingredients per day, then another constraint is $H + 0.5T = 80$.
 
-The owner can draw his objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}. From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
+The owner can draw the objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}. From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
 
 In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has three constraints [x, y, z] in terms of the decision variables, then the objective function would be "Maximize a if a = "x is met" + "y is met" + "z is met", where "x is met" returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher 'score' a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
 
@@ -1084,216 +1033,6 @@ same-sex married couples: 0
 (* A10 (if (= H10 1) 1 0)))) 5))
 
 \end{verbatim}
-
-\subsection{Zebra Problem Variable Encodings}
-
-Below are the variable encodings in C for the zebra problem. Each variable is a boolean represented in the output by a negative number if it is false and a positive number if it is true.
-
-\begin{verbatim}
-#define englishman_house0 1
-#define englishman_house1 2
-#define englishman_house2 3
-#define englishman_house3 4
-#define englishman_house4 5
-
-#define japanese_house0   6
-#define japanese_house1   7
-#define japanese_house2   8
-#define japanese_house3   9
-#define japanese_house4   10
-
-#define norwegian_house0  11
-#define norwegian_house1  12
-#define norwegian_house2  13
-#define norwegian_house3  14
-#define norwegian_house4  15
-
-#define spaniard_house0   16
-#define spaniard_house1   17
-#define spaniard_house2   18
-#define spaniard_house3   19
-#define spaniard_house4   20
-
-#define ukranian_house0   21
-#define ukranian_house1   22
-#define ukranian_house2   23
-#define ukranian_house3   24
-#define ukranian_house4   25
-
-#define englishman_zebra  26
-#define englishman_dog    27
-#define englishman_horse  28
-#define englishman_fox    29
-#define englishman_snails 30
-
-#define japanese_zebra    31
-#define japanese_dog      32
-#define japanese_horse    33
-#define japanese_fox      34
-#define japanese_snails   35
-
-#define norwegian_zebra   36
-#define norwegian_dog     37
-#define norwegian_horse   38
-#define norwegian_fox     39
-#define norwegian_snails  40
-
-#define spaniard_zebra    41
-#define spaniard_dog      42
-#define spaniard_horse    43
-#define spaniard_fox      44
-#define spaniard_snails   45
-
-#define ukranian_zebra    46
-#define ukranian_dog      47
-#define ukranian_horse    48
-#define ukranian_fox      49
-#define ukranian_snails   50
-
-#define englishman_redHouse    51
-#define englishman_greenHouse  52
-#define englishman_ivoryHouse  53
-#define englishman_yellowHouse 54
-#define englishman_blueHouse   55
-
-#define japanese_redHouse      56
-#define japanese_greenHouse    57
-#define japanese_ivoryHouse    58
-#define japanese_yellowHouse   59
-#define japanese_blueHouse     60
-
-#define norwegian_redHouse     61
-#define norwegian_greenHouse   62
-#define norwegian_ivoryHouse   63
-#define norwegian_yellowHouse  64
-#define norwegian_blueHouse    65
-
-#define spaniard_redHouse      66
-#define spaniard_greenHouse    67
-#define spaniard_ivoryHouse    68
-#define spaniard_yellowHouse   69
-#define spaniard_blueHouse     70
-
-#define ukranian_redHouse      71
-#define ukranian_greenHouse    72
-#define ukranian_ivoryHouse    73
-#define ukranian_yellowHouse   74
-#define ukranian_blueHouse     75
-
-#define englishman_oldGold      76
-#define englishman_parliament   77
-#define englishman_kools        78
-#define englishman_lucky        79
-#define englishman_chesterfield 80
-
-#define japanese_oldGold        81
-#define japanese_parliament     82
-#define japanese_kools          83
-#define japanese_lucky          84
-#define japanese_chesterfield   85
-
-#define norwegian_oldGold       86
-#define norwegian_parliament    87
-#define norwegian_kools         88
-#define norwegian_lucky         89
-#define norwegian_chesterfield  90
-
-#define spaniard_oldGold        91
-#define spaniard_parliament     92
-#define spaniard_kools          93
-#define spaniard_lucky          94
-#define spaniard_chesterfield   95
-
-#define ukranian_oldGold        96
-#define ukranian_parliament     97
-#define ukranian_kools          98
-#define ukranian_lucky          99
-#define ukranian_chesterfield   100
-
-
-#define englishman_coffee      101
-#define englishman_tea         102
-#define englishman_orangeJuice 103
-#define englishman_water       104
-#define englishman_milk        105
-
-#define japanese_coffee        106
-#define japanese_tea           107
-#define japanese_orangeJuice   108
-#define japanese_water         109
-#define japanese_milk          110
-
-#define norwegian_coffee       111
-#define norwegian_tea          112
-#define norwegian_orangeJuice  113
-#define norwegian_water        114
-#define norwegian_milk         115
-
-#define spaniard_coffee        116
-#define spaniard_tea           117
-#define spaniard_orangeJuice   118
-#define spaniard_water         119
-#define spaniard_milk          120
-
-#define ukranian_coffee        121
-#define ukranian_tea           122
-#define ukranian_orangeJuice   123
-#define ukranian_water         124
-#define ukranian_milk          125
-
-
-#define E_immLeft_J 126
-#define E_immLeft_N 127
-#define E_immLeft_S 128
-#define E_immLeft_U 129
-
-#define J_immLeft_E 130
-#define J_immLeft_N 131
-#define J_immLeft_S 132
-#define J_immLeft_U 133
-
-#define N_immLeft_E 134
-#define N_immLeft_J 135
-#define N_immLeft_S 136
-#define N_immLeft_U 137
-
-#define S_immLeft_E 138
-#define S_immLeft_J 139
-#define S_immLeft_N 140
-#define S_immLeft_U 141
-
-#define U_immLeft_E 142
-#define U_immLeft_J 143
-#define U_immLeft_N 144
-#define U_immLeft_S 145
-
-
-#define E_nextTo_J 146
-#define E_nextTo_N 147
-#define E_nextTo_S 148
-#define E_nextTo_U 149
-
-#define J_nextTo_E E_nextTo_J
-#define J_nextTo_N 150
-#define J_nextTo_S 151
-#define J_nextTo_U 152
-
-#define N_nextTo_E E_nextTo_N
-#define N_nextTo_J J_nextTo_N
-#define N_nextTo_S 153
-#define N_nextTo_U 154
-
-#define S_nextTo_E E_nextTo_S
-#define S_nextTo_J J_nextTo_S
-#define S_nextTo_N N_nextTo_S
-#define S_nextTo_U 155
-
-#define U_nextTo_E E_nextTo_U
-#define U_nextTo_J J_nextTo_U
-#define U_nextTo_N N_nextTo_U
-#define U_nextTo_S S_nextTo_U
-\end{verbatim}
-
 
 
 \end{document}

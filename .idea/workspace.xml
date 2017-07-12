@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="" />
+    <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/csp/sandbox.csp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/csp/simson.csp" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/demo2.dimacs" afterPath="$PROJECT_DIR$/examples/demo2.dimacs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.bib" afterPath="$PROJECT_DIR$/white_paper.bib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.tex" afterPath="$PROJECT_DIR$/white_paper.tex" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,27 +20,47 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="true">
+      <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/white_paper.tex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="1299" column="0" lean-forward="true" selection-start-line="1299" selection-start-column="0" selection-end-line="1299" selection-end-column="0" />
+            <state relative-caret-position="224">
+              <caret line="1027" column="24" lean-forward="true" selection-start-line="1027" selection-start-column="24" selection-end-line="1027" selection-end-column="24" />
               <folding>
-                <element signature="e#106#2158#0" expanded="true" />
-                <element signature="e#123#1129#0" expanded="true" />
-                <element signature="e#326#984#0" expanded="true" />
-                <element signature="e#987#1111#0" expanded="true" />
-                <element signature="e#1532#2158#0" expanded="true" />
+                <element signature="e#107#2173#0" expanded="true" />
+                <element signature="e#124#1144#0" expanded="true" />
+                <element signature="e#327#999#0" expanded="true" />
+                <element signature="e#1002#1126#0" expanded="true" />
+                <element signature="e#1547#2173#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="white_paper.bib" pinned="false" current-in-tab="false">
+      <file leaf-file-name="white_paper.bib" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/white_paper.bib">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="33" column="23" lean-forward="true" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
+            <state relative-caret-position="239">
+              <caret line="82" column="26" lean-forward="true" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="simple_encoded_stats.csp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/csp/simple_encoded_stats.csp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="870">
+              <caret line="58" column="26" lean-forward="true" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="demo2.dimacs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/demo2.dimacs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="329">
+              <caret line="201" column="27" lean-forward="false" selection-start-line="201" selection-start-column="27" selection-end-line="201" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -110,8 +137,10 @@
         <option value="$PROJECT_DIR$/statistics/statistics_driver.py" />
         <option value="$PROJECT_DIR$/statistics/statistics_generator.py" />
         <option value="$PROJECT_DIR$/csp/encoded_stats_noise.csp" />
-        <option value="$PROJECT_DIR$/white_paper.bib" />
+        <option value="$PROJECT_DIR$/examples/demo2.dimacs" />
+        <option value="$PROJECT_DIR$/examples/writer.py" />
         <option value="$PROJECT_DIR$/white_paper.tex" />
+        <option value="$PROJECT_DIR$/white_paper.bib" />
       </list>
     </option>
   </component>
@@ -661,7 +690,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cnf_example" />
     <entry file="file://$PROJECT_DIR$/dimacs_cnf_processor.py" />
     <entry file="file://$PROJECT_DIR$/examples/satsolver_attack_example.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -790,20 +818,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/encoded_stats.csp" />
     <entry file="file://$PROJECT_DIR$/TODO.md" />
-    <entry file="file://$PROJECT_DIR$/examples/example_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="824">
-          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/csp/simson.csp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/syllogism.csp" />
     <entry file="file://$PROJECT_DIR$/csp/encoded_stats.csp">
       <provider selected="true" editor-type-id="text-editor">
@@ -855,13 +869,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/problem_analysis.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -873,26 +880,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/demo2.dimacs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="8" lean-forward="true" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/dimacs_processor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="20" lean-forward="true" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/csp/simple_encoded_stats.csp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-898">
-          <caret line="58" column="26" lean-forward="true" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -964,14 +955,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/white_paper.bib">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="33" column="23" lean-forward="true" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/example_survey_responses.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -980,21 +963,77 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/white_paper.tex">
+    <entry file="file://$PROJECT_DIR$/csp/simple_encoded_stats.csp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="58" column="26" lean-forward="true" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/csp/simson.csp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/example_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/writer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="8" lean-forward="true" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/demo2.dimacs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="329">
-          <caret line="1299" column="0" lean-forward="true" selection-start-line="1299" selection-start-column="0" selection-end-line="1299" selection-end-column="0" />
+          <caret line="201" column="27" lean-forward="false" selection-start-line="201" selection-start-column="27" selection-end-line="201" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/white_paper.tex">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="1027" column="24" lean-forward="true" selection-start-line="1027" selection-start-column="24" selection-end-line="1027" selection-end-column="24" />
           <folding>
-            <element signature="e#106#2158#0" expanded="true" />
-            <element signature="e#123#1129#0" expanded="true" />
-            <element signature="e#326#984#0" expanded="true" />
-            <element signature="e#987#1111#0" expanded="true" />
-            <element signature="e#1532#2158#0" expanded="true" />
+            <element signature="e#107#2173#0" expanded="true" />
+            <element signature="e#124#1144#0" expanded="true" />
+            <element signature="e#327#999#0" expanded="true" />
+            <element signature="e#1002#1126#0" expanded="true" />
+            <element signature="e#1547#2173#0" expanded="true" />
           </folding>
         </state>
       </provider>
       <provider editor-type-id="LaTeXFileEditor">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/white_paper.bib">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="82" column="26" lean-forward="true" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
+          <folding />
+        </state>
       </provider>
     </entry>
   </component>
