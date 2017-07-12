@@ -62,7 +62,7 @@ a modern DRA.
 In this section we examine the most relevant literature regarding the DRA. Although this attack is relatively new due to the aforementioned recent development of attack technology, several groups have performed research on important concepts used in the DRA such as database inference from statistics and linear reconstruction.
 
 \subsection{Noise Addition and Query Restriction}
-Dinur and Nissim \cite{noise} proposed in 2003 that seemingly innocuous queries to a statistical database could be used to compromise individuals' sensitive data through obtaining indirectly identifying information. They further demonstrated that restricting the number or type of queries is often insufficient to prevent access to indirectly identifying information, since the system's refusal to answer a 'dangerous' query itself gives the user information. The authors found that noise addition on the order of $\Omega(\sqrt{n})$ for a database of size n is necessary to fully protect individuals from being identified.
+Dinur and Nissim \cite{noise} proposed in 2003 that seemingly innocuous queries to a statistical database could be used to compromise individuals' sensitive data through obtaining indirectly identifying information. They further demonstrated that restricting the number or type of queries is often insufficient to prevent access to indirectly identifying information, since the system's refusal to answer a 'dangerous' query itself gives the user information. The authors found that noise addition on the order of $\Omega(\sqrt{n})$ for a database of size $n$ is necessary to fully protect individuals from being identified.
 
 
 \subsection{Linear Reconstruction}
@@ -194,7 +194,7 @@ False & False & 1  \\
 \caption{Truth table for the == operator}\label{truthtable}
 \end{table}
 
-The data in Table~\ref{resultsencodedsmall} is the 'ground truth' (original) database that the attacker wishes to reconstruct. At the start of the attack, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall}.
+ At the start of the attack, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall} with the goal of reconstructing the database in Table~\ref{resultsencodedsmall}.
 
 
 
@@ -337,7 +337,9 @@ S-expressions are evaluated from the innermost parentheses to the outermost, wit
     \item The result of Step 2 must equal 40.
 \end{enumerate}
 
-Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35 seconds.
+Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35 seconds on a single Intel i7 2012 MacBook Pro.
+
+At past international SAT solver competitions, SAT solvers such as Sugar have solved problems with tens of millions of variables in less than 20 minutes \cite{satcomp}, demonstrating that dataset size and constraint number is not an insurmountable obstacle to this type of DRA.
 
 \begin{table}
 \begin{tabular}{c|c|c|c|c|c}
@@ -355,7 +357,7 @@ ID & Household & Age & Sex & Race & Generation \\
 10 & 1 & 70 & 1 & 0 & 2 \\
 \hline
 \end{tabular}
-\caption{Sugar output when run on the encoded statistics in Appendix 4}\label{sugarbig}
+\caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
 \end{table}
 
 \pagebreak
@@ -451,7 +453,7 @@ For example, imagine a fast food restaurant owner wants to maximize profit by de
 
 The owner can draw the objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}. From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
 
-In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has three constraints [x, y, z] in terms of the decision variables, then the objective function would be "Maximize a if a = "x is met" + "y is met" + "z is met", where "x is met" returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher 'score' a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
+In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has two constraints [x, y] in terms of the decision variables, then the objective function would be "Maximize f if f = ["x is met" + "y is met"], where "x is met" returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher 'score' a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
 
 \subsection{Sugar Input}
 
