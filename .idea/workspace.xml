@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="395d6265-36cd-4040-84c1-1a9e1b0eac2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/optimization/cvxopt_example_solver.py" afterPath="$PROJECT_DIR$/optimization/cvxopt_example_solver.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/white_paper.tex" afterPath="$PROJECT_DIR$/white_paper.tex" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -19,8 +19,8 @@
       <file leaf-file-name="white_paper.tex" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/white_paper.tex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="1041" column="24" lean-forward="true" selection-start-line="1041" selection-start-column="24" selection-end-line="1041" selection-end-column="24" />
+            <state relative-caret-position="365">
+              <caret line="1034" column="19" lean-forward="false" selection-start-line="1034" selection-start-column="19" selection-end-line="1034" selection-end-column="19" />
               <folding>
                 <element signature="e#107#2215#0" expanded="true" />
                 <element signature="e#124#1170#0" expanded="true" />
@@ -45,8 +45,8 @@
       <file leaf-file-name="cvxopt_example_solver.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/optimization/cvxopt_example_solver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="941">
-              <caret line="63" column="0" lean-forward="true" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
+            <state relative-caret-position="191">
+              <caret line="104" column="24" lean-forward="true" selection-start-line="104" selection-start-column="24" selection-end-line="104" selection-end-column="24" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -57,7 +57,7 @@
       <file leaf-file-name="simple_encoded_stats.csp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/csp/simple_encoded_stats.csp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="870">
+            <state relative-caret-position="216">
               <caret line="58" column="26" lean-forward="false" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
               <folding />
             </state>
@@ -974,24 +974,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/csp/simple_encoded_stats.csp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="58" column="26" lean-forward="false" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimization/cvxopt_example_solver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="941">
-          <caret line="63" column="0" lean-forward="true" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/white_paper.bib">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1140">
@@ -1000,13 +982,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/csp/simple_encoded_stats.csp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="58" column="26" lean-forward="false" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/optimization/cvxopt_example_solver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="104" column="24" lean-forward="true" selection-start-line="104" selection-start-column="24" selection-end-line="104" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/white_paper.tex">
       <provider editor-type-id="LaTeXFileEditor">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="1041" column="24" lean-forward="true" selection-start-line="1041" selection-start-column="24" selection-end-line="1041" selection-end-column="24" />
+        <state relative-caret-position="365">
+          <caret line="1034" column="19" lean-forward="false" selection-start-line="1034" selection-start-column="19" selection-end-line="1034" selection-end-column="19" />
           <folding>
             <element signature="e#107#2215#0" expanded="true" />
             <element signature="e#124#1170#0" expanded="true" />

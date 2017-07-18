@@ -5,12 +5,6 @@ import numpy as np
 # define a new fxn for every constraint, then add them all up for the obj function? (each sub function returns
 # 1 if met and -1000 if not met)
 
-objective = cp.Maximize(constraint_sum_fxn)
-
-master_constraints = []
-
-def constraint_sum_fxn:
-
 
 A = cp.Int(10)
 H = cp.Int(10)
@@ -62,5 +56,71 @@ bounds.append(H[8] <= 2)
 bounds.append(H[9] >= 1)
 bounds.append(H[9] <= 2)
 
+bounds.append(S[0] >= 0)
+bounds.append(S[0] <= 1)
+bounds.append(S[1] >= 0)
+bounds.append(S[1] <= 1)
+bounds.append(S[2] >= 0)
+bounds.append(S[2] <= 1)
+bounds.append(S[3] >= 0)
+bounds.append(S[3] <= 1)
+bounds.append(S[4] >= 0)
+bounds.append(S[4] <= 1)
+bounds.append(S[5] >= 0)
+bounds.append(S[5] <= 1)
+bounds.append(S[6] >= 0)
+bounds.append(S[6] <= 1)
+bounds.append(S[7] >= 0)
+bounds.append(S[7] <= 1)
+bounds.append(S[8] >= 0)
+bounds.append(S[8] <= 1)
+bounds.append(S[9] >= 0)
+bounds.append(S[9] <= 1)
 
-master_constraints += bounds
+bounds.append(R[0] >= 0)
+bounds.append(R[0] <= 1)
+bounds.append(R[1] >= 0)
+bounds.append(R[1] <= 1)
+bounds.append(R[2] >= 0)
+bounds.append(R[2] <= 1)
+bounds.append(R[3] >= 0)
+bounds.append(R[3] <= 1)
+bounds.append(R[4] >= 0)
+bounds.append(R[4] <= 1)
+bounds.append(R[5] >= 0)
+bounds.append(R[5] <= 1)
+bounds.append(R[6] >= 0)
+bounds.append(R[6] <= 1)
+bounds.append(R[7] >= 0)
+bounds.append(R[7] <= 1)
+bounds.append(R[8] >= 0)
+bounds.append(R[8] <= 1)
+bounds.append(R[9] >= 0)
+bounds.append(R[9] <= 1)
+
+bounds.append(G[0] >= 0)
+bounds.append(G[0] <= 2)
+bounds.append(G[1] >= 0)
+bounds.append(G[1] <= 2)
+bounds.append(G[2] >= 0)
+bounds.append(G[2] <= 2)
+bounds.append(G[3] >= 0)
+bounds.append(G[3] <= 2)
+bounds.append(G[4] >= 0)
+bounds.append(G[4] <= 2)
+bounds.append(G[5] >= 0)
+bounds.append(G[5] <= 2)
+bounds.append(G[6] >= 0)
+bounds.append(G[6] <= 2)
+bounds.append(G[7] >= 0)
+bounds.append(G[7] <= 2)
+bounds.append(G[8] >= 0)
+bounds.append(G[8] <= 2)
+bounds.append(G[9] >= 0)
+bounds.append(G[9] <= 2)
+
+
+scores = []
+
+objective = cp.Maximize(sum(scores))
+
