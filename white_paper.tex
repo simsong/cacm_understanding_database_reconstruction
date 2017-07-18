@@ -13,9 +13,8 @@
 
 \begin{abstract}
 In recent years, a certain type of attack on confidential survey data,
-the database reconstruction attack, has become increasingly feasible due to rapid advances in attack algorithm
-sophistication. We discuss how these attacks
-function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is much more effective at defending against database attacks by SAT solvers and optimizers.
+the database reconstruction attack, has become increasingly feasible due to advances in computing power and the sophistication of general purpose problem solvers. We discuss how these attacks
+function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is effective at defending against database attacks by SAT solvers and optimizers.
 \end{abstract}
 
 
@@ -26,48 +25,47 @@ database reconstruction attack, SAT solver, linear optimization, privacy, disclo
 
 
 \section{Problem Background}
-Database intruders often seek to identify individuals from publicly
+Database intruders seek to identify individuals from publicly
 available data products such as tables and graphs.
-Defending against such privacy breaches is
-a high priority for statistical agencies, and so researchers
+Defending against such attacks is
+a priority for statistical agencies, and so researchers
 have developed a variety of techniques to prevent database users
 from identifying any individual's personal information.
 
 These techniques include:
 \begin{enumerate}
-  \item Cell Suppression, where the values of cells with small counts or few possible
+  \item \textbf{Cell Suppression}, where the values of cells with small counts or few possible
         generating combinations are removed from the published table
-  \item Row Swapping, where the data rows corresponding to individuals
+  \item \textbf{Row Swapping}, where the data rows corresponding to individuals
         with similar values in certain key cells are switched
-  \item Generalization, where numerical values are grouped into
+  \item \textbf{Generalization}, where numerical values are grouped into
         buckets corresponding to ranges, instead of giving the exact
         values for each entry in the table
-  \item Top-and-bottom-coding, where the statistical groups at the high and low ends
+  \item \textbf{Top-and-bottom-coding}, where the statistical groups at the high and low ends
         of the table are given without upper or lower bound (e.g.
-        reporting the highest group for age as "80+" instead of
-        "80-90" and "90-100")
+        reporting the highest group for age as 80+ instead of
+        80-90 and 90-100)
 \end{enumerate}
 
 The goal of a database reconstruction attack is to
 use public statistics released about confidential data to create a mathematical system of equations,
-which then can be used to reconstruct the original (before the disclosure
-avoidance techniques were applied) data set.
-While the above techniques are not without merit, this paper will
-demonstrate that they alone are insufficient in guarding data against
+which then can be used to reconstruct the original data set.
+While the above techniques are not without merit, this paper
+demonstrates that they are insufficient in guarding data against
 a modern DRA.
 
 \section{Related Work}
 
 
-In this section we examine the most relevant literature regarding the DRA. Although this attack is relatively new due to the aforementioned recent development of attack technology, several groups have performed research on important concepts used in the DRA such as database inference from statistics and linear reconstruction.
+In this section we examine the most relevant literature regarding the DRA.
 
 \subsection{Noise Addition and Query Restriction}
-Dinur and Nissim \cite{noise} proposed in 2003 that seemingly innocuous queries to a statistical database could be used to compromise individuals' sensitive data through obtaining indirectly identifying information. They further demonstrated that restricting the number or type of queries is often insufficient to prevent access to indirectly identifying information, since the system's refusal to answer a 'dangerous' query itself gives the user information. The authors found that noise addition on the order of $\Omega(\sqrt{n})$ for a database of size $n$ is necessary to fully protect individuals from being identified.
+A statistical table can be formally viewed as a set of queries applied to a series of confidential data. Dinur and Nissim \cite{noise} proposed in 2003 that seemingly innocuous queries to a statistical database could be used to compromise individuals' confidential data through obtaining indirectly identifying information. They further demonstrated that restricting the number or type of queries is often insufficient to prevent access to indirectly identifying information, since the system's refusal to answer a 'dangerous' query itself gives the user information. The authors found that if a database is modeled as a string of $n$ bits, then at least $\sqrt{n}$ bits must be modified by adding noise to protect individuals from being identified.
 
 
 \subsection{Linear Reconstruction}
 
-Kasiviswanathan, Rudelson, and Smith \cite{linearattack} introduced the concept of the linear reconstruction attack which is the root behind the generic DRA. The key in this paper is the concept that, when given 'nonsensitive' data such as zip code or gender, an attacker can construct a matrix of linear equalities which can often be solved in polynomial time. The paper also analyzes a common reconstruction technique known as least squares decoding, where the attacker sets up a goal function to minimize the square of the distance between two databases in order to reconstruct the original database. Although the modern DRA is much more powerful due to solvers' abilities to support constraints besides simple equalities, the core concept of the matrix construction from this paper is still applicable.
+Kasiviswanathan, Rudelson, and Smith \cite{linearattack} introduced the concept of the linear reconstruction attack which is the root behind the generic DRA. The key in this paper is the concept that, when given nonsensitive data such as zip code or gender, an attacker can construct a matrix of linear equalities which can often be solved in polynomial time. The paper also analyzes a common reconstruction technique known as least squares decoding, where the attacker sets up a goal function to minimize the square of the distance between two databases in order to reconstruct the original database. Although the modern DRA is much more powerful due to solvers' abilities to support constraints besides simple equalities, the core concept of the matrix construction from this paper is still applicable.
 
 \subsection{Identifying Properties of a Database from Published Statistics}
 Brown and Heathers \cite{grim} developed the granularity-related inconsistency of means (GRIM) test in response to observed inconsistencies in published data from psychological journals. This test is centered around the premise that, for statistics drawn from integer data, only certain means are possible. The GRIM test determines whether reported means could possibly have come from data sets with a certain size, granularity, and group number. In surveying 71 published articles, the authors found 36 papers with one inconsistency and 16 with two or more inconsistencies. Although this test was intended to detect possible errors or mean falsification in published articles, the concept of drawing inferential conclusions about a data set based only off of published statistics is a key concept behind the DRA.
@@ -77,20 +75,14 @@ Brown and Heathers \cite{grim} developed the granularity-related inconsistency o
 \section{The Database Reconstruction Attack: An Example}
 
 
-To conceptually understand a DRA, we first consider a survey given to one household by a statistical agency. Table~\ref{groundtruthsmall} shows the responses to the following survey:
-
-\textbf{Please provide the following for each member
-of your family:
-Age, Sex, Race, Generation.}
-
+To conceptually understand a DRA, we first consider a survey given to one household by a statistical agency. Table~\ref{groundtruthsmall} shows a hypothetical survey and responses from a small population.
 
 The statistical agency then publishes the data product in Table~\ref{resultssmall} based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy.
-
 Retabulating these results in a numerical format with the keys in Table~\ref{tabulationkey} gives the results in Table~\ref{resultsencodedsmall}.
 
 
-
 \begin{table*}
+
 \begin{minipage}[t]{\columnwidth}
 \begin{tabular}{rlll}
 Age & Sex & Race & Gen \\
@@ -107,7 +99,8 @@ Age & Sex & Race & Gen \\
 \\
 \hline
 \end{tabular}
-\caption{Sample survey responses for a single fictional household (Not published)}\label{groundtruthsmall}
+\caption{Responses from a single fictional household
+to the survey: \textbf{Please provide the following for each member of your family: Age, Sex, Race, Generation.} (Not published)} \label{groundtruthsmall}
 \end{minipage}
 \hspace{\columnsep}
 \begin{minipage}[t]{\columnwidth}
@@ -178,7 +171,7 @@ ID & Household & Age & Sex & Race & Generation \\
 \\
 \\
 
-\caption{Encoded published survey results}\label{resultsencodedsmall}
+\caption{Encoded survey responses (Not published)}\label{resultsencodedsmall}
 \end{table}
 
 \begin{table}[t]
@@ -194,14 +187,14 @@ False & False & 1  \\
 \caption{Truth table for the == operator}\label{truthtable}
 \end{table}
 
- At the start of the attack, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall} with the goal of reconstructing the database in Table~\ref{resultsencodedsmall}.
+
+ To start, the attacker writes the table of 25 unknowns given in Table~\ref{unknownssmall}, with the goal of reconstructing the database in Table~\ref{resultsencodedsmall}.
 
 
 
 The reconstruction attack works by identifying constraint
-equations given by the data table. Constraint equations are  mathematical formulae representing rules that the ground truth satisfies. For example, we have the
-following statistic:
-
+equations given by the data table. Constraint equations are  mathematical formulae representing rules that the ground truth satisfies. Next we discuss two constraints.
+\subsection{Constraint 1}
 \textbf{Individuals: Number = 5, Average Age = 24}
 
 
@@ -211,9 +204,9 @@ This can be written as a linear constraint equation using the symbols for age, $
 This equation is in 5 unknowns, and so has many possible solutions alone.
 However, the attacker can write more constraint equations to further constrain the values of the unknowns.
 
-Here, the == operator is a test for equivalence. A truth table for this operator is shown in Table~\ref{truthtable}. Additionally, the = operator is used to show that the right-hand side and left-hand side of this operator must be equal in the constraint expression.
+Here, the == operator is a test for equivalence.It returns 1 if the left and right hand sides are equal, and 0 otherwise. A truth table for this operator is shown in Table~\ref{truthtable}. Additionally, the = operator is used to show that the right-hand side and left-hand side of this operator must be equal.
 
-
+\subsection{Constraint 2}
 \textbf{Children: Number = 2, Average Age = 6.5}
 
 
@@ -227,39 +220,39 @@ Becomes the following two equations:
 & (A1 * (G1==0) + A2 * (G2==0) + A3 * (G3==0) +\\
 & A4 * (G4==0) +  A5 * (G5==0)) = 13
 \end{align*}
+
+\subsection{Filling in the Remaining Constraints}
 Once the attacker has converted all the published statistics
-into equations like the ones above, the equations together form a system of many equations in 25 unknowns. This system has one 'true' solution, equivalent to the
-ground truth, and possibly many other 'false' solutions, which fit the constraints but are not equivalent to the ground truth.
-The \textit{solution universe}, the set of all solutions that fit the encoded set of constraints, is originally potentially  quite large, containing many false solutions along with the true solution.
+into equations like the ones above, the equations together form a system of many equations in 25 unknowns. This system has one true solution, equivalent to the
+ground truth, and possibly many other false solutions, which fit the constraints but are not equivalent to the ground truth.
+The \textit{solution universe}, the set of all solutions that fit the encoded set of constraints, is potentially quite large, containing many false solutions along with the true solution.
 However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
 down the set of possible solutions.
 
 Eventually, the attacker
 will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
-the ground truth. At this point, the attack has succeeded, and the statistical agency has failed to protect its respondents' privacy. Note here that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
+the ground truth. At this point, the attack has succeeded, and the statistical agency has completely failed to protect its respondents' privacy. Note that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
 
-Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been completely reconstructed. Thus, the database has failed to protect user privacy even though the attack did not fully reconstruct the database.
-\\
-\\
+Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data for some respondents because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been reconstructed. Thus, the database has failed to protect this person's privacy even though the attack did not fully reconstruct the database.
+Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously.
 
 
 \section{Methods of Attack}
 
-The three most common and effective ways of solving a
-system of constraint equations are:
+Here we discuss three approaches for solving the system of constraints that we have developed.
 \begin{enumerate}
 
 \item \textbf{Brute Force} - trying every possible combination of solutions.\\
 
 \item \textbf{SAT Solvers} - applying programs that quickly solve Boolean algebra problems.\\
 
-\item \textbf{Optimization} -  using optimization software such as IBM's CPLEX to solve systems of constraints.
+\item \textbf{Optimization} -  using optimization software such as the open source optimizer CVXOPT to solve systems of constraints.
 
 \end{enumerate}
 
-For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, optimizers and SAT solvers are both quite effective because they can reconstruct databases much more quickly than can a brute-force approach. Recent advances in SAT solver heuristics have enabled these programs to frequently solve systems with even millions of variables in a matter of minutes. Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
+For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, SAT solvers and optimizers are both quite effective because they can reconstruct databases much more quickly than can a brute-force approach. Recent advances in SAT solver heuristics have enabled these programs to frequently solve systems with even millions of variables in a matter of minutes. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
 
-\section{Revisiting the Example}
+\section{Database Reconstruction with a SAT Solver}
 
 In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new, larger set of responses to the survey given earlier.
 
@@ -326,20 +319,21 @@ Households $\geq 40\% $ black & 2 & 40 \\
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
-called PicoSAT written in C. Input and output is given to and from the open-source Java program Sugar \cite{sugar}, which wraps SAT solvers for usability improvements. In Sugar, constraints are given to the SAT solver through \textit{s-expressions}, which are mathematical expressions written in a special nested prefix form. For example, the constraint "Average total age (in a population of size 5): 40" is encoded as the following s-expression:
-
+called PicoSAT written in C. PicoSAT takes input in the standard DIMACS file format. Because the DIMACS format can be difficult to understand, we use another open source program, Sugar\cite{sugar}, to translate our system of constraints into the DIMACS format. In Sugar, constraints are given to the SAT solver through \textit{s-expressions}, which are mathematical expressions written in a special nested prefix form. For example, the constraint "Average total age (in a population of size 5): 40" is encoded as the following s-expression:
+\begin{verbatim}
 (= (/ (+ A1 A2 A3 A4 A5) 5) 40)
+\end{verbatim}
 
-S-expressions are evaluated from the innermost parentheses to the outermost, with the operator at the left of the parenthetic expression being applied to the rest of the arguments in that expression. The above expression is evaluated using the following steps:
+S-expressions are evaluated from the innermost parentheses to the outermost, with the operator at the left of each parenthetic expression being applied to the rest of the arguments in that expression. The above expression is evaluated using the following steps:
 \begin{enumerate}
     \item Take the sum of variables A1...A5.
     \item Divide the result of Step 1 by 5.
     \item The result of Step 2 must equal 40.
 \end{enumerate}
 
-Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are different, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1 in only 35 seconds on a single Intel i7 2012 MacBook Pro.
+Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are permutated, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1. Finding this solution required 35 seconds on a single 2012 MacBook Pro with an Intel i7 2.9GHz processor.
 
-At past international SAT solver competitions, SAT solvers such as Sugar have solved problems with tens of millions of variables in less than 20 minutes \cite{satcomp}, demonstrating that dataset size and constraint number is not an insurmountable obstacle to this type of DRA.
+At past international SAT solver competitions, SAT solvers such as PicoSAT have solved problems with tens of millions of variables in less than 20 minutes \cite{satcomp}, demonstrating that dataset size and constraint number is not an insurmountable obstacle to this type of DRA.
 
 \begin{table}
 \begin{tabular}{c|c|c|c|c|c}
@@ -360,16 +354,17 @@ ID & Household & Age & Sex & Race & Generation \\
 \caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
 \end{table}
 
-\pagebreak
+
+\section{Database Reconstruction with an Optimizer}
 
 \section{Defending Against a DRA}
 As demonstrated above, new techniques must be developed in
-order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise addition, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then publishes that number, there are now five elements in the solution universe for this value, where without noise addition there would be only one. Adding noise from a more complex distribution such as the Gaussian or Laplace distributions adds even more elements to the solution universe, since they are not discrete distributions like the example above. Noise addition allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
+order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise infusion, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then calculates and publishes statistics consistent with this new age, there are now five elements in the solution universe for this value, where without noise infusion there would be only one. If two responses are processed with noise of this sort, there are now $5^2 = 25$ possible solutions. If 10 people undergo noise infusion of this type, there are $5^{10}$ --- nearly 10 million --- possible solutions. Notice that the statistical agency can reveal that noise infusion has taken place, and can even reveal how much noise has been added, without compromising the effectiveness of said noise infusion. Noise infusion allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
 
-Especially noteworthy in the discussion of noise addition techniques is a special type of noise addition called the Laplace Mechanism \cite{Dwork:2006:CNS:2180286.2180305}
-The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise addition without worrying that his privacy will be compromised by his choice to respond.
+Especially noteworthy in the discussion of noise infusion techniques is a special type of noise infusion called the Laplace Mechanism .
+The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise infusion without worrying that his privacy will be compromised by his choice to respond.
 
-To demonstrate how effective adding Laplace noise is against the DRA, we reconsider the example from the previous section. This time, the statistical agency applies the Laplace transformation with mean 0 and exponential decay 3 to the survey responses to the ages before publishing any statistical products. The new published data product, analogous to Table~\ref{publishedstatsbig}, is shown in Table~\ref{publishedstatsnoise}.
+In the following example of noise infusion, we use noise generated from a distribution called the Laplace distribution \cite{Dwork:2006:CNS:2180286.2180305}. We choose this distribution because, when correctly applied, this type of noise addition gives a strong mathematical guarantee of individual privacy. To demonstrate how effective adding Laplace noise is against the DRA, we reconsider the example from the previous section. This time, the statistical agency applies the Laplace transformation with mean 0 and exponential decay 3 to the survey responses to the ages before publishing any statistical products. The new published data product, analogous to Table~\ref{publishedstatsbig}, is shown in Table~\ref{publishedstatsnoise}.
 
 \begin{table}[t]
 \begin{tabular}{c|c|c}
@@ -409,13 +404,13 @@ Households $\geq 40\% $ black & 2 & 38.57 \\
 \end{tabular}
 \caption{Data publication with added Laplace noise}\label{publishedstatsnoise}
 \end{table}
-It is important to note that the addition of the noise did not significantly impact the reported statistics, thus preserving their utility to nonintrusive users. However, when the attacker attempts to perform the DRA using the same process as before, Sugar returns "Unsatisfiable". The noise addition has defeated the DRA, and the statistical agency has upheld its legal obligation to protect respondent privacy.
+It is important to note that the infusion of the noise did not significantly impact the reported statistics, thus preserving their utility to nonintrusive users. However, when the attacker attempts to perform the DRA using the same process as before, Sugar returns "Unsatisfiable". The noise infusion has defeated the DRA, and the statistical agency has upheld its legal obligation to protect respondent privacy.
 
 \section{Problem Analysis}
 
 With the dramatic improvement in the efficiency of optimizers and SAT solvers in the last decade, the database reconstruction attack is no longer a solely theoretical danger. The vast amount of data products the Census publishes each year gives a determined and informed attacker more than enough constraints to reconstruct some or all of a target database and breach the privacy of millions of people. Although the Census Bureau's current disclosure avoidance technique suite is often sufficient to defend against a cursory attempt at an identification attack, we have demonstrated through attack simulations that cell suppression and grouping are not completely against the power of more sophisticated forms of attack.
 
-The most effective technique for defending against a DRA is the addition of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In addition to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise addition a required part of the pre-publication disclosure review process in order to protect respondent privacy.
+The most effective technique for defending against a DRA is the infusion of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In infusion to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise infusion a required part of the pre-publication disclosure review process in order to protect respondent privacy.
 
 \section{References}
 
@@ -449,11 +444,21 @@ There are a wide variety of SAT solvers available to the public for minimal or n
 
 The goal of optimization software is to minimize or maximize the value of a function in any number of variables given a set of constraints on the values of those variables.\cite{lpintro} This function, known as the \textit{objective function}, is a function that a certain number of inputs and returns a single output, or, formally, is a function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$.
 
-For example, imagine a fast food restaurant owner wants to maximize profit by deciding how many hot dogs and tacos to produce each day. If the price of a hot dog is \$5, and the price of a taco is \$3, then the owner's objective function can be written as, "Maximize profit where profit = 5H + 7T" where H is the number of hot dogs sold and T the number of tacos sold. Constraints the owner may face include the costs to produce a hot dog or taco, the maximum number of hours the restaurant's employees can work, and the maximum amount of raw food ingredients the restaurant can obtain in a day. If a hot dog or taco can be produced in 5 minutes, and state law mandates that an employee can only work 8 hours a day maximum, then a constraint the owner faces can be written as $\frac{H}{12} + \frac{T}{12} \leq 8$. If a hot dog costs \$1 to make, a taco costs \$0.50 to make, and the owner can only purchase up to \$80 worth of ingredients per day, then another constraint is $H + 0.5T = 80$.
+For example, imagine a fast food restaurant owner wants to maximize profit by deciding how many hot dogs and tacos to produce each day. If the price of a hot dog is \$5, and the price of a taco is \$3, then the owner's objective function can be written as:
+\begin{center}
+\textit{Maximize profit where profit} $= 5H + 7T$
+\end{center}
+where H is the number of hot dogs sold and T the number of tacos sold. Constraints the owner may face include the costs to produce a hot dog or taco, the maximum number of hours the restaurant's employees can work, and the maximum amount of raw food ingredients the restaurant can obtain in a day. If a hot dog or taco can be produced in 5 minutes, and state law mandates that an employee can only work 8 hours a day maximum, then a constraint the owner faces can be written as $\frac{H}{12} + \frac{T}{12} \leq 8$. If a hot dog costs \$1 to make, a taco costs \$0.50 to make, and the owner can only purchase up to \$80 worth of ingredients per day, then another constraint is $H + 0.5T = 80$.
 
-The owner can draw the objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}. From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
+The owner can draw the objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}.
 
-In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has two constraints [x, y] in terms of the decision variables, then the objective function would be "Maximize f if f = ["x is met" + "y is met"], where "x is met" returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher 'score' a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
+From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
+
+In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective because without an objective function there is no gradient to travel along. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has two constraints [x, y] in terms of the decision variables, then the objective function would be:
+\begin{center}
+Maximize $f$ where $f = [x\_is\_met + y\_is\_met]$
+\end{center}
+where $x\_is\_met$ returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher score a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
 
 \subsection{Sugar Input}
 
@@ -462,6 +467,8 @@ Sugar input is given in a standard Constraint Satisfaction Problem (CSP) file fo
 Input for the mock survey from Section 4 is as follows:
 
 \begin{verbatim}
+;define variables and their domains
+;households (either 1 or 2)
 (int H1 1 2)
 (int H2 1 2)
 (int H3 1 2)
@@ -472,6 +479,7 @@ Input for the mock survey from Section 4 is as follows:
 (int H8 1 2)
 (int H9 1 2)
 (int H10 1 2)
+;ages (between 1 and 90 years old)
 (int A1 1 90)
 (int A2 1 90)
 (int A3 1 90)
@@ -482,6 +490,7 @@ Input for the mock survey from Section 4 is as follows:
 (int A8 1 90)
 (int A9 1 90)
 (int A10 1 90)
+;sexes (male or female)
 (int S1 0 1)
 (int S2 0 1)
 (int S3 0 1)
@@ -492,6 +501,7 @@ Input for the mock survey from Section 4 is as follows:
 (int S8 0 1)
 (int S9 0 1)
 (int S10 0 1)
+;races (white or black)
 (int R1 0 1)
 (int R2 0 1)
 (int R3 0 1)
@@ -502,6 +512,7 @@ Input for the mock survey from Section 4 is as follows:
 (int R8 0 1)
 (int R9 0 1)
 (int R10 0 1)
+;generations (child, parent, or grandparent)
 (int G1 0 2)
 (int G2 0 2)
 (int G3 0 2)
@@ -514,7 +525,8 @@ Input for the mock survey from Section 4 is as follows:
 (int G10 0 2)
 ;
 ;avg age total
-(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 10) 40)
+(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10)
+10) 40)
 ;household sizes
 (<= (+ (if (= H1 1) 1 0) (if (= H2 1) 1 0)
 (if (= H3 1) 1 0) (if (= H4 1) 1 0)
@@ -556,13 +568,13 @@ Input for the mock survey from Section 4 is as follows:
 (if (= S5 1) 1 0) (if (= S6 1) 1 0)
 (if (= S7 1) 1 0) (if (= S8 1) 1 0)
 (if (= S9 1) 1 0) (if (= S10 1) 1 0) ) 5)
-;number blacks
+;number of blacks
 (= (+ (if (= R1 1) 1 0) (if (= R2 1) 1 0)
 (if (= R3 1) 1 0) (if (= R4 1) 1 0)
 (if (= R5 1) 1 0) (if (= R6 1) 1 0)
 (if (= R7 1) 1 0) (if (= R8 1) 1 0)
 (if (= R9 1) 1 0) (if (= R10 1) 1 0) ) 5)
-;number whites
+;number of whites
 (= (+ (if (= R1 0) 1 0) (if (= R2 0) 1 0)
 (if (= R3 0) 1 0) (if (= R4 0) 1 0)
 (if (= R5 0) 1 0) (if (= R6 0) 1 0)
@@ -816,48 +828,46 @@ Input for the mock survey from Section 4 is as follows:
 (if (and (= H10 2) (= S10 1)) 1 0) ) 2)
 ;number of households with
 same-sex married couples: 0
-(= 1 (+
-(if (and (= H1 1)
-(and (= G1 1) (= S1 0))) 1 0)
+(= 1 (+ (if (and (= H1 1)
+    (and (= G1 1) (= S1 0))) 1 0)
 (if (and (= H2 1)
-(and (= G2 1) (= S2 0))) 1 0)
+    (and (= G2 1) (= S2 0))) 1 0)
 (if (and (= H3 1)
-(and (= G3 1) (= S3 0))) 1 0)
+    (and (= G3 1) (= S3 0))) 1 0)
 (if (and (= H4 1)
-(and (= G4 1) (= S4 0))) 1 0)
+    (and (= G4 1) (= S4 0))) 1 0)
 (if (and (= H5 1)
-(and (= G5 1) (= S5 0))) 1 0)
+    (and (= G5 1) (= S5 0))) 1 0)
 (if (and (= H6 1)
-(and (= G6 1) (= S6 0))) 1 0)
+    (and (= G6 1) (= S6 0))) 1 0)
 (if (and (= H7 1)
-(and (= G7 1) (= S7 0))) 1 0)
+    (and (= G7 1) (= S7 0))) 1 0)
 (if (and (= H8 1)
-(and (= G8 1) (= S8 0))) 1 0)
+    (and (= G8 1) (= S8 0))) 1 0)
 (if (and (= H9 1)
-(and (= G9 1) (= S9 0))) 1 0)
+    (and (= G9 1) (= S9 0))) 1 0)
 (if (and (= H10 1)
-(and (= G10 1) (= S10 0)))
-1 0)))
+    (and (= G10 1) (= S10 0))) 1 0)))
 (= 1 (+ (if (and (= H1 2)
-(and (= G1 1) (= S1 0))) 1 0)
+   (and (= G1 1) (= S1 0))) 1 0)
 (if (and (= H2 2)
-(and (= G2 1) (= S2 0))) 1 0)
+   (and (= G2 1) (= S2 0))) 1 0)
 (if (and (= H3 2)
-(and (= G3 1) (= S3 0))) 1 0)
+   (and (= G3 1) (= S3 0))) 1 0)
 (if (and (= H4 2)
-(and (= G4 1) (= S4 0))) 1 0)
+   (and (= G4 1) (= S4 0))) 1 0)
 (if (and (= H5 2)
-(and (= G5 1) (= S5 0))) 1 0)
+   (and (= G5 1) (= S5 0))) 1 0)
 (if (and (= H6 2)
-(and (= G6 1) (= S6 0))) 1 0)
+   (and (= G6 1) (= S6 0))) 1 0)
 (if (and (= H7 2)
-(and (= G7 1) (= S7 0))) 1 0)
+   (and (= G7 1) (= S7 0))) 1 0)
 (if (and (= H8 2)
-(and (= G8 1) (= S8 0))) 1 0)
+   (and (= G8 1) (= S8 0))) 1 0)
 (if (and (= H9 2)
-(and (= G9 1) (= S9 0))) 1 0)
+   (and (= G9 1) (= S9 0))) 1 0)
 (if (and (= H10 2)
-(and (= G10 1) (= S10 0))) 1 0)))
+   (and (= G10 1) (= S10 0))) 1 0)))
 ;avg age of male parents: 30
 (= (/ (* (+ (* (if (and (= G1 1)
 (= S1 0)) 1 0) A1)
@@ -881,25 +891,25 @@ same-sex married couples: 0
 (= S10 0)) 1 0) A10)) 10) 2) 300)
 ;avg age of female parents: 35
 (= (/ (* (+ (* (if (and (= G1 1)
-(= S1 1)) 1 0) A1)
+   (= S1 1)) 1 0) A1)
 (* (if (and (= G2 1)
-(= S2 1)) 1 0) A2)
+   (= S2 1)) 1 0) A2)
 (* (if (and (= G3 1)
-(= S3 1)) 1 0) A3)
+   (= S3 1)) 1 0) A3)
 (* (if (and (= G4 1)
-(= S4 1)) 1 0) A4)
+   (= S4 1)) 1 0) A4)
 (* (if (and (= G5 1)
-(= S5 1)) 1 0) A5)
+   (= S5 1)) 1 0) A5)
 (* (if (and (= G6 1)
-(= S6 1)) 1 0) A6)
+   (= S6 1)) 1 0) A6)
 (* (if (and (= G7 1)
-(= S7 1)) 1 0) A7)
+   (= S7 1)) 1 0) A7)
 (* (if (and (= G8 1)
-(= S8 1)) 1 0) A8)
+   (= S8 1)) 1 0) A8)
 (* (if (and (= G9 1)
-(= S9 1)) 1 0) A9)
+   (= S9 1)) 1 0) A9)
 (* (if (and (= G10 1)
-(= S10 1)) 1 0) A10)) 10) 2) 350)
+   (= S10 1)) 1 0) A10)) 10) 2) 350)
 ;avg age of female grandparents: 75
 (= (/ (* (+ (* (if (and (= G1 2)
 (= S1 1)) 1 0) A1)
@@ -982,45 +992,45 @@ same-sex married couples: 0
 (if (and (= H10 2) (= G10 0)) 1 0) ) 3))
 ;number of interracial married couples: 2
 (= 1 (+ (if (and (= H1 1)
-(and (= G1 1) (= R1 0))) 1 0)
+   (and (= G1 1) (= R1 0))) 1 0)
 (if (and (= H2 1) (and (= G2 1)
-(= R2 0))) 1 0)
+   (= R2 0))) 1 0)
 (if (and (= H3 1) (and (= G3 1)
-(= R3 0))) 1 0)
+   (= R3 0))) 1 0)
 (if (and (= H4 1) (and (= G4 1)
-(= R4 0))) 1 0)
+   (= R4 0))) 1 0)
 (if (and (= H5 1) (and (= G5 1)
-(= R5 0))) 1 0)
+   (= R5 0))) 1 0)
 (if (and (= H6 1) (and (= G6 1)
-(= R6 0))) 1 0)
+   (= R6 0))) 1 0)
 (if (and (= H7 1) (and (= G7 1)
-(= R7 0))) 1 0)
+   (= R7 0))) 1 0)
 (if (and (= H8 1) (and (= G8 1)
-(= R8 0))) 1 0)
+   (= R8 0))) 1 0)
 (if (and (= H9 1) (and (= G9 1)
-(= R9 0))) 1 0)
+   (= R9 0))) 1 0)
 (if (and (= H10 1) (and (= G10 1)
-(= R10 0))) 1 0)))
+   (= R10 0))) 1 0)))
 (= 1 (+ (if (and (= H1 2)
-(and (= G1 1) (= R1 0))) 1 0)
+   (and (= G1 1) (= R1 0))) 1 0)
 (if (and (= H2 2)
-(and (= G2 1) (= R2 0))) 1 0)
+   (and (= G2 1) (= R2 0))) 1 0)
 (if (and (= H3 2)
-(and (= G3 1) (= R3 0))) 1 0)
+   (and (= G3 1) (= R3 0))) 1 0)
 (if (and (= H4 2)
-(and (= G4 1) (= R4 0))) 1 0)
+   (and (= G4 1) (= R4 0))) 1 0)
 (if (and (= H5 2)
-(and (= G5 1) (= R5 0))) 1 0)
+   (and (= G5 1) (= R5 0))) 1 0)
 (if (and (= H6 2)
-(and (= G6 1) (= R6 0))) 1 0)
+   (and (= G6 1) (= R6 0))) 1 0)
 (if (and (= H7 2)
-(and (= G7 1) (= R7 0))) 1 0)
+   (and (= G7 1) (= R7 0))) 1 0)
 (if (and (= H8 2)
-(and (= G8 1) (= R8 0))) 1 0)
+   (and (= G8 1) (= R8 0))) 1 0)
 (if (and (= H9 2)
-(and (= G9 1) (= R9 0))) 1 0)
+   (and (= G9 1) (= R9 0))) 1 0)
 (if (and (= H10 2)
-(and (= G10 1) (= R10 0))) 1 0)))
+   (and (= G10 1) (= R10 0))) 1 0)))
 ;household average ages: 62, 18
 (= 620 (/ (* 10 (+
 (* A1 (if (= H1 1) 1 0))
