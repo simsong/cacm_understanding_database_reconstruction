@@ -123,7 +123,40 @@ Households & 1 & 24 \\
 \end{minipage}
 \end{table*}
 
+\begin{table*}[t]
 
+\begin{minipage}[t]{\columnwidth}
+
+\begin{tabular}{c|c|c|c|c|c}
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & 1 & 24 & 0 & 0 & 1  \\
+2 & 1 & 28 & 1 & 1 & 1  \\
+3 & 1 & 55 & 1 & 0 & 2  \\
+4 & 1 & 5 & 1 & 1 & 0  \\
+5 & 1 & 8 & 0 & 0 & 0  \\
+\hline
+\end{tabular}
+\caption{Encoded survey responses (Not published)}
+\label{resultsencodedsmall}
+\end{minipage}
+\hspace{\columnsep}
+\begin{minipage}[t]{\columnwidth}
+\begin{tabular}{c|c|c|c|c|c}
+ID & Household & Age & Sex & Race & Generation \\
+\hline
+1 & H1 & A1 & S1 & R1 & G1  \\
+2 & H2 & A2 & S2 & R2 & G2  \\
+3 & H3 & A3 & S3 & R3 & G3  \\
+4 & H4 & A4 & S4 & R4 & G4  \\
+5 & H5 & A5 & S5 & R5 & G5  \\
+\hline
+\end{tabular}
+\caption{DRA unknowns}
+\label{unknownssmall}
+\end{minipage}
+
+\end{table*}
 
 \begin{table}
 \begin{tabular}{c|c}
@@ -141,38 +174,6 @@ Grandparent & 2 \\
 \caption{Tabulation key}\label{tabulationkey}
 \end{table}
 
-
-\begin{table}[h]
-\begin{tabular}{c|c|c|c|c|c}
-ID & Household & Age & Sex & Race & Generation \\
-\hline
-1 & H1 & A1 & S1 & R1 & G1  \\
-2 & H2 & A2 & S2 & R2 & G2  \\
-3 & H3 & A3 & S3 & R3 & G3  \\
-4 & H4 & A4 & S4 & R4 & G4  \\
-5 & H5 & A5 & S5 & R5 & G5  \\
-\hline
-\end{tabular}
-\caption{DRA unknowns}\label{unknownssmall}
-\end{table}
-
-\begin{table}[h]
-\begin{tabular}{c|c|c|c|c|c}
-ID & Household & Age & Sex & Race & Generation \\
-\hline
-1 & 1 & 24 & 0 & 0 & 1  \\
-2 & 1 & 28 & 1 & 1 & 1  \\
-3 & 1 & 55 & 1 & 0 & 2  \\
-4 & 1 & 5 & 1 & 1 & 0  \\
-5 & 1 & 8 & 0 & 0 & 0  \\
-\hline
-\end{tabular}
-\\
-\\
-\\
-
-\caption{Encoded survey responses (Not published)}\label{resultsencodedsmall}
-\end{table}
 
 \begin{table}[t]
 \begin{tabular}{cc|c}
@@ -1032,7 +1033,7 @@ same-sex married couples: 0
 (if (and (= H10 2)
    (and (= G10 1) (= R10 0))) 1 0)))
 ;household average ages: 62, 18
-(= 620 (/ (* 10 (+ 
+(= 620 (/ (* 10 (+
 (* A1 (if (= H1 1) 1 0))
 (* A2 (if (= H2 1) 1 0))
 (* A3 (if (= H3 1) 1 0))
