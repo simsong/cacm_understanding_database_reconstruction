@@ -119,7 +119,9 @@ Households & 1 & 24 \\
 \\
 \hline
 \end{tabular}
-\caption{Published sample statistical findings for the fictional household in Table~\ref{groundtruthsmall}}\label{resultssmall}
+\caption{Published sample statistical findings for the fictional
+  household in Table~\ref{groundtruthsmall}. Note that the average age
+of the ``Grandparents'' has been suppressed, as there is a single grandparent.}\label{resultssmall}
 \end{minipage}
 \end{table*}
 
@@ -218,8 +220,9 @@ Becomes the following two equations:
 & (G4==0)+  (G5==0) = 2
 \end{align*}
 \begin{align*}
-& (A1 * (G1==0) + A2 * (G2==0) + A3 * (G3==0) +\\
-& A4 * (G4==0) +  A5 * (G5==0)) = 13
+&  A1 * (G1==0) + \\
+&  A2 * (G2==0) + A3 * (G3==0) +\\
+&  A4 * (G4==0) + A5 * (G5==0) = 13
 \end{align*}
 
 \subsection{Filling in the Remaining Constraints}
@@ -296,7 +299,7 @@ Black children & 2 & 10 \\
 Parents & 4 & 32.5 \\
 Male parents & 2 & 30 \\
 Female parents & 2 & 35 \\
-Parents over 40 & 0 & N/A \\
+Parents over 40 & 0 & -- \\
 \hline
 Grandparents & 3 & 80 \\
 White grandparents & 2 & 80 \\
@@ -305,17 +308,17 @@ Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
 Female grandparents & 2 & 75 \\
 \hline
 Households & 2 & 40 \\
-Tri-generational households & 0 & N/A \\
-Single-parent households & 0 & N/A \\
+Tri-generational households & 0 & -- \\
+Single-parent households & 0 & -- \\
 Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
 Interracial married couples & 2 & 32.5 \\
-Same-sex married couples & 0 & N/A \\
+Same-sex married couples & 0 & -- \\
 Households $\geq 40\% $ female & 2 & 40 \\
 Households $\geq 40\% $ black & 2 & 40 \\
 
 \hline
 \end{tabular}
-\caption{Data publication}\label{publishedstatsbig}
+\caption{Data publication. Note that 4 values have been suppressed.}\label{publishedstatsbig}
 \end{table}
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
@@ -362,10 +365,31 @@ ID & Household & Age & Sex & Race & Generation \\
 As demonstrated above, new techniques must be developed in
 order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise infusion, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then calculates and publishes statistics consistent with this new age, there are now five elements in the solution universe for this value, where without noise infusion there would be only one. If two responses are processed with noise of this sort, there are now $5^2 = 25$ possible solutions. If 10 people undergo noise infusion of this type, there are $5^{10}$ --- nearly 10 million --- possible solutions. Notice that the statistical agency can reveal that noise infusion has taken place, and can even reveal how much noise has been added, without compromising the effectiveness of said noise infusion. Noise infusion allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
 
-Especially noteworthy in the discussion of noise infusion techniques is a special type of noise infusion called the Laplace Mechanism .
-The mathematics behind this process are beyond the scope of this paper, but the important property of this distribution is that it is effective in creating noise that minimally impacts the utility of the statistics while still ensuring individual privacy. Informally, the proper addition of Laplace noise ensures that the choice of any individual to respond or not respond to a survey does not significantly impact the published data from the survey. Therefore, a person is free to respond truthfully to a survey covered by Laplace noise infusion without worrying that his privacy will be compromised by his choice to respond.
+%Especially noteworthy in the discussion of noise infusion techniques
+%is a special type of noise infusion called the Laplace Mechanism .
+%The mathematics behind this process are beyond the scope of this
+%paper, but the important property of this distribution is that it is
+%effective in creating noise that minimally impacts the utility of the
+%statistics while still ensuring individual privacy. Informally, the
+%proper addition of Laplace noise ensures that the choice of any
+%individual to respond or not respond to a survey does not
+%significantly impact the published data from the survey. Therefore, a
+%person is free to respond truthfully to a survey covered by Laplace
+%noise infusion without worrying that his privacy will be compromised
+%by his choice to respond.
 
-In the following example of noise infusion, we use noise generated from a distribution called the Laplace distribution \cite{Dwork:2006:CNS:2180286.2180305}. We choose this distribution because, when correctly applied, this type of noise addition gives a strong mathematical guarantee of individual privacy. To demonstrate how effective adding Laplace noise is against the DRA, we reconsider the example from the previous section. This time, the statistical agency applies the Laplace transformation with mean 0 and exponential decay 3 to the survey responses to the ages before publishing any statistical products. The new published data product, analogous to Table~\ref{publishedstatsbig}, is shown in Table~\ref{publishedstatsnoise}.
+In the following example of noise infusion, we use noise generated
+from a distribution called the Laplace distribution
+\cite{Dwork:2006:CNS:2180286.2180305}. We choose this distribution
+because, when correctly applied, this type of noise addition gives a
+strong mathematical guarantee of individual privacy. To demonstrate
+how effective adding Laplace noise is against the DRA, we reconsider
+the example from the previous section. This time, the statistical
+agency applies the Laplace transformation with mean 0 and exponential
+decay 3 to the survey responses to the ages before publishing any
+statistical products. The new published data product, analogous to
+Table~\ref{publishedstatsbig}, is shown in
+Table~\ref{publishedstatsnoise}.
 
 \begin{table}[t]
 \begin{tabular}{c|c|c}
@@ -384,7 +408,7 @@ Black children & 2 & 8.75 \\
 Parents & 4 & 31.41 \\
 Male parents & 2 & 29.77 \\
 Female parents & 2 & 33.06 \\
-Parents over 40 & 0 & N/A \\
+Parents over 40 & 0 & -- \\
 \hline
 Grandparents & 3 & 78.18 \\
 White grandparents & 2 & 77.64 \\
@@ -393,11 +417,11 @@ Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
 Female grandparents & 2 & 72.76 \\
 \hline
 Households & 2 & 38.57 \\
-Tri-generational households & 0 & N/A \\
-Single-parent households & 0 & N/A \\
+Tri-generational households & 0 & -- \\
+Single-parent households & 0 & -- \\
 Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
 Interracial married couples & 2 & 31.41 \\
-Same-sex married couples & 0 & N/A \\
+Same-sex married couples & 0 & -- \\
 Households $\geq 40\% $ female & 2 & 38.57 \\
 Households $\geq 40\% $ black & 2 & 38.57 \\
 
@@ -415,7 +439,7 @@ The most effective technique for defending against a DRA is the infusion of nois
 
 \section{References}
 
-\bibliography{refs}
+\bibliography{white_paper}
 \bibliographystyle{ieeetr}
 
 
