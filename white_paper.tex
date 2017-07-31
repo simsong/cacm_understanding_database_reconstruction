@@ -14,12 +14,12 @@
 \begin{abstract}
 In recent years, a certain type of attack on confidential survey data,
 the database reconstruction attack, has become increasingly feasible due to advances in computing power and the sophistication of general purpose problem solvers. We discuss how these attacks
-function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is effective at defending against database attacks by SAT solvers and optimizers.
+function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is effective at defending against database attacks by SAT solvers.
 \end{abstract}
 
 
 \begin{keyword}
-database reconstruction attack, SAT solver, linear optimization, privacy, disclosure avoidance
+database reconstruction attack, SAT solver, privacy, disclosure avoidance
 \end{keyword}
 \end{frontmatter}
 
@@ -243,18 +243,17 @@ Although public Census data tables are drawn from hundreds of millions of Americ
 
 \section{Methods of Attack}
 
-Here we discuss three approaches for solving the system of constraints that we have developed.
+Here we discuss two approaches for solving the system of constraints that we have developed.
 \begin{enumerate}
 
 \item \textbf{Brute Force} - trying every possible combination of solutions.\\
 
 \item \textbf{SAT Solvers} - applying programs that quickly solve Boolean algebra problems.\\
 
-\item \textbf{Optimization} -  using optimization software such as the open source optimizer CVXOPT to solve systems of constraints.
-
 \end{enumerate}
 
-For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns. However, SAT solvers and optimizers are both quite effective because they can reconstruct databases much more quickly than can a brute-force approach. Recent advances in SAT solver heuristics have enabled these programs to frequently solve systems with even millions of variables in a matter of minutes. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
+For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns.
+However, SAT solvers are quite effective because they can reconstruct databases much more quickly than can a brute-force approach. Recent advances in SAT solver heuristics have enabled these programs to frequently solve systems with even millions of variables in a matter of minutes. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
 
 \section{Database Reconstruction with a SAT Solver}
 
@@ -359,24 +358,9 @@ ID & Household & Age & Sex & Race & Generation \\
 \end{table}
 
 
-\section{Database Reconstruction with an Optimizer}
-
 \section{Defending Against a DRA}
 As demonstrated above, new techniques must be developed in
 order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise infusion, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then calculates and publishes statistics consistent with this new age, there are now five elements in the solution universe for this value, where without noise infusion there would be only one. If two responses are processed with noise of this sort, there are now $5^2 = 25$ possible solutions. If 10 people undergo noise infusion of this type, there are $5^{10}$ --- nearly 10 million --- possible solutions. Notice that the statistical agency can reveal that noise infusion has taken place, and can even reveal how much noise has been added, without compromising the effectiveness of said noise infusion. Noise infusion allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
-
-%Especially noteworthy in the discussion of noise infusion techniques
-%is a special type of noise infusion called the Laplace Mechanism .
-%The mathematics behind this process are beyond the scope of this
-%paper, but the important property of this distribution is that it is
-%effective in creating noise that minimally impacts the utility of the
-%statistics while still ensuring individual privacy. Informally, the
-%proper addition of Laplace noise ensures that the choice of any
-%individual to respond or not respond to a survey does not
-%significantly impact the published data from the survey. Therefore, a
-%person is free to respond truthfully to a survey covered by Laplace
-%noise infusion without worrying that his privacy will be compromised
-%by his choice to respond.
 
 In the following example of noise infusion, we use noise generated
 from a distribution called the Laplace distribution
@@ -433,7 +417,7 @@ It is important to note that the infusion of the noise did not significantly imp
 
 \section{Problem Analysis}
 
-With the dramatic improvement in the efficiency of optimizers and SAT solvers in the last decade, the database reconstruction attack is no longer a solely theoretical danger. The vast amount of data products the Census publishes each year gives a determined and informed attacker more than enough constraints to reconstruct some or all of a target database and breach the privacy of millions of people. Although the Census Bureau's current disclosure avoidance technique suite is often sufficient to defend against a cursory attempt at an identification attack, we have demonstrated through attack simulations that cell suppression and grouping are not completely against the power of more sophisticated forms of attack.
+With the dramatic improvement in the efficiency of SAT solvers in the last decade, the database reconstruction attack is no longer a solely theoretical danger. The vast amount of data products the Census publishes each year gives a determined and informed attacker more than enough constraints to reconstruct some or all of a target database and breach the privacy of millions of people. Although the Census Bureau's current disclosure avoidance technique suite is often sufficient to defend against a cursory attempt at an identification attack, we have demonstrated through attack simulations that cell suppression and grouping are not completely against the power of more sophisticated forms of attack.
 
 The most effective technique for defending against a DRA is the infusion of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In infusion to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise infusion a required part of the pre-publication disclosure review process in order to protect respondent privacy.
 
@@ -465,25 +449,6 @@ This process is much faster at solving SAT problems than previous processes used
 There are a wide variety of SAT solvers available to the public for minimal or no cost. Although a SAT solver requires the user to translate the problem into Boolean formulae before use,  programs such as Naoyuki Tamura's Sugar facilitate this process by translating user-input mathematical and English constraints into Boolean formulae automatically.
 
 
-\subsection{Optimizers}
-
-The goal of optimization software is to minimize or maximize the value of a function in any number of variables given a set of constraints on the values of those variables.\cite{lpintro} This function, known as the \textit{objective function}, is a function that a certain number of inputs and returns a single output, or, formally, is a function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$.
-
-For example, imagine a fast food restaurant owner wants to maximize profit by deciding how many hot dogs and tacos to produce each day. If the price of a hot dog is \$5, and the price of a taco is \$3, then the owner's objective function can be written as:
-\begin{center}
-\textit{Maximize profit where profit} $= 5H + 7T$
-\end{center}
-where H is the number of hot dogs sold and T the number of tacos sold. Constraints the owner may face include the costs to produce a hot dog or taco, the maximum number of hours the restaurant's employees can work, and the maximum amount of raw food ingredients the restaurant can obtain in a day. If a hot dog or taco can be produced in 5 minutes, and state law mandates that an employee can only work 8 hours a day maximum, then a constraint the owner faces can be written as $\frac{H}{12} + \frac{T}{12} \leq 8$. If a hot dog costs \$1 to make, a taco costs \$0.50 to make, and the owner can only purchase up to \$80 worth of ingredients per day, then another constraint is $H + 0.5T = 80$.
-
-The owner can draw the objective function as a map of the form $\mathbb{R}_2 \rightarrow  \mathbb{R}$. Since the labor constraint must be satisfied, the only feasible solutions will be located below the line $\frac{H}{12} + \frac{T}{12} \leq 8$. Additionally, the solutions must satisfy the input price constraints, so the solutions must also lie below the line $H + 0.5T = 80$. This region below the constraint lines is known as the \textit{feasible region}.
-
-From calculus, we know that for any function of the form $\mathbb{R}_n \rightarrow  \mathbb{R}$, the gradient (the collection of partial derivatives with respect to each variable) gives the direction in multidimensional space in which the function reaches its maximum value. Therefore, if the owner moves an line perpendicular to the objective function's gradient through the feasible region in the direction of said gradient, the last point the line reaches before it leaves the feasible region is the point at which the objective function is maximized. In this example, the last point the line perpendicular to the gradient reaches before leaving the feasible region is (64, 32), which means that producing 64 hot dogs and 32 tacos per day will maximize the restaurant owner's profit.
-
-In order to use an optimizer to perform a DRA, the attacker uses a slightly different strategy. Since the goal for a DRA is not to optimize a function, but rather to reconstruct a database, inputting the constraints as constraint equations like one would for a SAT solver-driven attack is not effective because without an objective function there is no gradient to travel along. Rather, the attacker encodes the sum of the constraints' satisfaction as the objective function. For example, if a problem has two constraints [x, y] in terms of the decision variables, then the objective function would be:
-\begin{center}
-Maximize $f$ where $f = [x\_is\_met + y\_is\_met]$
-\end{center}
-where $x\_is\_met$ returns 1 if the constraint x is satisfied by the given variable assignment and 0 otherwise. This way, the more constraints that are satisfied, the higher score a certain solution's assignment of variables will have. The solution that corresponds to the ground truth will have the highest possible score, since the ground truth data necessarily meets all the constraints. If enough constraints are encoded, then the solution universe will again be narrowed down to size 1, at which point the DRA has succeeded.
 
 \subsection{Sugar Input}
 
