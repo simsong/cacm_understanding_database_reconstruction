@@ -155,7 +155,7 @@ agencies can use for protecting respondent data. This techniques include:
 \end{enumerate}
 
 While it makes intuitive sense that these techniques hamper the
-ability of a data intruder to recover respondent data from the
+ability of a potential data intruder\cite{data-intruder} to recover respondent data from the
 statistical release, such hunches do not constitute rigorous
 mathematical proofs. Absent a formal definition of privacy and
 mathematical proofs showing that a specific disclosure limitation
@@ -217,22 +217,24 @@ published statistics is a key concept behind the DRA.
 
 \section{The Database Reconstruction Attack: An Example}
 
-To conceptually understand a DRA, we first consider a hypothetical
+To present a DRA, we consider a hypothetical
 census of a fictional block conducted by a fictional statistical
 agency. For every household, the agency collects each member's age,
 sex, race, and their generation in the household.  Because the
 confidential data will not be released in order to protect the
-respondent's privacy, the statistical agency feels compelled to
-publish every conceivable statistic that might be of use to a
-population demographer interested in accessing the confidential
-data. Table~\ref{publishedstatsbig} presents the statistics that are
-published in by the official statistics agency. Note that in order to
-protect respondent privacy, the agency has suppressed all statistics
-that would only result from a single individual. The agency does this
-even though the statistics are presumably ``de-identified''---that is,
-no identifying information is published with the summary statistics,
-so the intuition is that there is no way to match these statistics
-back up to specific individuals.
+respondent's privacy, the statistical agency 
+publishes every conceivable statistic that might be of use to a
+potential demographers, sociologists and economists. Based on user
+feedback from previous census reports, the agency has come up with the
+a set of statistics that it calls ``Table~\ref{publishedstatsbig},''
+and which we present here.
+
+Note that in order to protect respondent privacy, the agency has
+suppressed all statistics that would only result from a single
+individual. The agency does this even though the statistics are
+presumably ``de-identified''---that is, no identifying information is
+published with the summary statistics, so the intuition is that there
+is no way to match these statistics back up to specific individuals.
 
 \begin{table}
 \begin{center}
@@ -278,13 +280,13 @@ Households $\geq 40\% $ black & 2 & 40 \\
 
 The goal of the DRA is to reconstruct the number of households and,
 for each household, to learn the age, sex, race, and generation of
-each member. The attack views each of these attributes as a set of
-unknown variables, five for each person in the census. Since we know
-there are 10 individuals, there must be 50 unknowns. They are shown in
+each member. The attack views these attributes as a set of five
+independent and unknown variables. Since there are 10 individuals in
+the fictitious census, there must be 50 unknowns. They are shown in
 Table~\label{unknownssmall}. 
 
 \begin{table}
-\begin{minipage}[t]{2in}
+\begin{minipage}[t]{3in}
 \begin{tabular}{cccccc}
 ID & Household & Age & Sex & Race & Generation \\
 \hline
@@ -312,7 +314,6 @@ ID & Household & Age & Sex & Race & Generation \\
 \hline
 \end{tabular}
 \end{minipage}
-\hspace{.5in}
 \begin{minipage}[t]{1in}
 \begin{tabular}{c|c}
 Key & Value \\
@@ -336,8 +337,6 @@ Grandparent & 2 \\
   and Generation categorical values; they are converted into numerical
   values using the key at the right.}\label{unknownssmall}
 \end{table}
-
-
 
 Table~\ref{responses}
 shows the hypothetical survey responses from a small population.
