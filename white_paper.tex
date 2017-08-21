@@ -1,43 +1,145 @@
-\documentclass[5p,times,11pt]{elsarticle}
+\newif\ifanonymized
+\anonymizedtrue
+%\anonymizedfalse
+\documentclass[runningheads]{llncs}
+%cmap has to be loaded before any font package (such as cfr-lm)
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage[ngerman,english]{babel}
+%better font, similar to the default springer font
+%cfr-lm is preferred over lmodern. Reasoning at http://tex.stackexchange.com/a/247543/9075
+\usepackage[%
+rm={oldstyle=false,proportional=true},%
+sf={oldstyle=false,proportional=true},%
+tt={oldstyle=false,proportional=true,variable=true},%
+qt=false%
+]{cfr-lm}
+%Sorts the citations in the brackets
+%It also allows \cite{refa, refb}. Otherwise, the document does not compile.
+%  Error message: "White space in argument"
+\usepackage{cite}
+%extended enumerate, such as \begin{compactenum}
+\usepackage{paralist}
+%for easy quotations: \enquote{text}
+\usepackage{csquotes}
+
+%enable margin kerning
+\usepackage{microtype}
+
+%tweak \url{...}
+\usepackage{url}
+%improve wrapping of URLs - hint by http://tex.stackexchange.com/a/10419/9075
 \makeatletter
-\def\ps@pprintTitle{%
- \def\@oddfoot{\centerline{\thepage}}%
- \let\@evenfoot\@oddfoot}
+\g@addto@macro{\UrlBreaks}{\UrlOrds}
 \makeatother
+%required for pdfcomment later
+\usepackage{xcolor}
+%enable nice comments
+%this also loads hyperref
+\usepackage{pdfcomment}
+%enable hyperref without colors and without bookmarks
+\hypersetup{hidelinks,
+   colorlinks=true,
+   allcolors=black,
+   pdfstartview=Fit,
+   breaklinks=true}
+%enables correct jumping to figures when referencing
+\usepackage[all]{hypcap}
+
+\newcommand{\commentontext}[2]{\colorbox{yellow!60}{#1}\pdfcomment[color={0.234 0.867 0.211},hoffset=-6pt,voffset=10pt,opacity=0.5]{#2}}
+\newcommand{\commentatside}[1]{\pdfcomment[color={0.045 0.278 0.643},icon=Note]{#1}}
+
+%compatibality with packages todo, easy-todo, todonotes
+\newcommand{\todo}[1]{\commentatside{#1}}
+%compatiblity with package fixmetodonotes
+\newcommand{\TODO}[1]{\commentatside{#1}}
+
+%enable \cref{...} and \Cref{...} instead of \ref: Type of reference included in the link
+\usepackage[capitalise,nameinlink]{cleveref}
+%Nice formats for \cref
+\crefname{section}{Sect.}{Sect.}
+\Crefname{section}{Section}{Sections}
+
+\usepackage{xspace}
+%\newcommand{\eg}{e.\,g.\xspace}
+%\newcommand{\ie}{i.\,e.\xspace}
+\newcommand{\eg}{e.\,g.,\ }
+\newcommand{\ie}{i.\,e.,\ }
+
+%introduce \powerset - hint by http://matheplanet.com/matheplanet/nuke/html/viewtopic.php?topic=136492&post_id=997377
+\DeclareFontFamily{U}{MnSymbolC}{}
+\DeclareSymbolFont{MnSyC}{U}{MnSymbolC}{m}{n}
+\DeclareFontShape{U}{MnSymbolC}{m}{n}{
+    <-6>  MnSymbolC5
+   <6-7>  MnSymbolC6
+   <7-8>  MnSymbolC7
+   <8-9>  MnSymbolC8
+   <9-10> MnSymbolC9
+  <10-12> MnSymbolC10
+  <12->   MnSymbolC12%
+}{}
+\DeclareMathSymbol{\powerset}{\mathord}{MnSyC}{180}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+%% END COPYING HERE
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{siunitx}
 
 
 \begin{document}
-\begin{frontmatter}
-\title{Analysis of a Database Reconstruction Attack on Public Data}
+\title{Database Reconstruction Attack on Public Data}
+\titlerunning{Database Reconstruction}
+\ifanonymized
+\author{Anonymized Author(s)}
+\institute{Institute for Anonymous Papers}
+\else
+\author{Christian Martindale \and Simson Garfinkel}
+\institute{Center for Disclosure Avoidance, U.S. Census Bureau}
+\fi
 
-\author{Christian Martindale and Simson Garfinkel}
-\address{Center for Disclosure Avoidance, U.S. Census Bureau}
-
+\maketitle
 \begin{abstract}
-In recent years, a certain type of attack on confidential survey data,
-the database reconstruction attack, has become increasingly feasible due to advances in computing power and the sophistication of general purpose problem solvers. We discuss how these attacks
-function and demonstrate their effectiveness and efficiency. By applying database reconstruction techniques on statistical tables drawn from simulated data, we demonstrate that traditional disclosure avoidance techniques are often insufficient to fully protect respondent privacy, and also demonstrate that noise addition is effective at defending against database attacks by SAT solvers.
+Statistical agencies are mandated to publish summary statistics and
+micro data while not providing data users with the ability to derive
+specific attributes for particular individuals or
+establishments. Today these privacy guarantees are assured through the
+practical of \emph{Statistical Disclosure Limitation} (SDL)
+techniques, such as suppressing cells and generalizing categories in
+summary tables. Although these techniques are not be sufficient to
+prevent a database reconstruction attack of the sort anticipated by
+Dinur and Nissim\cite{noise}, statistical agencies have been slow to
+adopt disclosure limitation techniques based on formal privacy
+techniques such as differential privacy---presumably because there is
+little knowledge of formal privacy techniques within the broader
+official statistics community.  This paper discusses how a database
+reconstruction attack functions and demonstrate their effectiveness
+and efficiency on a toy example. We then show how SDL techniques based
+on additive noise can be effective at defending against database
+reconstruction.
 \end{abstract}
 
-
-\begin{keyword}
+\begin{keywords}
 database reconstruction attack, SAT solver, privacy, disclosure avoidance
-\end{keyword}
-\end{frontmatter}
+\end{keywords}
 
 
-\section{Problem Background}
-Database intruders seek to identify individuals from publicly
-available data products such as tables and graphs.
-Defending against such attacks is
-a priority for statistical agencies, and so researchers
-have developed a variety of techniques to prevent database users
-from identifying any individual's personal information.
+\section{Introduction}
+Working Paper \#22 of the U.S. Federal Committee on Statistical
+Methodology\cite{workingpaper22} outlines the currently accepted best
+practice for statistical agencies to follow when they prepare and
+release both statistical data and ``de-identified''
+microdata. Broadly, statistical agencies are charged with releasing
+high-quality data to further public policy goals, but they are
+prohibited from releasing data that might result in the identification
+of a data from a specific individual or establishment.
 
-These techniques include:
+Working Paper \#22 outlines a number of approaches that statistical
+agencies can use for protecting respondent data. This techniques include:
 \begin{enumerate}
   \item \textbf{Cell Suppression}, where the values of cells with small counts or few possible
         generating combinations are removed from the published table
@@ -52,97 +154,221 @@ These techniques include:
         80-90 and 90-100)
 \end{enumerate}
 
-The goal of a database reconstruction attack is to
-use public statistics released about confidential data to create a mathematical system of equations,
-which then can be used to reconstruct the original data set.
-While the above techniques are not without merit, this paper
-demonstrates that they are insufficient in guarding data against
-a modern DRA.
+While it makes intuitive sense that these techniques hamper the
+ability of a data intruder to recover respondent data from the
+statistical release, such hunches do not constitute rigorous
+mathematical proofs. Absent a formal definition of privacy and
+mathematical proofs showing that a specific disclosure limitation
+technique realize that definition, there is no way to know if these
+techniques actually protect privacy, or if that is merely wishful thinking.
+
+Indeed, despite roughly 15 years' passage since Dinur and Nissum's
+groundbreaking work\cite{noise}, and 12 years' since the formalization
+of differential privacy\cite{Dwork:2006:CNS:2180286.2180305}, today most of
+statistical agencies still rely on the disclosure
+limitation techniques described in Working Paper \#22. The purpose of
+this paper, then, is to show how a database reconstruction attack
+might be implemented against a data release from an official
+statistics agency by showing a toy example, and then to show how a
+formally private  technique can protect against such an attack.
 
 \section{Related Work}
 
+Dinur and Nissim\cite{noise} showed that the underlying
+confidential data of a statistical database can be reconstructed with
+a surprisingly small number of queries. In part, this is because the
+architecture of the released information forms a set of constraints
+for which there is ultimately only one exact solution. They further
+demonstrated that restricting the number or type of queries is often
+insufficient to prevent access to indirectly identifying information,
+since the system's refusal to answer a 'dangerous' query itself gives
+the user information. The authors found that if a database is modeled
+as a string of $n$ bits, then at least $\sqrt{n}$ bits must be
+modified by adding noise to protect individuals from being identified. 
 
-In this section we examine the most relevant literature regarding the DRA.
+In this paper we shall use
+the term \emph{database reconstruction attack} (DRA) to describe the process of
+taking a published set of statistical tables and deriving the
+underlying sensitive data. 
 
-\subsection{Noise Addition and Query Restriction}
-A statistical table can be formally viewed as a set of queries applied to a series of confidential data. Dinur and Nissim \cite{noise} proposed in 2003 that seemingly innocuous queries to a statistical database could be used to compromise individuals' confidential data through obtaining indirectly identifying information. They further demonstrated that restricting the number or type of queries is often insufficient to prevent access to indirectly identifying information, since the system's refusal to answer a 'dangerous' query itself gives the user information. The authors found that if a database is modeled as a string of $n$ bits, then at least $\sqrt{n}$ bits must be modified by adding noise to protect individuals from being identified.
+Kasiviswanathan, Rudelson, and Smith\cite{Kasiviswanathan:2013:PLR:2627817.2627919} introduced
+the concept of the linear reconstruction attack which is the root
+behind the generic DRA. The key concept is that,
+given nonsensitive data such as zip code or gender, an attacker
+can construct a matrix of linear equalities that can often be solved
+in polynomial time. The paper also analyzes a common reconstruction
+technique known as least squares decoding, where the attacker sets up
+a goal function to minimize the square of the distance between two
+databases in order to reconstruct the original database. 
 
-
-\subsection{Linear Reconstruction}
-
-Kasiviswanathan, Rudelson, and Smith \cite{linearattack} introduced the concept of the linear reconstruction attack which is the root behind the generic DRA. The key in this paper is the concept that, when given nonsensitive data such as zip code or gender, an attacker can construct a matrix of linear equalities which can often be solved in polynomial time. The paper also analyzes a common reconstruction technique known as least squares decoding, where the attacker sets up a goal function to minimize the square of the distance between two databases in order to reconstruct the original database. Although the modern DRA is much more powerful due to solvers' abilities to support constraints besides simple equalities, the core concept of the matrix construction from this paper is still applicable.
-
-\subsection{Identifying Properties of a Database from Published Statistics}
-Brown and Heathers \cite{grim} developed the granularity-related inconsistency of means (GRIM) test in response to observed inconsistencies in published data from psychological journals. This test is centered around the premise that, for statistics drawn from integer data, only certain means are possible. The GRIM test determines whether reported means could possibly have come from data sets with a certain size, granularity, and group number. In surveying 71 published articles, the authors found 36 papers with one inconsistency and 16 with two or more inconsistencies. Although this test was intended to detect possible errors or mean falsification in published articles, the concept of drawing inferential conclusions about a data set based only off of published statistics is a key concept behind the DRA.
-
-
+Brown and Heathers\cite{doi:10.1177/1948550616673876} developed the
+granularity-related inconsistency of means (GRIM) test in response to
+observed inconsistencies in published data from psychological
+journals. This test is centered around the premise that, for
+statistics drawn from integer data, only certain means are
+possible. The GRIM test determines whether reported means could
+possibly have come from data sets with a certain size, granularity,
+and group number. In surveying 71 published articles, the authors
+found 36 papers with one inconsistency and 16 with two or more
+inconsistencies. Although this test was intended to detect possible
+errors or mean falsification in published articles, the concept of
+drawing inferential conclusions about a data set based only off of
+published statistics is a key concept behind the DRA.
 
 \section{The Database Reconstruction Attack: An Example}
 
+To conceptually understand a DRA, we first consider a hypothetical
+census of a fictional block conducted by a fictional statistical
+agency. For every household, the agency collects each member's age,
+sex, race, and their generation in the household.  Because the
+confidential data will not be released in order to protect the
+respondent's privacy, the statistical agency feels compelled to
+publish every conceivable statistic that might be of use to a
+population demographer interested in accessing the confidential
+data. Table~\ref{publishedstatsbig} presents the statistics that are
+published in by the official statistics agency. Note that in order to
+protect respondent privacy, the agency has suppressed all statistics
+that would only result from a single individual. The agency does this
+even though the statistics are presumably ``de-identified''---that is,
+no identifying information is published with the summary statistics,
+so the intuition is that there is no way to match these statistics
+back up to specific individuals.
 
-To conceptually understand a DRA, we first consider a survey given to two households by a statistical agency. Table~\ref{groundtruthsmall} shows a hypothetical survey and responses from a small population.
-
-The statistical agency then publishes the data product in Table~\ref{publishedstatsbig} based on the survey results. If information in a cell comes from only one individual, then that cell is suppressed to protect that individual's privacy.
-Retabulating these results in a numerical format with the keys in Table~\ref{tabulationkey} gives the results in Table~\ref{resultsbig}.
-
-
-\begin{table*}[t]
-
-\begin{minipage}[t]{\columnwidth}
-\begin{tabular}{rlll}
-Age & Sex & Race & Gen \\
+\begin{table}
+\begin{center}
+\begin{tabular}{c|c|c}
+Group & Number & Average Age \\
 \hline
-80 & Female & Black & Grandparent\\
-40 & Male & White & Parent\\
-70 & Female & White & Grandparent\\
-30 & Female & Black & Parent\\
-90 & Male & White & Grandparent\\
+Individuals & 10 & 40 \\
+Males & 5 & 34 \\
+Females & 5 & 46 \\
+Whites & 5 & 50 \\
+Blacks & 5 & 30 \\
+\hline
+Children (0-12) & 3 & 10 \\
+White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Black children & 2 & 10 \\
+\hline
+Parents & 4 & 32.5 \\
+Male parents & 2 & 30 \\
+Female parents & 2 & 35 \\
+Parents over 40 & 0 & -- \\
+\hline
+Grandparents & 3 & 80 \\
+White grandparents & 2 & 80 \\
+Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Female grandparents & 2 & 75 \\
+\hline
+Households & 2 & 40 \\
+Tri-generational households & 0 & -- \\
+Single-parent households & 0 & -- \\
+Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+Interracial married couples & 2 & 32.5 \\
+Same-sex married couples & 0 & -- \\
+Households $\geq 40\% $ female & 2 & 40 \\
+Households $\geq 40\% $ black & 2 & 40 \\
 \hline
 \end{tabular}
-\caption{Responses from a single fictional household
-to the survey: \textbf{Please provide the following for each member of your family: Age, Sex, Race, Generation.} (Not published)} \label{groundtruthsmall}
-\end{minipage}
-\hspace{\columnsep}
-\begin{minipage}[t]{\columnwidth}
-\begin{tabular}{rlll}
-Age & Sex & Race & Gen \\
-\hline
-10 & Male & Black & Child\\
-10 & Male & Black & Child\\
-10 & Female & White & Child\\
-40 & Female & White & Parent\\
-20 & Male & Black & Parent\\
-\hline
-\end{tabular}
-\caption{Responses from a different fictional household
-to the survey from Table \ref{groundtruthsmall} (Not published)} \label{groundtruth2}
-\end{minipage}
-\end{table*}
+\end{center}
+\caption{Fictional statistical data published by the fictional
+  statistics agency. Note that 4 values have been suppressed as part
+  of the statistical disclosure limitation process.}\label{publishedstatsbig}
+\end{table}
 
+The goal of the DRA is to reconstruct the number of households and,
+for each household, to learn the age, sex, race, and generation of
+each member. The attack views each of these attributes as a set of
+unknown variables, five for each person in the census. Since we know
+there are 10 individuals, there must be 50 unknowns. They are shown in
+Table~\label{unknownssmall}. 
 
-\begin{table*}[t]
-
-\begin{minipage}[t]{\columnwidth}
-\begin{tabular}{c|c|c|c|c|c}
+\begin{table}
+\begin{minipage}[t]{2in}
+\begin{tabular}{cccccc}
 ID & Household & Age & Sex & Race & Generation \\
 \hline
+\hline
 1 & H1 & A1 & S1 & R1 & G1  \\
+\hline
 2 & H2 & A2 & S2 & R2 & G2  \\
+\hline
 3 & H3 & A3 & S3 & R3 & G3  \\
+\hline
 4 & H4 & A4 & S4 & R4 & G4  \\
+\hline
 5 & H5 & A5 & S5 & R5 & G5  \\
+\hline
 6 & H6 & A6 & S6 & R6 & G6  \\
+\hline
 7 & H7 & A7 & S7 & R7 & G7  \\
+\hline
 8 & H8 & A8 & S8 & R8 & G8  \\
+\hline
 9 & H9 & A9 & S9 & R9 & G9  \\
+\hline
 10 & H10 & A10 & S10 & R10 & G10  \\
 \hline
+\hline
 \end{tabular}
-\caption{DRA unknowns}
-\label{unknownssmall}
 \end{minipage}
+\hspace{.5in}
+\begin{minipage}[t]{1in}
+\begin{tabular}{c|c}
+Key & Value \\
+\hline
+Male & 0 \\
+Female & 1 \\
+\hline
+White & 0 \\
+Black & 1 \\
+\hline
+Child & 0 \\
+Parent & 1 \\
+Grandparent & 2 \\
+\hline
+\end{tabular}
+\end{minipage}
+\caption{Unknowns for the 10 fictitious individuals whose statistical
+  data are presented in Table~\ref{publishedstatsbig}. Unknowns
+  H\textit{n} are the household, A\textit{n} the age, S\textit{n} the
+  sex, R\textit{n} the race and G\textit{n} the generation. Sex, Race
+  and Generation categorical values; they are converted into numerical
+  values using the key at the right.}\label{unknownssmall}
+\end{table}
 
-\begin{minipage}[t]{\columnwidth}
+
+
+Table~\ref{responses}
+shows the hypothetical survey responses from a small population.
+
+If
+information in a cell comes from only one individual, then that cell
+is suppressed to protect that individual's privacy.  Retabulating
+these results in a numerical format with the keys in
+Table~\ref{tabulationkey} gives the results in Table~\ref{resultsbig}.
+
+
+\begin{table}
+\begin{tabular}{rllp{1in}||rllp{1in}}
+\multicolumn{4}{c||}{Household \#1}    & \multicolumn{4}{c}{Household \#2} \\
+Age & Sex & Race & Gen                 & Age & Sex & Race & Gen \\
+\hline
+90 & Male & White & Grandparent        & 40 & Female & White & Parent\\
+80 & Female & Black & Grandparent      & 20 & Male & Black & Parent\\
+70 & Female & White & Grandparent      & 10 & Female & White & Child\\
+40 & Male & White & Parent             & 10 & Male & Black & Child\\
+30 & Female & Black & Parent           & 10 & Male & Black & Child\\
+\hline
+\end{tabular}
+\caption{Responses from a two fictional households
+for a survey that collects Age, Sex, Race and Generation of each resident. This is
+the unpublished, confidential data collected by a fictional statistical
+agency.}\label{responses}
+\end{table}
+
+
+\begin{table}
 \begin{tabular}{c|c|c|c|c|c}
 ID & Household & Age & Sex & Race & Generation \\
 \hline
@@ -160,27 +386,10 @@ ID & Household & Age & Sex & Race & Generation \\
 \end{tabular}
 \caption{Survey results}
 \label{resultsbig}
-\end{minipage}
-\end{table*}
-
-\begin{table}
-\begin{tabular}{c|c}
-Key & Value \\
-\hline
-Male & 0 \\
-Female & 1 \\
-White & 0 \\
-Black & 1 \\
-Child & 0 \\
-Parent & 1 \\
-Grandparent & 2 \\
-\hline
-\end{tabular}
-\caption{Tabulation key}\label{tabulationkey}
 \end{table}
 
 
-\begin{table}[t]
+\begin{table}
 \begin{tabular}{cc|c}
 A & B & A==B  \\
 \hline
@@ -264,45 +473,6 @@ In order to show how a SAT solver can be used to rapidly narrow down the solutio
 
 The ground truth responses from two new households are given in Table~\ref{resultsbig}. The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
 
-
-\begin{table}[t]
-\begin{tabular}{c|c|c}
-Group & Number & Average Age \\
-\hline
-Individuals & 10 & 40 \\
-Males & 5 & 34 \\
-Females & 5 & 46 \\
-Whites & 5 & 50 \\
-Blacks & 5 & 30 \\
-\hline
-Children (0-12) & 3 & 10 \\
-White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Black children & 2 & 10 \\
-\hline
-Parents & 4 & 32.5 \\
-Male parents & 2 & 30 \\
-Female parents & 2 & 35 \\
-Parents over 40 & 0 & -- \\
-\hline
-Grandparents & 3 & 80 \\
-White grandparents & 2 & 80 \\
-Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Female grandparents & 2 & 75 \\
-\hline
-Households & 2 & 40 \\
-Tri-generational households & 0 & -- \\
-Single-parent households & 0 & -- \\
-Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Interracial married couples & 2 & 32.5 \\
-Same-sex married couples & 0 & -- \\
-Households $\geq 40\% $ female & 2 & 40 \\
-Households $\geq 40\% $ black & 2 & 40 \\
-
-\hline
-\end{tabular}
-\caption{Data publication. Note that 4 values have been suppressed.}\label{publishedstatsbig}
-\end{table}
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
@@ -407,8 +577,8 @@ The most effective technique for defending against a DRA is the infusion of nois
 
 \section{References}
 
-\bibliography{refs}
-\bibliographystyle{ieeetr}
+\bibliographystyle{splncs03}
+\bibliography{white_paper}
 
 
 \section{Appendices}
@@ -1022,3 +1192,5 @@ same-sex married couples: 0
 
 
 \end{document}
+
+% LocalWords:  microdata equalities
