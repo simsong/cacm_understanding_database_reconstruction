@@ -219,7 +219,11 @@ published statistics is a key concept behind the DRA.
 
 To present a DRA, we consider a hypothetical
 census of a fictional block conducted by a fictional statistical
-agency. For every household, the agency collects each member's age,
+agency. 
+
+\subsection{The released statistical data}
+
+For every household, the agency collects each member's age,
 sex, race, and their generation in the household.  Because the
 confidential data will not be released in order to protect the
 respondent's privacy, the statistical agency 
@@ -238,52 +242,55 @@ is no way to match these statistics back up to specific individuals.
 
 \begin{table}
 \begin{center}
-\begin{tabular}{c|c|c}
-Group & Number & Average Age \\
+\begin{tabular}{l|l|c|c}
+Item & Group & Number & Average Age \\
 \hline
-Individuals & 10 & 40 \\
-Males & 5 & 34 \\
-Females & 5 & 46 \\
-Whites & 5 & 50 \\
-Blacks & 5 & 30 \\
+1A & Individuals & 10 & 40 \\
+1B & Males & 5 & 34 \\
+1C & Females & 5 & 46 \\
+1D & Whites & 5 & 50 \\
+1E & Blacks & 5 & 30 \\
 \hline
-Children (0-12) & 3 & 10 \\
-White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Black children & 2 & 10 \\
+2A & Children (0-12) & 3 & 10 \\
+2D & White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+2E & Black children & 2 & 10 \\
 \hline
-Parents & 4 & 32.5 \\
-Male parents & 2 & 30 \\
-Female parents & 2 & 35 \\
-Parents over 40 & 0 & -- \\
+3A & Parents & 4 & 32.5 \\
+3B & Male parents & 2 & 30 \\
+3C & Female parents & 2 & 35 \\
+35 & Parents over 40 & 0 & -- \\
 \hline
-Grandparents & 3 & 80 \\
-White grandparents & 2 & 80 \\
-Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Female grandparents & 2 & 75 \\
+4A & Grandparents & 3 & 80 \\
+4B & Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+4C & Female grandparents & 2 & 75 \\
+4D & White grandparents & 2 & 80 \\
+4E & Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
 \hline
-Households & 2 & 40 \\
-Tri-generational households & 0 & -- \\
-Single-parent households & 0 & -- \\
-Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Interracial married couples & 2 & 32.5 \\
-Same-sex married couples & 0 & -- \\
-Households $\geq 40\% $ female & 2 & 40 \\
-Households $\geq 40\% $ black & 2 & 40 \\
+5A & Households & 2 & 40 \\
+5B & Tri-generational households & 0 & -- \\
+5C & Single-parent households & 0 & -- \\
+5D & Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
+5E & Interracial married couples & 2 & 32.5 \\
+5F & Same-sex married couples & 0 & -- \\
+5G & Households $\geq 40\% $ female & 2 & 40 \\
+5H & Households $\geq 40\% $ black & 2 & 40 \\
 \hline
 \end{tabular}
 \end{center}
 \caption{Fictional statistical data published by the fictional
-  statistics agency. Note that 4 values have been suppressed as part
+  statistics agency. Item numbers are for identification purpose
+  only. Note that statistics 2D, 4B, 4E and 5D have been suppressed as part
   of the statistical disclosure limitation process.}\label{publishedstatsbig}
 \end{table}
+
+\subsection{Setting up the attack}
 
 The goal of the DRA is to reconstruct the number of households and,
 for each household, to learn the age, sex, race, and generation of
 each member. The attack views these attributes as a set of five
-independent and unknown variables. Since there are 10 individuals in
-the fictitious census, there must be 50 unknowns. They are shown in
-Table~\label{unknownssmall}. 
+unknown variables. Since there are 10 individuals in
+the fictitious census, there are 50 unknowns. They are shown in
+Table~\ref{50unknowns}. 
 
 \begin{table}
 \begin{minipage}[t]{3in}
@@ -311,7 +318,6 @@ ID & Household & Age & Sex & Race & Generation \\
 \hline
 10 & H10 & A10 & S10 & R10 & G10  \\
 \hline
-\hline
 \end{tabular}
 \end{minipage}
 \begin{minipage}[t]{1in}
@@ -335,17 +341,91 @@ Grandparent & 2 \\
   H\textit{n} are the household, A\textit{n} the age, S\textit{n} the
   sex, R\textit{n} the race and G\textit{n} the generation. Sex, Race
   and Generation categorical values; they are converted into numerical
-  values using the key at the right.}\label{unknownssmall}
+  values using the key at the right.}\label{50unknowns}
 \end{table}
 
-Table~\ref{responses}
-shows the hypothetical survey responses from a small population.
+\subsection{Setting up the constraints}
 
-If
-information in a cell comes from only one individual, then that cell
-is suppressed to protect that individual's privacy.  Retabulating
-these results in a numerical format with the keys in
-Table~\ref{tabulationkey} gives the results in Table~\ref{resultsbig}.
+The reconstruction attack works by examining data published by the
+statistical agency and identifying how those data can be translated
+into constraints on the private data. The constraints are expressed as
+mathematical formulae representing rules that the ground truth must
+satisfy. In \S\ref{c1}, \S\ref{c2} and \S\ref{c3} we identify how
+specific released statistics can be mapped to constraints.
+\subsubsection{Constraint 1}\label{c1}
+
+The first constraint relies on statistic 1A:\\
+
+\begin{center}
+\begin{tabular}{l|l|c|c}
+Item & Group & Number & Average Age \\
+\hline
+1A & Individuals & 10 & 40 \\
+\multicolumn{4}{c}{$\vdots$}
+\end{tabular}
+\end{center}
+
+This constraint can be written as a linear constraint equation using
+the symbols for age, $A1...A10$ given in Table~\ref{50unknowns}:
+
+\[\frac{A1 + A2 + A3 + A4 +...+ A10}{10} = 40\]
+
+This equation has 10 unknowns, each of which has a range from 0..120,
+and thus there are many possible solutions.
+
+However, the attacker can write more constraint equations to further constrain the values of the unknowns.
+
+\subsubsection{Constraint 2}\label{c2}
+
+To encode the second constraint we must introduce the == operator,
+which here is a test for equivalence. This operator returns 1 if the
+left and right hand sides are equal, and 0 otherwise. A truth table
+for this operator is shown in Table~\ref{truthtable}. Additionally,
+the = operator is used to show that the right-hand side and left-hand
+side of this operator must be equal. 
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{cc|c}
+A & B & A==B  \\
+\hline
+True & True & 1   \\
+True & False & 0  \\
+False & True & 0  \\
+False & False & 1  \\
+\hline
+\end{tabular}
+\caption{Truth table for the == operator}\label{truthtable}
+\end{center}
+\end{table}
+
+The constraint that we will encode is:
+
+\begin{center}
+\begin{tabular}{l|l|c|c}
+Item & Group & Number & Average Age \\
+\hline
+\multicolumn{4}{c}{$\vdots$}\\
+2A & Children (0-12) & 3 & 10 \\
+\multicolumn{4}{c}{$\vdots$}\\
+\end{tabular}
+\end{center}
+
+This constraint becomes the following two equations, the first of which asserts that
+there must be three children, the second of which asserts that their
+combined age must be 30, implied by the fact that their average age
+is given as 10:
+
+\begin{align*}
+& (G1==0) + (G2==0) + (G3==0)+ (G4==0) + (G5==0) + \\
+& (G6==0) + (G7==0) + (G8==0)+ (G9==0) + (G10==0) = 3 \\
+\\
+&  A1 \times (G1==0) + A2 \times (G2==0) + A3 \times (G3==0) + A4 \times (G4==0) + \\
+&  A5 \times (G5==0) + A6 \times (G6==0) + A7 \times (G7==0) + A8 \times (G8==0) + \\
+&  A9 \times (G9==0) + A10 \times (G10==0) = 30 
+\end{align*}
+
+
 
 
 \begin{table}
@@ -387,91 +467,46 @@ ID & Household & Age & Sex & Race & Generation \\
 \label{resultsbig}
 \end{table}
 
-
-\begin{table}
-\begin{tabular}{cc|c}
-A & B & A==B  \\
-\hline
-True & True & 1   \\
-True & False & 0  \\
-False & True & 0  \\
-False & False & 1  \\
-\hline
-\end{tabular}
-\caption{Truth table for the == operator}\label{truthtable}
-\end{table}
-
-
- To start, the attacker writes the table of 50 unknowns given in Table~\ref{unknownssmall}, with the goal of reconstructing the database in Table~\ref{resultsbig}.
-
-
-
-The reconstruction attack works by identifying constraint
-equations given by the data table. Constraint equations are  mathematical formulae representing rules that the ground truth satisfies. Next we discuss two constraints.
-\subsection{Constraint 1}
-\textbf{Individuals: Number = 10, Average Age = 40}
-
-
-This can be written as a linear constraint equation using the symbols for age, $A1...A10$ given in Table~\ref{unknownssmall}:
-\[\frac{A1 + A2 + A3 + A4 +...+ A10}{10} = 40\]
-
-This equation is in 10 unknowns, and so has many possible solutions alone.
-However, the attacker can write more constraint equations to further constrain the values of the unknowns.
-
-Here, the == operator is a test for equivalence.It returns 1 if the left and right hand sides are equal, and 0 otherwise. A truth table for this operator is shown in Table~\ref{truthtable}. Additionally, the = operator is used to show that the right-hand side and left-hand side of this operator must be equal.
-
-\subsection{Constraint 2}
-\textbf{Children: Number = 3, Average Age = 10}
-
-
-Becomes the following two equations:
-
-\begin{align*}
-& (G1==0) + (G2==0) + (G3==0)+\\
-& (G4==0)+...+(G10==0) = 3
-\end{align*}
-\begin{align*}
-&  A1 * (G1==0) + \\
-&  A2 * (G2==0) + A3 * (G3==0) +\\
-&  A4 * (G4==0) +...+ A10 * (G10==0) = 10
-\end{align*}
-
-\subsection{Filling in the Remaining Constraints}
+\subsubsection{Filling in the Remaining Constraints}\label{c3}
 Once the attacker has converted all the published statistics
-into equations like the ones above, the equations together form a system of many equations in 50 unknowns. This system has one true solution, equivalent to the
-ground truth, and possibly many other false solutions, which fit the constraints but are not equivalent to the ground truth.
-The \textit{solution universe}, the set of all solutions that fit the encoded set of constraints, is potentially quite large, containing many false solutions along with the true solution.
-However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
-down the set of possible solutions.
+into equations like the ones above, the equations together form a
+system of many equations in 50 unknowns. 
+There is a \textit{solution universe} of all possible solutions to
+this set of simultaneous equations. If there is a single possible
+solution, then the published statistics completely reveal the
+underlying confidential data---the \emph{ground truth}. However, if
+there is more than one possible solution, then one of those solutions
+is correct, and the others are not. 
 
-Eventually, the attacker
-will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
-the ground truth. At this point, the attack has succeeded, and the statistical agency has completely failed to protect its respondents' privacy. Note that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
+\section{Performing the Attack}
+A straight forward but possibly inefficient approach to solving this
+system of simultaneous equations is to perform a brute force
+search---that is, to try all possible values of all possible variables
+and record the ones that work.
 
-Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data for some respondents because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been reconstructed. Thus, the database has failed to protect this person's privacy even though the attack did not fully reconstruct the database.
-Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously.
+Ordinarily a brute force search on even this toy problem would be
+unreasonable: there are 10 age variables that can range from 0...120,
+30 binary variables (household, sex and race), and ten trinary
+variable. All together, there are $120^{10} \times 2^{30} \times
+3^{10} \approx 4 \times 10^{34}$ possible combinations. Even if we
+could try a billion a second, trying all possible combinations would
+take a billion billion years.
 
+Those familiar with complexity theory will have recognized by now that
+the system of variables can be expressed as a satisfiability (SAT)
+problem purely Boolean variables. This is done by encoding each of the
+integer variables and trinary variables as themselves being derived
+from a set of Boolean variables with still more constraints. Encoding
+the DRA has a SAT problem allows it to be solved using a SAT Solver,
+programs that have been developed over the past two
+decades that use sophisticated heuristics that can rapidly solve many
+SAT problems. In general, SAT solvers work by identifying a ``kernel''
+of constraints that must always be true (or, conversely, can never be
+true) and using these kernels to systematically eliminate large parts
+of the search space. In recent years SAT solvers have been
+successfully applied to many applications.
 
-\section{Methods of Attack}
-
-Here we discuss two approaches for solving the system of constraints that we have developed.
-\begin{enumerate}
-
-\item \textbf{Brute Force} - trying every possible combination of solutions.\\
-
-\item \textbf{SAT Solvers} - applying programs that quickly solve Boolean algebra problems.\\
-
-\end{enumerate}
-
-For large data sets such as the U.S. Census, performing a brute-force attack is infeasible due to the fact that the runtime of brute force programs scales exponentially with the number of unknowns.
-However, SAT solvers are quite effective because they can reconstruct databases much more quickly than can a brute-force approach. Recent advances in SAT solver heuristics have enabled these programs to frequently solve systems with even millions of variables in a matter of minutes. In later examples, we will use a SAT solver to demonstrate how quickly these very complex programs can solve large systems of equations.
-
-\section{Database Reconstruction with a SAT Solver}
-
-In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new, larger set of responses to the survey given earlier.
-
-The ground truth responses from two new households are given in Table~\ref{resultsbig}. The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
-
+\textbf{SIMSON'S REWRITE IS UP TO HERE}
 
 From this data, the attacker generates many constraint equations as demonstrated earlier,
 and then inputs these constraints into a SAT solver. In this example, we use a free open-source SAT solver
@@ -1192,4 +1227,37 @@ same-sex married couples: 0
 
 \end{document}
 
+
+
+
+Clearly, if there is one possible solution, then suppressing
+additional variables will increase the size of the solution
+universe. However, the fictional statistics agency must be concerned
+about more than the 
+
+, the set of all solutions that fit the encoded set of constraints, is potentially quite large, containing many false solutions along with the true solution.
+However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
+down the set of possible solutions.
+
+
+This system has one true
+solution, equivalent to the 
+ground truth, and possibly many other false solutions, which fit the
+constraints but are not equivalent to the ground truth. 
+
+Eventually, the attacker
+will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
+the ground truth. At this point, the attack has succeeded, and the statistical agency has completely failed to protect its respondents' privacy. Note that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
+
+Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data for some respondents because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been reconstructed. Thus, the database has failed to protect this person's privacy even though the attack did not fully reconstruct the database.
+Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously.
+
+
+>> Need to discuss that suppressing more results increases the size of
+the solution universe, but that comonalities in solutions may sill
+compromise privacy.
+
+
 % LocalWords:  microdata equalities
+
+
