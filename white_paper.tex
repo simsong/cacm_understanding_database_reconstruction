@@ -444,78 +444,55 @@ can often solve hard structured problems with over a million variables and
 several million constraints.''\cite[references omitted]{Gomes200889}.
 
 Many SAT solvers take their input in the so-called DIMACS file format,
-which specifies a single equation in conjunctive normal form. Because
-the DIMACS format can be difficult to understand, we Sugar\cite{sugar} to translate our system of
-constraints into the DIMACS format. Sugar accepts input as a series of
-\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For example, the
-constraint \ref{eq1} can be encoded as the following s-expression:
+which specifies a single equation in conjunctive normal form (CNF). We use
+Sugar\cite{sugar} to transform our system of constraints into DIMACS
+format. Surgar's input is a series of
+\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
+example, the constraint \ref{eq1} can be encoded as the following
+s-expression:
 \begin{verbatim}
 (= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 
          10) 
       40)
 \end{verbatim}
 
-We created s-expressions for the constraints in Table~\ref{publishedstatsbig}.
+Our source input file is \NumConstraintLines{} (minus comments)
+consisting of \NumSExpressions s-expressions. This is converted into
+\NumVaraibles Boolean variables and \NumClauses CNF clauses. Using the
+open source picosat solver\cite{Biere_picosatessentials}, we are able
+to solve this system in 35 seconds on a 2012 MacBook Pro with an Intel
+i7 2.9GHz processor. Output is given in Table~\ref{sugarbig} and is
+tabulated for readability and sorted by household. 
 
-Output is given in Table~\ref{sugarbig} and is tabulated for readability. Although the ID numbers are permutated, the ten people in the SAT solver output are identical to the ten people from the ground truth in Table~\ref{resultsbig}, so the attack has succeeded in reconstructing the entire database and narrowing down the solution universe to size 1. Finding this solution required 35 seconds on a single 2012 MacBook Pro with an Intel i7 2.9GHz processor.
+Although the ID numbers are permutated, the ten people in the SAT
+solver output are identical to the ten people from the ground truth in
+Table~\ref{resultsbig}, so the attack has succeeded in reconstructing
+the entire database and narrowing down the solution universe to size
+1. Finding this solution required 35 seconds on a single 2012 MacBook
+Pro with an Intel i7 2.9GHz processor. 
 
-At past international SAT solver competitions, SAT solvers such as PicoSAT have solved problems with tens of millions of variables in less than 20 minutes \cite{satcomp}, demonstrating that dataset size and constraint number is not an insurmountable obstacle to this type of DRA.
-
-\begin{table}
-\begin{tabular}{rllp{1in}||rllp{1in}}
-\multicolumn{4}{c||}{Household \#1}    & \multicolumn{4}{c}{Household \#2} \\
-Age & Sex & Race & Gen                 & Age & Sex & Race & Gen \\
-\hline
-90 & Male & White & Grandparent        & 40 & Female & White & Parent\\
-80 & Female & Black & Grandparent      & 20 & Male & Black & Parent\\
-70 & Female & White & Grandparent      & 10 & Female & White & Child\\
-40 & Male & White & Parent             & 10 & Male & Black & Child\\
-30 & Female & Black & Parent           & 10 & Male & Black & Child\\
-\hline
-\end{tabular}
-\caption{Responses from a two fictional households
-for a survey that collects Age, Sex, Race and Generation of each resident. This is
-the unpublished, confidential data collected by a fictional statistical
-agency.}\label{responses}
-\end{table}
+At past international SAT
+solver competitions, SAT solvers such as PicoSAT have solved problems
+with tens of millions of variables in less than 20 minutes
+\cite{satcomp}. It is thus likely that today's SAT solvers could solve
+realistic database reconstruction problems based on data being
+published today by official statistics agencies.
 
 
 \begin{table}
 \begin{tabular}{c|c|c|c|c|c}
 ID & Household & Age & Sex & Race & Generation \\
 \hline
-1 & 1 & 80 & 1 & 1 & 2  \\
-2 & 1 & 40 & 0 & 0 & 1  \\
-3 & 1 & 70 & 1 & 0 & 2  \\
-4 & 1 & 30 & 1 & 1 & 1  \\
-5 & 1 & 90 & 0 & 0 & 2  \\
-6 & 2 & 10 & 0 & 1 & 0  \\
-7 & 2 & 10 & 0 & 1 & 0  \\
-8 & 2 & 10 & 1 & 0 & 0  \\
-9 & 2 & 40 & 1 & 0 & 1 \\
-10 & 2 & 20 & 0 & 1 & 1 \\
-\hline
-\end{tabular}
-\caption{Survey results}
-\label{resultsbig}
-\end{table}
-
-
-
-\begin{table}
-\begin{tabular}{c|c|c|c|c|c}
-ID & Household & Age & Sex & Race & Generation \\
-\hline
-1 & 2 & 10 & 1 & 0 & 0  \\
-2 & 2 & 20 & 0 & 1 & 1  \\
-3 & 1 & 30 & 1 & 1 & 1  \\
-4 & 2 & 10 & 0 & 1 & 0  \\
-5 & 2 & 40 & 1 & 0 & 1  \\
-6 & 2 & 10 & 0 & 1 & 0  \\
-7 & 1 & 40 & 0 & 0 & 1  \\
-8 & 1 & 80 & 1 & 1 & 2  \\
-9 & 1 & 90 & 0 & 0 & 2 \\
+ 3 & 1 & 30 & 1 & 1 & 1  \\
+ 7 & 1 & 40 & 0 & 0 & 1  \\
+ 8 & 1 & 80 & 1 & 1 & 2  \\
+ 9 & 1 & 90 & 0 & 0 & 2 \\
 10 & 1 & 70 & 1 & 0 & 2 \\
+ 1 & 2 & 10 & 1 & 0 & 0  \\
+ 2 & 2 & 20 & 0 & 1 & 1  \\
+ 4 & 2 & 10 & 0 & 1 & 0  \\
+ 5 & 2 & 40 & 1 & 0 & 1  \\
+ 6 & 2 & 10 & 0 & 1 & 0  \\
 \hline
 \end{tabular}
 \caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
@@ -523,21 +500,46 @@ ID & Household & Age & Sex & Race & Generation \\
 
 
 \section{Defending Against a DRA}
-As demonstrated above, new techniques must be developed in
-order to protect databases against reconstruction attacks, as traditional techniques such as cell suppression are insufficient defense. One of the simplest and most effective techniques in defending against the DRA is noise infusion, where the publishing agency adds random values to data before publication in order to increase the size of the solution universe. For example, if the statistical agency takes a true value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and then calculates and publishes statistics consistent with this new age, there are now five elements in the solution universe for this value, where without noise infusion there would be only one. If two responses are processed with noise of this sort, there are now $5^2 = 25$ possible solutions. If 10 people undergo noise infusion of this type, there are $5^{10}$ --- nearly 10 million --- possible solutions. Notice that the statistical agency can reveal that noise infusion has taken place, and can even reveal how much noise has been added, without compromising the effectiveness of said noise infusion. Noise infusion allows an agency to publish more statistics without fearing that it has given attackers too many constraints to work with.
+There are three approaches for defending against a DRA: publish less
+statistical data, and apply noise (randomness) to either the
+statistical data being tabulated, or to the results of those
+tabulations. We consider them in order below.
 
-In the following example of noise infusion, we use noise generated
-from a distribution called the Laplace distribution
-\cite{Dwork:2006:CNS:2180286.2180305}. We choose this distribution
-because, when correctly applied, this type of noise addition gives a
-strong mathematical guarantee of individual privacy. To demonstrate
-how effective adding Laplace noise is against the DRA, we reconsider
-the example from the previous section. This time, the statistical
-agency applies the Laplace transformation with mean 0 and exponential
-decay 3 to the survey responses to the ages before publishing any
-statistical products. The new published data product, analogous to
-Table~\ref{publishedstatsbig}, is shown in
-Table~\ref{publishedstatsnoise}.
+Although it might seem that publishing less statistical data is a
+reasonable defense against the DRA, this may severely limit the amount
+of tabulations that can be published the problem with this approach. A
+related problem is that it may be computationally infeasible to
+determine if a reconstruction is possible, a direct result of DRA being an NP-complete
+problem. DRA is NP-complete because 3SAT can be mapped to a set of
+statistical tables in which the statistics for a series of
+hypothetical blocks, each containing 3 residences, are
+published. Although SAT Solvers a powerful, the inability of a SAT
+solver to find a solution to a SAT problem does not mean that a
+solution is not possible---it may just mean that the attacker hasn't waited
+long enough. 
+
+A second approach is to apply noise (randomness) to the data being
+tabulated. For example, if the statistical agency takes a true
+value of age = 10, then randomly adds either -2, -1, 0, 1, or 2, and
+then calculates and publishes statistics consistent with this new age,
+there are now five elements in the solution universe for this value,
+where without noise infusion there would be only one. If two responses
+are processed with noise of this sort, there are now $5^2 = 25$
+possible solutions. If 10 people undergo noise infusion of this type,
+there are $5^{10}$---nearly 10 million---possible
+solutions. Database reconstruction may still be possible, but there is no
+way which solution is correct. 
+
+A third approach is to use output noise infusion, for example, using
+the Laplace mechanism\cite{Dwork:2006:CNS:2180286.2180305}. Output
+noise infusion has the advantage of being easier to understand,
+although the results may be internally inconsistent. 
+
+For example, in Table~\ref{publishedstatsnoise} we present the results
+of the original Table~\ref{publishedstatsbig}, but with Laplace noise
+added.  The infusion of noise does not
+significantly impact the reported statistics, but makes a DRA using
+the same process as before ``Unsatisfiable,'' according to Sugar. 
 
 \begin{table}[t]
 \begin{tabular}{c|c|c}
@@ -577,13 +579,19 @@ Households $\geq 40\% $ black & 2 & 38.57 \\
 \end{tabular}
 \caption{Data publication with added Laplace noise}\label{publishedstatsnoise}
 \end{table}
-It is important to note that the infusion of the noise did not significantly impact the reported statistics, thus preserving their utility to nonintrusive users. However, when the attacker attempts to perform the DRA using the same process as before, Sugar returns "Unsatisfiable". The noise infusion has defeated the DRA, and the statistical agency has upheld its legal obligation to protect respondent privacy.
 
-\section{Problem Analysis}
+\section{Conclusion}
 
-With the dramatic improvement in the efficiency of SAT solvers in the last decade, the database reconstruction attack is no longer a solely theoretical danger. The vast amount of data products the Census publishes each year gives a determined and informed attacker more than enough constraints to reconstruct some or all of a target database and breach the privacy of millions of people. Although the Census Bureau's current disclosure avoidance technique suite is often sufficient to defend against a cursory attempt at an identification attack, we have demonstrated through attack simulations that cell suppression and grouping are not completely against the power of more sophisticated forms of attack.
-
-The most effective technique for defending against a DRA is the infusion of noise to results before publication. If the noise is generated by correctly applying the Laplace mechanism, it is possible to guarantee individuals' choice to respond to a survey cannot harm them while simultaneously preserving the accuracy of the data for benign use. In infusion to continuing to use the traditional disclosure avoidance techniques, data agencies should make probabilistic noise infusion a required part of the pre-publication disclosure review process in order to protect respondent privacy.
+With the dramatic improvement in the efficiency of SAT solvers in the
+last decade, the database reconstruction attack is no longer a solely
+theoretical danger. The vast amount of data products published by
+statistical agencies each year gives a determined and informed attacker more than
+enough constraints to reconstruct some or all of a target database and
+breach the privacy of millions of people. Although traditional
+disclosure avoidance technique suite is often sufficient to
+defend against a cursory attack, cell suppression and
+generalization are not secure against more sophisticated
+forms of attack.
 
 \section{References}
 
@@ -593,68 +601,69 @@ The most effective technique for defending against a DRA is the infusion of nois
 
 \section{Appendices}
 
+\emph{These appendices will not be part of the FC2018 submission, but
+  would be part of a technical report.}
+
 \subsection{SAT and SAT Solvers}
 
-The Boolean satisfiability problem, known as SAT, was the first problem to be proven NP-complete \cite{cooklevin}. This problem asks, for a given Boolean formula, whether replacing each variable with either True or False can make the formula evaluate to True.   A consequence of SAT being NP-complete is that any problem can be reduced in polynomial time (i.e., quickly) to an instance of the SAT problem. Once a problem has been reduced to an instance of the SAT problem, this SAT problem can be fed into a SAT solver to find possible solutions. Although the SAT problem is not solvable by algorithms in polynomial time, researchers have found many heuristic techniques for expediting this process. SAT solvers combine a variety of these techniques into one complex process, resulting in polynomial time solutions for the SAT problem in many cases.
+The Boolean satisfiability problem (SAT) was the first
+problem to be proven NP-complete \cite{cooklevin}. This problem asks,
+for a given Boolean formula, whether replacing each variable with
+either True or False can make the formula evaluate to True.  A
+consequence of SAT being NP-complete is that any problem can be
+reduced in polynomial time (i.e., quickly) to an instance of the SAT
+problem. Once a problem has been reduced to an instance of the SAT
+problem, this SAT problem can be fed into a SAT solver to find
+possible solutions. Although the SAT problem is not solvable by
+algorithms in polynomial time, researchers have found many heuristic
+techniques for expediting this process. SAT solvers combine a variety
+of these techniques into one complex process, resulting in polynomial
+time solutions for the SAT problem in many cases.
 
-Modern SAT solvers use a heuristic technique called Conflict-Driven Clause Learning, commonly referred to as CDCL. CDCL works by the following process \cite{cdcl}:
+Modern SAT solvers use a heuristic technique called Conflict-Driven
+Clause Learning, commonly referred to as CDCL\cite{cdcl}. Briefly, CDCL algorithm
+is::
 
 \begin{enumerate}
 
-\item Assign a value to a variable arbitrarily.
-\item Use this assignment to determine values for the other variables in the formula (a process known as unit propagation).
-\item If a conflict is found, backtrack to the clause that made the conflict occur and undo variable assignments made after that point.
-\item Add the negation of the conflict-causing clause as a new clause to the master formula and resume from step 1.
+\item Assign a value to a variable arbitrarily. 
+\item Use this assignment to determine values for the other variables
+  in the formula (a process known as unit propagation). 
+\item If a conflict is found, backtrack to the clause that made the
+  conflict occur and undo variable assignments made after that point. 
+\item Add the negation of the conflict-causing clause as a new clause
+  to the master formula and resume from step 1. 
 
 \end{enumerate}
 
-This process is much faster at solving SAT problems than previous processes used in SAT solvers because adding conflicts as new clauses has the potential to avoid wasteful 'repeated backtracks'. Additionally, CDCL and its predecessor algorithm, DPLL, are both provably complete algorithms and will always return either a solution or "Unsatisfiable" if given enough time and memory.
+This process is much faster at solving SAT problems than previous
+processes used in SAT solvers because adding conflicts as new clauses
+has the potential to avoid wasteful ``repeated backtracks.''
+Additionally, CDCL and its predecessor algorithm, DPLL, are both
+provably complete algorithms and will always return either a solution
+or ``Unsatisfiable'' if given enough time and memory.
 
-There are a wide variety of SAT solvers available to the public for minimal or no cost. Although a SAT solver requires the user to translate the problem into Boolean formulae before use,  programs such as Naoyuki Tamura's Sugar facilitate this process by translating user-input mathematical and English constraints into Boolean formulae automatically.
-
-
+There are a wide variety of SAT solvers available to the public for
+minimal or no cost. Although a SAT solver requires the user to
+translate the problem into Boolean formulae before use, programs such
+as Naoyuki Tamura's Sugar facilitate this process by translating
+user-input mathematical and English constraints into Boolean formulae
+automatically.
 
 \subsection{Sugar Input}
 
-Sugar input is given in a standard Constraint Satisfaction Problem (CSP) file format. A constraint must be given on a single line of the file, but here we separate most constraints into multiple lines for readability. Constraint equations are separated by comments describing what statistics they encode.
+Sugar input is given in a standard Constraint Satisfaction Problem
+(CSP) file format. A constraint must be given on a single line of the
+file, but here we separate most constraints into multiple lines for
+readability. Constraint equations are separated by comments describing
+what statistics they encode.
 
-Input for the mock survey from Section 4 is as follows:
+Input for the model in this paper is as follows:
 
 \verbatiminput{constraints.csp}
 
 
 \end{document}
-
-
-
-
-Clearly, if there is one possible solution, then suppressing
-additional variables will increase the size of the solution
-universe. However, the fictional statistics agency must be concerned
-about more than the 
-
-, the set of all solutions that fit the encoded set of constraints, is potentially quite large, containing many false solutions along with the true solution.
-However, each time the agency publishes a new statistic, the attacker can generate new constraints and therefore narrow
-down the set of possible solutions.
-
-
-This system has one true
-solution, equivalent to the 
-ground truth, and possibly many other false solutions, which fit the
-constraints but are not equivalent to the ground truth. 
-
-Eventually, the attacker
-will be able to narrow down the solution universe to just one solution, at which point the solution universe contains only
-the ground truth. At this point, the attack has succeeded, and the statistical agency has completely failed to protect its respondents' privacy. Note that the cell suppression disclosure avoidance technique does not prevent the attacker from performing the reconstruction attack, but rather simply gives one fewer constraint to work with per cell suppressed.
-
-Furthermore, even if the number of constraints is insufficient to narrow down the solution universe to just one element, the attacker can still often identify personal data for some respondents because of the high probability that all remaining solutions share values for a set of people. For example, if there are three remaining solutions in the solution universe, and all three contain a 75-year-old black male grandparent in household 1, then the attacker knows that this person is a real person in the database, even though the rest of the database may not have been reconstructed. Thus, the database has failed to protect this person's privacy even though the attack did not fully reconstruct the database.
-Although public Census data tables are drawn from hundreds of millions of American individuals, the Census publishes billions of statistics from those individual responses, so there are still sufficient constraints to narrow down the solution universe enormously.
-
-
->> Need to discuss that suppressing more results increases the size of
-the solution universe, but that comonalities in solutions may sill
-compromise privacy.
-
 
 % LocalWords:  microdata equalities satisfiability
 
