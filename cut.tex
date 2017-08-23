@@ -1,0 +1,22 @@
+In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new, larger set of responses to the survey given earlier.
+
+The ground truth responses from two new households are given in Table~\ref{resultsbig}. The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
+
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{cc|c}
+A & B & A==B  \\
+\hline
+True & True & 1   \\
+True & False & 0  \\
+False & True & 0  \\
+False & False & 1  \\
+\hline
+\end{tabular}
+\caption{Truth table for the == operator}\label{truthtable}
+\end{center}
+\end{table}
+
+
+
