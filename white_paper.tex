@@ -112,7 +112,7 @@ specific attributes for particular individuals or
 establishments. Today these privacy guarantees are assured through the
 practical of \emph{Statistical Disclosure Limitation} (SDL)
 techniques, such as suppressing cells and generalizing categories in
-summary tables. Although these techniques are not be sufficient to
+summary tables. Although these techniques are not sufficient to
 prevent a database reconstruction attack of the sort anticipated by
 Dinur and Nissim\cite{noise}, statistical agencies have been slow to
 adopt disclosure limitation techniques based on formal privacy
@@ -142,7 +142,7 @@ of a data about a specific individual or establishment, or the linkage
 of microdata to an identity.
 
 Working Paper \#22 outlines a number of approaches that statistical
-agencies can use for protecting respondent data. This techniques include:
+agencies can use for protecting respondent data. These techniques include:
 \begin{enumerate}
   \item \textbf{Cell Suppression}, where the values of cells with small counts or few possible
         generating combinations are removed from the published table
@@ -411,17 +411,17 @@ and record the ones that work.
 Ordinarily a brute force search on even this toy problem would be
 unreasonable: there are 10 age variables that can range from 0...120,
 30 binary variables (household, sex and race), and ten trinary
-variable. All together, there are $120^{10} \times 2^{30} \times
+variables. All together, there are $120^{10} \times 2^{30} \times
 3^{10} \approx 4 \times 10^{34}$ possible combinations. Even if we
 could try a billion a second, trying all possible combinations would
 take a billion billion years.
 
 Those familiar with complexity theory will have recognized by now that
 the system of variables can be expressed as a satisfiability (SAT)
-problem purely Boolean variables. This is done by encoding each of the
+problem of purely Boolean variables. This is done by encoding each of the
 integer variables and trinary variables as themselves being derived
 from a set of Boolean variables with still more constraints. Encoding
-the DRA has a SAT problem allows it to be solved using a SAT Solver
+the DRA as a SAT problem allows it to be solved using a SAT solver, which are 
 programs that have been developed over the past two
 decades that use sophisticated heuristics that can rapidly solve many
 SAT problems. 
@@ -460,7 +460,7 @@ s-expression:
 Our source input file is \NumConstraintLines{} (minus comments)
 consisting of \NumSExpressions s-expressions. This is converted into
 \NumVariables Boolean variables and \NumClauses CNF clauses. Using the
-open source picosat solver\cite{Biere_picosatessentials}, we are able
+open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
 to solve this system in 35 seconds on a 2012 MacBook Pro with an Intel
 i7 2.9GHz processor. Output is given in Table~\ref{sugarbig} and is
 tabulated for readability and sorted by household. 
@@ -529,7 +529,7 @@ are processed with noise of this sort, there are now $5^2 = 25$
 possible solutions. If 10 people undergo noise infusion of this type,
 there are $5^{10}$---nearly 10 million---possible
 solutions. Database reconstruction may still be possible, but there is no
-way which solution is correct. 
+way to know which solution is correct. 
 
 A third approach is to use output noise infusion, for example, using
 the Laplace mechanism\cite{Dwork:2006:CNS:2180286.2180305}. Output
