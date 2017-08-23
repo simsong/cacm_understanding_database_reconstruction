@@ -162,7 +162,7 @@ ability of a  data intruder\cite{data-intruder} to recover respondent data from 
 statistical release, such hunches do not constitute rigorous
 mathematical proofs. Absent a formal definition of privacy and
 mathematical proofs showing that a specific disclosure limitation
-technique realizes that definition, there is no way to know if 
+technique realizes that definition, there is no way to know if
 technique actually protect privacy, or if that is merely wishful thinking.
 
 In this paper, we use
@@ -174,7 +174,7 @@ years\cite{noise}. Yet surprisingly, today most of
 statistical agencies still rely on the disclosure
 limitation techniques described in Working Paper \#22, rather than
 having adopted new techniques based on differential
-privacy\cite{Dwork:2006:CNS:2180286.2180305}. 
+privacy\cite{Dwork:2006:CNS:2180286.2180305}.
 
 The contribution of this paper, then, is to present a model example of how
 a database reconstruction attack might be implemented against a data
@@ -183,7 +183,7 @@ formally private technique can protect against such an
 attack. Although the possibility of database reconstruction is
 presented in Dinur and Nissum's original paper\cite{noise}, we are not
 aware of any end-to-end example showing the threat, a worked attack,
-and the results of modern defenses. 
+and the results of modern defenses.
 
 \section{Related Work}
 
@@ -191,7 +191,7 @@ Dinur and Nissim\cite{noise} showed that the underlying
 confidential data of a statistical database can be reconstructed with
 a surprisingly small number of queries. In practice, most statistical
 agencies perform these queries themselves when they release
-statistical tables. Thus, Dinur and Nissim's primary finding 
+statistical tables. Thus, Dinur and Nissim's primary finding
 is that a statistical agency that publishes too many statistical
 tables drawn from the same confidential dataset risks inadvertently
 compromising that dataset unless it takes specific protective measures.
@@ -216,7 +216,7 @@ can construct a matrix of linear equalities that can often be solved
 in polynomial time. The paper also analyzes a common reconstruction
 technique known as least squares decoding, where the attacker sets up
 a goal function to minimize the square of the distance between two
-databases in order to reconstruct the original database. 
+databases in order to reconstruct the original database.
 
 Brown and Heathers\cite{doi:10.1177/1948550616673876} developed the
 granularity-related inconsistency of means (GRIM) test in response to
@@ -238,7 +238,7 @@ To present a DRA, we consider a hypothetical
 census of a fictional block conducted by a fictional statistical
 agency. For every household, the agency collects each member's age,
 sex, race, and their generation in the household.  Because the
-confidential data will not be released in order to protect respondent privacy, the statistical agency 
+confidential data will not be released in order to protect respondent privacy, the statistical agency
 publishes every conceivable statistic that might be of use to a
 potential demographers, sociologists and economists. Based on user
 feedback from previous census reports, the agency has come up with the
@@ -246,7 +246,7 @@ a set of statistics, which we present here as Table~\ref{publishedstatsbig}.
 
 Note that in order to protect respondent privacy, the agency has
 suppressed all statistics that are based on a single
-individual. 
+individual.
 
 \begin{table}
 \begin{center}
@@ -370,13 +370,13 @@ Two constraints can be encoded based on statistic 1B: the existence of
 five men, and the average age of 34. To encode these kinds of
 conditional constraints, we must introduce the == operator,
 which here is a test for equivalence. This operator returns 1 if the
-left and right hand sides are equal, and 0 otherwise. 
+left and right hand sides are equal, and 0 otherwise.
 Five men is thus:
 
 \begin{equation}
 \begin{split}
 (S1==0) + (S2==0) + (S3==0) + (S4==0) + (S5==0) +  & \\
-(S6==0) + (S7==0) + (S8==0) + (S9==0) + (S10==0) & = 3 
+(S6==0) + (S7==0) + (S8==0) + (S9==0) + (S10==0) & = 3
 \end{split}
 \end{equation}
 
@@ -393,7 +393,7 @@ A7\times(S7==0) + A8\times(S8==0) + A9\times(S9==0) + &\\
 
 Once the attacker has converted all the published statistics
 into equations like the ones above, the equations together form a
-system of many equations in 50 unknowns. 
+system of many equations in 50 unknowns.
 There is a \textit{solution universe} of all possible solutions to
 this set of simultaneous equations. If there is a single possible
 solution, then the published statistics completely reveal the
@@ -424,7 +424,7 @@ from a set of Boolean variables with still more constraints. Encoding
 the DRA as a SAT problem allows it to be solved using a SAT solver, which are 
 programs that have been developed over the past two
 decades that use sophisticated heuristics that can rapidly solve many
-SAT problems. 
+SAT problems.
 
 Those not familiar with modern SAT solvers may be somewhat
 incredulous at the suggestion of using attempting to use them to solve
@@ -436,7 +436,7 @@ are increasingly leaving their mark as a general-purpose tool in areas
 as diverse as software and hardware verification,
 automatic test pattern generation, planning,
 scheduling, and even challenging problems from algebra. Annual SAT
-competitions have led to the development of dozens 
+competitions have led to the development of dozens
 of clever implementations of such solvers, an exploration of many new
 techniques, and the creation of an extensive suite of real-world
 instances as well as challenging hand-crafted benchmark
@@ -452,8 +452,8 @@ format. Surgar's input is a series of
 example, the constraint \ref{eq1} can be encoded as the following
 s-expression:
 \begin{verbatim}
-(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 
-         10) 
+(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10)
+         10)
       40)
 \end{verbatim}
 
@@ -463,14 +463,14 @@ consisting of \NumSExpressions s-expressions. This is converted into
 open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
 to solve this system in 35 seconds on a 2012 MacBook Pro with an Intel
 i7 2.9GHz processor. Output is given in Table~\ref{sugarbig} and is
-tabulated for readability and sorted by household. 
+tabulated for readability and sorted by household.
 
 Although the ID numbers are permuted, the ten people in the SAT
 solver output are identical to the ten people from the ground truth in
 Table~\ref{resultsbig}, so the attack has succeeded in reconstructing
 the entire database and narrowing down the solution universe to size
 1. Finding this solution required 35 seconds on a single 2012 MacBook
-Pro with an Intel i7 2.9GHz processor. 
+Pro with an Intel i7 2.9GHz processor.
 
 At past international SAT
 solver competitions, SAT solvers such as PicoSAT have solved problems
@@ -517,7 +517,7 @@ hypothetical blocks, each containing 3 residences, are
 published. Although SAT Solvers a powerful, the inability of a SAT
 solver to find a solution to a SAT problem does not mean that a
 solution is not possible---it may just mean that the attacker hasn't waited
-long enough. 
+long enough.
 
 A second approach is to apply noise (randomness) to the data being
 tabulated. For example, if the statistical agency takes a true
@@ -529,18 +529,18 @@ are processed with noise of this sort, there are now $5^2 = 25$
 possible solutions. If 10 people undergo noise infusion of this type,
 there are $5^{10}$---nearly 10 million---possible
 solutions. Database reconstruction may still be possible, but there is no
-way to know which solution is correct. 
+way to know which solution is correct.
 
 A third approach is to use output noise infusion, for example, using
 the Laplace mechanism\cite{Dwork:2006:CNS:2180286.2180305}. Output
 noise infusion has the advantage of being easier to understand,
-although the results may be internally inconsistent. 
+although the results may be internally inconsistent.
 
 For example, in Table~\ref{publishedstatsnoise} we present the results
 of the original Table~\ref{publishedstatsbig}, but with Laplace noise
 added.  The infusion of noise does not
 significantly impact the reported statistics, but makes a DRA using
-the same process as before ``Unsatisfiable,'' according to Sugar. 
+the same process as before ``Unsatisfiable,'' according to Sugar.
 
 \begin{table}[t]
 \begin{tabular}{c|c|c}
@@ -627,13 +627,13 @@ is::
 
 \begin{enumerate}
 
-\item Assign a value to a variable arbitrarily. 
+\item Assign a value to a variable arbitrarily.
 \item Use this assignment to determine values for the other variables
-  in the formula (a process known as unit propagation). 
+  in the formula (a process known as unit propagation).
 \item If a conflict is found, backtrack to the clause that made the
-  conflict occur and undo variable assignments made after that point. 
+  conflict occur and undo variable assignments made after that point.
 \item Add the negation of the conflict-causing clause as a new clause
-  to the master formula and resume from step 1. 
+  to the master formula and resume from step 1.
 
 \end{enumerate}
 
@@ -667,5 +667,6 @@ Input for the model in this paper is as follows:
 \end{document}
 
 % LocalWords:  microdata equalities satisfiability
+
 
 
