@@ -18,3 +18,4 @@ white_paper.pdf
 *.gradle
 constraints_.cnf
 constraints_.map
+*.pyc
