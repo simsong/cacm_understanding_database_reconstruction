@@ -11,3 +11,10 @@ sugar-v2-3-2
 *.log
 white_paper.pdf
 *.fdb_latexmk
+*.upa
+*.upb
+*.spl
+*.out
+*.gradle
+constraints_.cnf
+constraints_.map
