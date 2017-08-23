@@ -1,7 +1,8 @@
+\documentclass[runningheads]{llncs}
+\include{vars}
 \newif\ifanonymized
 \anonymizedtrue
 %\anonymizedfalse
-\documentclass[runningheads]{llncs}
 %cmap has to be loaded before any font package (such as cfr-lm)
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
@@ -458,13 +459,13 @@ s-expression:
 
 Our source input file is \NumConstraintLines{} (minus comments)
 consisting of \NumSExpressions s-expressions. This is converted into
-\NumVaraibles Boolean variables and \NumClauses CNF clauses. Using the
+\NumVariables Boolean variables and \NumClauses CNF clauses. Using the
 open source picosat solver\cite{Biere_picosatessentials}, we are able
 to solve this system in 35 seconds on a 2012 MacBook Pro with an Intel
 i7 2.9GHz processor. Output is given in Table~\ref{sugarbig} and is
 tabulated for readability and sorted by household. 
 
-Although the ID numbers are permutated, the ten people in the SAT
+Although the ID numbers are permuted, the ten people in the SAT
 solver output are identical to the ten people from the ground truth in
 Table~\ref{resultsbig}, so the attack has succeeded in reconstructing
 the entire database and narrowing down the solution universe to size
