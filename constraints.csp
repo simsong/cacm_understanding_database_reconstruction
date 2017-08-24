@@ -168,6 +168,20 @@
       5)
    300)
 
+;; 2A number of children 0-12: 3
+(= (+ (if (and (>= A1 1) (<= A1 12)) 1 0)
+      (if (and (>= A2 1) (<= A2 12)) 1 0)
+      (if (and (>= A3 1) (<= A3 12)) 1 0)
+      (if (and (>= A4 1) (<= A4 12)) 1 0)
+      (if (and (>= A5 1) (<= A5 12)) 1 0)
+      (if (and (>= A6 1) (<= A6 12)) 1 0)
+      (if (and (>= A7 1) (<= A7 12)) 1 0)
+      (if (and (>= A8 1) (<= A8 12)) 1 0)
+      (if (and (>= A9 1) (<= A9 12)) 1 0)
+      (if (and (>= A10 1) (<= A10 12)) 1 0) ) 3)
+
+
+
 ;; 2A number of children
 (= (+ (if (= G1 0) 1 0) (if (= G2 0) 1 0)
       (if (= G3 0) 1 0) (if (= G4 0) 1 0)
@@ -237,8 +251,12 @@
    800)
 
 ;;5A number of households
+;; (nvalue 2 (a b c d ...)) means that the elements in the list must have
+;;                          two distinct values.
 (nvalue 2 (H1 H2 H3 H4 H5 H6 H7 H8 H9 H10))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; these are not in the main table?
 ;; number of male children
 (= (+ (if (and (= G1 0) (= S1 0 )) 1 0)
       (if (and (= G2 0) (= S2 0 )) 1 0)
@@ -263,18 +281,6 @@
       (if (and (= G8 0) (= S8 1 )) 1 0)
       (if (and (= G9 0) (= S9 1 )) 1 0)
       (if (and (= G10 0) (= S10 1 )) 1 0) ) 1)
-
-;; number of children 0-12: 3
-(= (+ (if (and (>= A1 1) (<= A1 12)) 1 0)
-      (if (and (>= A2 1) (<= A2 12)) 1 0)
-      (if (and (>= A3 1) (<= A3 12)) 1 0)
-      (if (and (>= A4 1) (<= A4 12)) 1 0)
-      (if (and (>= A5 1) (<= A5 12)) 1 0)
-      (if (and (>= A6 1) (<= A6 12)) 1 0)
-      (if (and (>= A7 1) (<= A7 12)) 1 0)
-      (if (and (>= A8 1) (<= A8 12)) 1 0)
-      (if (and (>= A9 1) (<= A9 12)) 1 0)
-      (if (and (>= A10 1) (<= A10 12)) 1 0) ) 3)
 
 ;; number of children 13-17: 0
 (= (+ (if (and (>= A1 13) (<= A1 17)) 1 0)

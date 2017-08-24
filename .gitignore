@@ -19,3 +19,4 @@ white_paper.pdf
 constraints_.cnf
 constraints_.map
 *.pyc
+.DS_Store

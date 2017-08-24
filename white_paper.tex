@@ -3,7 +3,7 @@
 \newif\ifanonymized
 \anonymizedtrue
 %\anonymizedfalse
-%cmap has to be loaded before any font package (such as cfr-lm)
+% cmap has to be loaded before any font package (such as cfr-lm)
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -91,7 +91,6 @@ qt=false%
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{siunitx}
-
 
 \begin{document}
 \title{Database Reconstruction Attack on Public Data}
@@ -299,31 +298,7 @@ the fictitious census, there are 50 unknowns (Table~\ref{50unknowns}).
 
 \begin{table}
 \begin{minipage}[t]{3in}
-\begin{tabular}{cccccc}
-ID & Household & Age & Sex & Race & Generation \\
-\hline
-\hline
-1 & H1 & A1 & S1 & R1 & G1  \\
-\hline
-2 & H2 & A2 & S2 & R2 & G2  \\
-\hline
-3 & H3 & A3 & S3 & R3 & G3  \\
-\hline
-4 & H4 & A4 & S4 & R4 & G4  \\
-\hline
-5 & H5 & A5 & S5 & R5 & G5  \\
-\hline
-6 & H6 & A6 & S6 & R6 & G6  \\
-\hline
-7 & H7 & A7 & S7 & R7 & G7  \\
-\hline
-8 & H8 & A8 & S8 & R8 & G8  \\
-\hline
-9 & H9 & A9 & S9 & R9 & G9  \\
-\hline
-10 & H10 & A10 & S10 & R10 & G10  \\
-\hline
-\end{tabular}
+\input{id_table.tex}
 \end{minipage}
 \begin{minipage}[t]{1in}
 \begin{tabular}{c|c}
@@ -480,23 +455,40 @@ published today by official statistics agencies.
 
 
 \begin{table}
-\begin{tabular}{c|c|c|c|c|c}
-ID & Household & Age & Sex & Race & Generation \\
+\begin{minipage}{.48\linewidth}
+\input{id_table_solved.tex}
+\caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
+\end{minipage}
+\begin{minipage}[t]{.48\linewidth}
+\begin{tabular}{rllp{1in}}
 \hline
- 3 & 1 & 30 & 1 & 1 & 1  \\
- 7 & 1 & 40 & 0 & 0 & 1  \\
- 8 & 1 & 80 & 1 & 1 & 2  \\
- 9 & 1 & 90 & 0 & 0 & 2 \\
-10 & 1 & 70 & 1 & 0 & 2 \\
- 1 & 2 & 10 & 1 & 0 & 0  \\
- 2 & 2 & 20 & 0 & 1 & 1  \\
- 4 & 2 & 10 & 0 & 1 & 0  \\
- 5 & 2 & 40 & 1 & 0 & 1  \\
- 6 & 2 & 10 & 0 & 1 & 0  \\
+\multicolumn{4}{c}{Household \#1}   \\
+Age & Sex & Race & Generation     \\
+\hline
+90  & 0 Male   & 0 White & 2 Grandparent   \\      
+80  & 1 Female & 1 Black & 2 Grandparent \\    
+70  & 1 Female & 0 White & 2 Grandparent \\  
+40  & 0 Male   & 0 White & 1 Parent        \\
+30  & 1 Female & 1 Black & 1 Parent      \\
+\hline
+\\
+\multicolumn{4}{c}{Household \#2} \\
+Age & Sex & Race & Generation     \\
+\hline
+40 & 1 Female & 0 White & 1 Parent      \\
+20 & 0 Male   & 1 Black & 1 Parent        \\
+10 & 1 Female & 0 White & 0 Child       \\
+10 & 0 Male   & 1 Black & 0 Child         \\
+10 & 0 Male   & 1 Black & 0 Child         \\
 \hline
 \end{tabular}
-\caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
+\caption{Responses from a two fictional households
+for a survey that collects Age, Sex, Race and Generation of each resident. This is
+the unpublished, confidential data collected by a fictional statistical
+agency.}\label{responses}
+\end{minipage}
 \end{table}
+
 
 
 \section{Defending Against a DRA}
