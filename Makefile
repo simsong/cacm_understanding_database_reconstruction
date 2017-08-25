@@ -1,4 +1,4 @@
-white_paper.pdf: vars.tex constraints_.cnf
+white_paper.pdf: vars.tex constraints_.cnf white_paper.tex
 	latexmk -pdf white_paper.tex
 
 constraints_.cnf: constraints.csp 

@@ -32,11 +32,11 @@ if __name__=="__main__":
                 fout.write(" ".join([vars.get(var,var) for var in line.split(" ")]))
                     
     with open("vars.tex","w") as f:
-        print("\\newcommand\\NumConstraintLines{{ {} }}".format(linecount("constraints.csp",lambda a:";" not in a)),file=f)
-        print("\\newcommand\\NumSExpressions{{ {} }}".format(linecount("constraints.csp",lambda a:a.startswith("("))),file=f)
+        print("\\newcommand\\NumConstraintLines{{\\xspace{:,d}\\xspace}}".format(linecount("constraints.csp",lambda a:";" not in a)),file=f)
+        print("\\newcommand\\NumSExpressions{{\\xspace{:,d}\\xspace}}".format(linecount("constraints.csp",lambda a:a.startswith("("))),file=f)
         (variables,clauses) = dimacs()
-        print("\\newcommand\\NumVariables{{ {} }}".format(variables),file=f)
-        print("\\newcommand\\NumClauses{{ {:,d} }}".format(clauses),file=f)
-        print("\\newcommand\\NumDIMACSLines{{ {:,d} }}".format(linecount("constraints_.cnf",lambda a:True)),file=f)
+        print("\\newcommand\\NumVariables{{\\xspace{:,d}\\xspace}}".format(variables),file=f)
+        print("\\newcommand\\NumClauses{{\\xspace{:,d}\\xspace}}".format(clauses),file=f)
+        print("\\newcommand\\NumDIMACSLines{{\\xspace{:,d}\\xspace}}".format(linecount("constraints_.cnf",lambda a:True)),file=f)
 
         

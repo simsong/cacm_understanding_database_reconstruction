@@ -249,6 +249,10 @@ individual.
 
 \begin{table}
 \begin{center}
+\caption{Fictional statistical data published by the fictional
+  statistics agency. Item numbers are for identification purpose
+  only. Note that statistics 2D, 4B, 4E and 5D have been suppressed as part
+  of the statistical disclosure limitation process.}\label{publishedstatsbig}
 \begin{tabular}{l|l|c|c}
 Item & Group & Number & Average Age \\
 \hline
@@ -286,10 +290,6 @@ Item & Group & Number & Average Age \\
 \hline
 \end{tabular}
 \end{center}
-\caption{Fictional statistical data published by the fictional
-  statistics agency. Item numbers are for identification purpose
-  only. Note that statistics 2D, 4B, 4E and 5D have been suppressed as part
-  of the statistical disclosure limitation process.}\label{publishedstatsbig}
 \end{table}
 
 The goal of the DRA is to reconstruct the number of households and,
@@ -299,31 +299,35 @@ unknown variables. Since there are 10 individuals in
 the fictitious census, there are 50 unknowns (Table~\ref{50unknowns}).
 
 \begin{table}
-\begin{minipage}[t]{3in}
-\input{id_table.tex}
-\end{minipage}
-\begin{minipage}[t]{1in}
-\begin{tabular}{c|c}
-Key & Value \\
-\hline
-Male & 0 \\
-Female & 1 \\
-\hline
-White & 0 \\
-Black & 1 \\
-\hline
-Child & 0 \\
-Parent & 1 \\
-Grandparent & 2 \\
-\hline
-\end{tabular}
-\end{minipage}
 \caption{Unknowns for the 10 fictitious individuals whose statistical
   data are presented in Table~\ref{publishedstatsbig}. Unknowns
   H\textit{n} are the household, A\textit{n} the age, S\textit{n} the
   sex, R\textit{n} the race and G\textit{n} the generation. Sex, Race
   and Generation categorical values; they are converted into numerical
   values using the key at the right.}\label{50unknowns}
+\begin{minipage}[t]{.6\textwidth}
+~\\[0pt]                        % aligns minipages for some reason
+  \input{id_table.tex}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{.35\textwidth}
+~\\[0pt]                        % aligns minipages for some reason
+  \begin{tabular}{c|c}
+  Key & Value \\
+  \hline
+  \hline
+  Male & 0 \\
+  Female & 1 \\
+  \hline
+  White & 0 \\
+  Black & 1 \\
+  \hline
+  Child & 0 \\
+  Parent & 1 \\
+  Grandparent & 2 \\
+  \hline
+  \end{tabular}
+\end{minipage}
 \end{table}
 
 The data intruder proceeds by examining the published tables and
@@ -339,9 +343,9 @@ $0\ldots120$, using the symbols for age $A1...A10$
 (Table~\ref{50unknowns}), where $=$ is the constraint operator
 establishing that the two sides must be equal:
 
-\begin{equation}
+\begin{equation}\label{eq1}
 \frac{A1 + A2 + A3 + A4 +...+ A10}{10} = 40
-\end{equation}\label{eq1}
+\end{equation}
 
 Two constraints can be encoded based on statistic 1B: the existence of
 five men, and the average age of 34. To encode these kinds of
@@ -426,16 +430,18 @@ which specifies a single equation in conjunctive normal form (CNF). We use
 Sugar\cite{sugar} to transform our system of constraints into DIMACS
 format. Surgar's input is a series of
 \textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
-example, the constraint \ref{eq1} can be encoded as the following
+example, the constraint in Equation~\ref{eq1} can be encoded as the following
 s-expression:
 \begin{verbatim}
-(= (/ (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10)
-         10)
-      40)
+(= (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 10) 400)
 \end{verbatim}
 
+Notice that we do not encode the division operator. Because SAT
+solvers can only perform operations on Boolean values, the division
+operator would not yield exact solutions due to integer round-off error.
+
 Our source input file is \NumConstraintLines{} (minus comments)
-consisting of \NumSExpressions s-expressions. This is converted into
+consisting of \NumSExpressions s-expressions. This converts into
 \NumVariables Boolean variables and \NumClauses CNF clauses. Using the
 open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
 to solve this system in 35 seconds on a 2012 MacBook Pro with an Intel
@@ -448,20 +454,27 @@ the entire database and narrowing down the solution universe to size
 1. Finding this solution required 35 seconds on a single 2012 MacBook
 Pro with an Intel i7 2.9GHz processor.
 
-At past international SAT
-solver competitions, SAT solvers such as PicoSAT have solved problems
+%At past international SAT solver competitions, 
+SAT solvers such as PicoSAT can solve problems
 with tens of millions of variables in less than 20 minutes
 \cite{satcomp}. It is thus likely that today's SAT solvers could solve
 realistic database reconstruction problems based on data being
 published today by official statistics agencies.
 
 
-\begin{table}
-\begin{minipage}{.48\linewidth}
-\input{id_table_solved.tex}
+\begin{table*}
+\begin{minipage}[t]{.45\linewidth}
+~\\
 \caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
+\input{id_table_solved.tex}
 \end{minipage}
-\begin{minipage}[t]{.48\linewidth}
+\hfill
+\begin{minipage}[t]{.45\linewidth}
+~\\
+\caption{Responses from a two fictional households
+for a survey that collects Age, Sex, Race and Generation of each resident. This is
+the unpublished, confidential data collected by a fictional statistical
+agency.}\label{responses}
 \begin{tabular}{rllp{1in}}
 \hline
 \multicolumn{4}{c}{Household \#1}   \\
@@ -484,12 +497,8 @@ Age & Sex & Race & Generation     \\
 10 & 0 Male   & 1 Black & 0 Child         \\
 \hline
 \end{tabular}
-\caption{Responses from a two fictional households
-for a survey that collects Age, Sex, Race and Generation of each resident. This is
-the unpublished, confidential data collected by a fictional statistical
-agency.}\label{responses}
 \end{minipage}
-\end{table}
+\end{table*}
 
 
 
@@ -564,10 +573,10 @@ Households & 2 & 38.57 \\
 Tri-generational households & 0 & -- \\
 Single-parent households & 0 & -- \\
 Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Interracial married couples & 2 & 31.41 \\
-Same-sex married couples & 0 & -- \\
-Households $\geq 40\% $ female & 2 & 38.57 \\
-Households $\geq 40\% $ black & 2 & 38.57 \\
+% Interracial married couples & 2 & 31.41 \\
+% Same-sex married couples & 0 & -- \\
+% Households $\geq 40\% $ female & 2 & 38.57 \\
+% Households $\geq 40\% $ black & 2 & 38.57 \\
 
 \hline
 \end{tabular}
