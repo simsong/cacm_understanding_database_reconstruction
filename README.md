@@ -16,3 +16,8 @@ Demo program using pycoSAT can be found in satsolver_attack_example.py.
 # To Do:
 
 * Create the output table automatically from the sugar output
+
+1. I made some minor changes (typos, sentence restructuring, and explaining a term or two)
+2. You seem to have removed the table with the ground truth responses to the survey, and only give the statistics generated from these responses. As a result, we can’t demonstrate that the Sugar output matches the original responses, since the reader never sees the original responses. The table reference in the section discussing the Sugar output is also returning ?? because it refers to the ground truth table that was removed
+3. Do we need to explain what we mean by “3SAT”, or are we assuming the audience knows?
+4. You talk in the introduction about how formally proving privacy is important instead of relying on “hunches", but then we never revisit that topic in the section where we actually add the noise and rerun Sugar. I’m not sure if the way I added noise from the Laplace mechanism was differentially private or not. I think we should either remove the parts about formal privacy from the intro or add an explanation in the last section about how we can now say that our database is mathematically sound against a DRA.
