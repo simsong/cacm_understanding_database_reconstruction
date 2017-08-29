@@ -226,7 +226,7 @@ confidential data of a statistical database can be reconstructed with
 a surprisingly small number of queries. In practice, most statistical
 agencies perform these queries themselves when they release
 statistical tables. Thus, Dinur and Nissim's primary finding
-is that a statistical agency that publishes too many accurate statistical
+is: a statistical agency that publishes too many accurate statistical
 tables drawn from the same confidential dataset risks inadvertently
 compromising that dataset unless it takes specific protective measures.
 
@@ -237,7 +237,7 @@ the number or specific types of queries---for example, by suppressing
 results from a small number of respondents---is often insufficient to prevent access
 to indirectly identifying information, because the system's refusal to
 answer a ``dangerous'' query itself provides the attacker with information. 
-Dinus and Nissim found that if a database is modeled as a string of $n$ bits,
+Dinur and Nissim found that, if a database is modeled as a string of $n$ bits,
 then at least $\sqrt{n}$ bits must be modified by adding noise to
 protect individuals from being identified.
 
@@ -280,7 +280,7 @@ a set of statistics, which we present here as Table~\ref{publishedstatsbig}.
 
 We assume that the agency applied SDL using only primary cell suppression---deleting items
 in cells with size one (singletons). Normally, an agency would also apply complementary 
-suppression--deleting additional items to insure that the singleton cells
+suppression---deleting additional items to insure that the singleton cells
 could not be recovered by subtraction\cite{Fellegi:1972}. Doing so in this
 example would have eliminated most of the published data. Our example can be
 extended to larger collections of tables where both types of suppression can 
@@ -304,7 +304,7 @@ be done.
 \ifshortversion
 The rightmost column, ``Average Age Protected,'' shows the value of Average Age protected
 with the addition of Laplace noise sufficient to prevent a database reconstruction attack,
-as discussed in section~\ref{solution}
+as discussed in section~\ref{solution}.
 \fi
 }\label{publishedstatsbig}
 \ifshortversion
@@ -324,7 +324,7 @@ Item & Group & Number & Average Age \RC{& Protected}\\
 \hline
 2A & Children (0-17) & 3 & 10 \RC{&8.50} \\
 2D & White children  & 1 & \censored \RC{& \censoredb} \\
-2E & Black children  & 2 & 10 \RC{8.75} \\
+2E & Black children  & 2 & 10 & \RC{8.75} \\
 \hline
 3A & Parents         & 4 & 32.5 \RC{&31.41} \\
 3B & Male parents    & 2 & 30   \RC{&29.77} \\
@@ -508,7 +508,7 @@ open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
 to solve this system in 11.86 seconds on a 2013 MacBook Pro with a 2.8GHz Intel
 i7 processor and 16GiB of RAM (although the program was not limited by RAM). Output is given in Table~\ref{sugarbig} and is tabulated for readability and sorted by household.
 
-Examining the output, we see that 8 of the 10 fictional respondents are exactly solved, while the remaining two are each off by 4 years (one 4 years too high, the other 4 years too low, so as the average age constraint is maintained). In this case there are a number of permutations of children's ages that satisfy the constraints. We could eliminate this by adding more constraints. Indeed, size of the solution set can be experimentally determined by adding additional constraints to the mix: in this case, for example, the constraint that the children may not have the ages of 6, 10 and 14. 
+Examining the output, we see that 8 of the 10 fictional respondents are exactly solved, while the remaining two are each off by 4 years (one 4 years too high, the other 4 years too low, so that the average age constraint is maintained). In this case there are a number of permutations of children's ages that satisfy the constraints. We could eliminate this by adding more constraints. Indeed, the size of the solution set can be experimentally determined by adding additional constraints to the mix: in this case, for example, the constraint that parents and grandparents may not have the ages of 1, ..., 14. 
 
 %At past international SAT solver competitions, 
 SAT solvers such as PicoSAT can solve problems
@@ -565,10 +565,10 @@ statistical data being tabulated (input noise infusion in SDL), or to the result
 tabulations (output noise infusion). We consider them in order below.
 
 Although it might seem that publishing less statistical data is a
-reasonable defense against the DRA, this may severely limit the number
-of tabulations that can be published with this approach. A
+reasonable defense against the DRA, this choice may severely limit the number
+of tabulations that can be published. A
 related problem is that it may be computationally infeasible to
-determine if a reconstruction is possible, a direct result of DRA being an NP-complete
+determine when a reconstruction is possible from limited publications, a direct result of DRA being an NP-complete
 problem. \iflongversion That is, the inability of a SAT
 solver to find a solution to a SAT problem does not mean that a
 solution is not possible---it may just mean that the attacker hasn't waited
@@ -577,7 +577,7 @@ long enough.\fi
 A second approach is to apply noise to the data before
 tabulation. For example, each respondent's age might be randomly altered by $-2 \ldots 2$; 
 the statistical agency then tabulates the values. 
-In this scenario, if attacker performs a DRA, the result is the altered dataset, and not the underlying true values. Thus, if two responses
+In this scenario, if the attacker performs a DRA, the result is the altered dataset, and not the underlying true values. Thus, if two responses
 are processed with noise of this sort, there are now $5^2 = 25$
 possible solutions. If 10 people undergo noise infusion of this type,
 there are $5^{10}$---nearly 10 million---possible
@@ -586,7 +586,7 @@ way to know which solution is correct.
 
 A third approach is to use output noise infusion, for example, using
 the Laplace mechanism\cite{Dwork:2006:CNS:2180286.2180305}. Output
-noise infusion has the advantage of being easier to apply, but the resulting tables will not be internally consistent.
+noise infusion has the advantage of being easier to apply, but the resulting tables may not be internally consistent without postprocessing.
 \ifshortversion
 The rightmost column of Table~\ref{publishedstatsbig} shows the results of output noise infusion.
 \else
@@ -595,8 +595,8 @@ For example, in Table~\ref{publishedstatsnoise} we present the results
 of the original Table~\ref{publishedstatsbig}, but with Laplace noise
 added.  
 \fi
-With output noise infusion, the attacker must revise each constraint from an equality to a bounded range, resulting in an explosion of possible solutions that is exponential in the number of constraints. Exact solutions can still be found, but there is no way for an attacker to determine which are correct
- Like input noise infusion, output noise infusion does not prevent an attacker from reconstructing the database, but it prevents the attacker from knowing if the reconstruction is correct. .
+With output noise infusion, the attacker must revise each constraint from an equality to a bounded range, resulting in an explosion of possible solutions that is exponential in the number of constraints. Exact solutions can still be found, but there is no way for an attacker to determine which are correct. 
+ Like input noise infusion, output noise infusion does not prevent an attacker from reconstructing the database, but it prevents the attacker from knowing if the reconstruction is correct.
 
 \iflongversion
 \begin{table}[t]
