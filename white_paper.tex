@@ -269,7 +269,7 @@ published statistics is a key concept behind the DRA.
 \section{The Database Reconstruction Attack: An Example}
 
 To present a DRA, we consider a hypothetical
-census of a fictional block conducted by a fictional statistical
+census of a fictional geographic frame unit conducted by a fictional statistical
 agency. For every household, the agency collects each resident's age,
 sex, race, and their generation in the household.  Because the
 confidential data will not be released in order to protect respondent privacy, the statistical agency
@@ -508,7 +508,7 @@ open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
 to solve this system in 11.86 seconds on a 2013 MacBook Pro with a 2.8GHz Intel
 i7 processor and 16GiB of RAM (although the program was not limited by RAM). Output is given in Table~\ref{sugarbig} and is tabulated for readability and sorted by household.
 
-Examining the output, we see that 8 of the 10 fictional respondents are exactly solved, while the remaining two are each off by 4 years (one 4 years too high, the other 4 years too low, so that the average age constraint is maintained). In this case there are a number of permutations of children's ages that satisfy the constraints. We could eliminate this by adding more constraints. Indeed, the size of the solution set can be experimentally determined by adding additional constraints to the mix: in this case, for example, the constraint that parents and grandparents may not have the ages of 1, ..., 14. 
+Examining the output, we see that 8 of the 10 fictional respondents are exactly solved, while the remaining two are each off by 4 years (one 4 years too high, the other 4 years too low, so that the average age constraint is maintained). In this case there are a number of permutations of children's ages that satisfy the constraints. We could eliminate this by adding more constraints. Indeed, the size and characteristics of the solution set can be explored by systematically adding and removing additional constraints. 
 
 %At past international SAT solver competitions, 
 SAT solvers such as PicoSAT can solve problems
