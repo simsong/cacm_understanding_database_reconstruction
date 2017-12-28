@@ -6,7 +6,10 @@
 \shortversiontrue
 \newif\iflongversion
 \longversionfalse
-%\anonymizedfalse
+
+\anonymizedfalse
+\shortversionfalse
+\longversiontrue
 % cmap has to be loaded before any font package (such as cfr-lm)
 \usepackage{cmap}
 \usepackage{amsmath}
@@ -109,7 +112,7 @@ qt=false%
 \author{Anonymized Author(s)}
 \institute{Institute for Anonymous Papers}
 \else
-\author{Christian Martindale \and Simson Garfinkel}
+\author{Christian Martindale \and Simson Garfinkel \and John Abowd}
 \institute{Center for Disclosure Avoidance, U.S. Census Bureau}
 \fi
 
@@ -316,15 +319,15 @@ as discussed in section~\ref{solution}.
 \RC{ &       &        &                 & Average Age\\}
 Item & Group & Number & Average Age \RC{& Protected}\\
 \hline
-1A & Individuals & 10 & 40 \RC{&38.57} \\
-1B & Males       & 5 & 34  \RC{&33.21} \\
-1C & Females     & 5 & 46  \RC{&43.92} \\
-1D & Whites      & 5 & 50  \RC{&47.82} \\
-1E & Blacks      & 5 & 30  \RC{&29.31} \\
+1A & Individuals & 10 & 40          \RC{&38.57} \\
+1B & Males       & 5 & 34           \RC{&33.21} \\
+1C & Females     & 5 & 46           \RC{&43.92} \\
+1D & Whites      & 5 & 50           \RC{&47.82} \\
+1E & Blacks      & 5 & 30           \RC{&29.31} \\
 \hline
-2A & Children (0-17) & 3 & 10 \RC{&8.50} \\
+2A & Children (0-17) & 3 & 10        \RC{&8.50} \\
 2D & White children  & 1 & \censored \RC{& \censoredb} \\
-2E & Black children  & 2 & 10 & \RC{8.75} \\
+2E & Black children  & 2 & 10        \RC{& 8.75} \\
 \hline
 3A & Parents         & 4 & 32.5 \RC{&31.41} \\
 3B & Male parents    & 2 & 30   \RC{&29.77} \\

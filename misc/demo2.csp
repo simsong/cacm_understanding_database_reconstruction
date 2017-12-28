@@ -1,0 +1,90 @@
+;; -*- mode: lisp; -*-
+; race variables
+; white = 1, black = 2
+(int R1 1 2)
+(int R2 1 2)
+(int R3 1 2)
+(int R4 1 2)
+(int R5 1 2)
+(int R6 1 2)
+
+; sex variables
+; man = 1, woman = 2
+(int S1 1 2)
+(int S2 1 2)
+(int S3 1 2)
+(int S4 1 2)
+(int S5 1 2)
+
+; age variables
+(int A1 1 110)
+(int A2 1 110)
+(int A3 1 110)
+(int A4 1 110)
+(int A5 1 110)
+
+; heart rate
+(int H1 1 120)
+(int H2 1 120)
+(int H3 1 120)
+(int H4 1 120)
+(int H5 1 120)
+
+; number of whites: 3
+(= (+ (if (= R1 1) 1 0)
+      (if (= R2 1) 1 0)  
+      (if (= R3 1) 1 0)  
+      (if (= R4 1) 1 0)  
+      (if (= R5 1) 1 0)
+      (if (= R6 1) 1 0))
+   3)
+
+; number of blacks: 3
+(= (+ (if (= R1 2) 1 0)
+      (if (= R2 2) 1 0)  
+      (if (= R3 2) 1 0)  
+      (if (= R4 2) 1 0)  
+      (if (= R5 2) 1 0)  
+      (if (= R6 2) 1 0))
+   3)
+
+; average age whites: 40
+(= (+ (if (= R1 1) A1 0)
+      (if (= R2 1) A2 0)  
+      (if (= R3 1) A3 0)  
+      (if (= R4 1) A4 0)  
+      (if (= R5 1) A4 0)  
+      (if (= R6 1) A5 0))
+   40)
+
+; average age of blacks: 50
+(= (+ (if (= R1 2) A1 0)
+      (if (= R2 2) A2 0)  
+      (if (= R3 2) A3 0)  
+      (if (= R4 2) A4 0)  
+      (if (= R5 2) A4 0)  
+      (if (= R6 2) A5 0))
+   3)
+
+; number of men: 3
+(= (+ (if (= S1 1) 1 0)
+      (if (= S2 1) 1 0)  
+      (if (= S3 1) 1 0)  
+      (if (= S4 1) 1 0)  
+      (if (= S5 1) 1 0))
+   3)
+
+; number of women: 3
+(= (+ (if (= S1 1) 2 0)
+      (if (= S2 1) 2 0)  
+      (if (= S3 1) 2 0)  
+      (if (= S4 1) 2 0)  
+      (if (= S5 1) 2 0))
+   3)
+
+
+
+
+
+
+
