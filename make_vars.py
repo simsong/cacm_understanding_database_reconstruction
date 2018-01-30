@@ -14,10 +14,18 @@ def dimacs():
             
 
 if __name__=="__main__":
+    from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
+    parser = ArgumentParser(
+        formatter_class = ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument("sugar_output",help="Sugar file standard output")
+    args = parser.parse_args()
     # Get the varaibles out of constraints.csp
     # Create the solved table
+    import sys
+    
     vars = {}
-    with open("sugar.out","r") as f:
+    with open(args.sugar_output,"r") as f:
         for line in f:
             line = line.strip()
             if line[0]=='s' and line!='s SATISFIABLE':

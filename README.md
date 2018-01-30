@@ -1,3 +1,7 @@
+# Sat solvers:
+https://cstheory.stackexchange.com/posts/7473/revisions
+# 
+
 The purpose of this project is to teach data agency officials about the dangers
 of database reconstruction attacks. 
 
