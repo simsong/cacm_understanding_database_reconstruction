@@ -38,9 +38,9 @@
 ;; White Female: 1 <suppressed>
 ;; Black Female: 3
 
-(= (+ A1 A2 A3 A4 A5 A6 A7) 247)      ; average age 27.28  (191 = 27.28 * 7)
+(= (+ A1 A2 A3 A4 A5 A6 A7) 247)      ; average age 
 
-(= (+ (if (= S1 0) A1 0)           ; average male age 30 (90 = 30 * 3)
+(= (+ (if (= S1 0) A1 0)           ; average male age 
       (if (= S2 0) A2 0)
       (if (= S3 0) A3 0)
       (if (= S4 0) A4 0)
@@ -49,7 +49,7 @@
       (if (= S7 0) A7 0)
       ) 116)
 
-(= (+ (if (= S1 1) A1 0)   ; average female age 25.25 (101 = 25.25 * 4)
+(= (+ (if (= S1 1) A1 0)   ; average female age 
       (if (= S2 1) A2 0)
       (if (= S3 1) A3 0)
       (if (= S4 1) A4 0)
@@ -58,7 +58,7 @@
       (if (= S7 1) A7 0)
       ) 131)
 
-(= (+ (if (= R1 0) A1 0)          ; average white age 24 (72 = 24 * 3)
+(= (+ (if (= R1 0) A1 0)          ; average white age 
       (if (= R2 0) A2 0)
       (if (= R3 0) A3 0)
       (if (= R4 0) A4 0)
@@ -67,7 +67,7 @@
       (if (= R7 0) A7 0)
       ) 72)
 
-(= (+ (if (= R1 1) A1 0)   ; average black age 29.75 (119 = 29.75 * 4)
+(= (+ (if (= R1 1) A1 0)   ; average black age 
       (if (= R2 1) A2 0)
       (if (= R3 1) A3 0)
       (if (= R4 1) A4 0)
@@ -76,7 +76,7 @@
       (if (= R7 1) A7 0)
       ) 175)
 
-(= (+ (if (= M1 0) A1 0)         ; average single age 23.67 (71 = 23.67 * 3)
+(= (+ (if (= M1 0) A1 0)         ; average single age
       (if (= M2 0) A2 0)
       (if (= M3 0) A3 0)
       (if (= M4 0) A4 0)
@@ -85,7 +85,7 @@
       (if (= M7 0) A7 0)
       ) 47)
 
-(= (+ (if (= M1 1) A1 0)                ; average married age 30 (120 = 30 * 4)
+(= (+ (if (= M1 1) A1 0)                ; average married age
       (if (= M2 1) A2 0)
       (if (= M3 1) A3 0)
       (if (= M4 1) A4 0)
