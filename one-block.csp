@@ -12,6 +12,7 @@
 ;; 6  S6=F  A6=66  R6=B   M6=M      PARENT        MBF66
 ;; 7  S7=F  A7=5   R7=B   M7=S      CHILD         SBF5
 
+
 ;; Sexes (0:male  1:female)
 (int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1) (int S5 0 1) (int S6 0 1) (int S7 0 1)
 
@@ -214,6 +215,93 @@
       (if (and (= R6 0) (> A6 24)) 1 0)      
       (if (and (= R7 0) (> A7 24)) 1 0)
       ) 1)
+
+;;; Median age of blacks is 51
+;;; We know that there are an even number of blacks
+(= (+ (if (and (= R1 1) (= A1 51)) 1 0)
+      (if (and (= R2 1) (= A2 51)) 1 0)      
+      (if (and (= R3 1) (= A3 51)) 1 0)      
+      (if (and (= R4 1) (= A4 51)) 1 0)      
+      (if (and (= R5 1) (= A5 51)) 1 0)      
+      (if (and (= R6 1) (= A6 51)) 1 0)      
+      (if (and (= R7 1) (= A7 51)) 1 0)
+      ) 0)
+
+(= (+ (if (and (= R1 1) (< A1 51)) 1 0)
+      (if (and (= R2 1) (< A2 51)) 1 0)      
+      (if (and (= R3 1) (< A3 51)) 1 0)      
+      (if (and (= R4 1) (< A4 51)) 1 0)      
+      (if (and (= R5 1) (< A5 51)) 1 0)      
+      (if (and (= R6 1) (< A6 51)) 1 0)      
+      (if (and (= R7 1) (< A7 51)) 1 0)
+      ) 2)
+
+(= (+ (if (and (= R1 1) (> A1 51)) 1 0)
+      (if (and (= R2 1) (> A2 51)) 1 0)      
+      (if (and (= R3 1) (> A3 51)) 1 0)      
+      (if (and (= R4 1) (> A4 51)) 1 0)      
+      (if (and (= R5 1) (> A5 51)) 1 0)      
+      (if (and (= R6 1) (> A6 51)) 1 0)      
+      (if (and (= R7 1) (> A7 51)) 1 0)
+      ) 2)
+
+;;; Median age of men is 30
+;;; We know that there are an odd number of men
+(= (+ (if (and (= S1 0) (= A1 30)) 1 0)
+      (if (and (= S2 0) (= A2 30)) 1 0)      
+      (if (and (= S3 0) (= A3 30)) 1 0)      
+      (if (and (= S4 0) (= A4 30)) 1 0)      
+      (if (and (= S5 0) (= A5 30)) 1 0)      
+      (if (and (= S6 0) (= A6 30)) 1 0)      
+      (if (and (= S7 0) (= A7 30)) 1 0)
+      ) 1)
+
+(= (+ (if (and (= S1 0) (< A1 30)) 1 0)
+      (if (and (= S2 0) (< A2 30)) 1 0)      
+      (if (and (= S3 0) (< A3 30)) 1 0)      
+      (if (and (= S4 0) (< A4 30)) 1 0)      
+      (if (and (= S5 0) (< A5 30)) 1 0)      
+      (if (and (= S6 0) (< A6 30)) 1 0)      
+      (if (and (= S7 0) (< A7 30)) 1 0)
+      ) 1)
+
+(= (+ (if (and (= S1 0) (> A1 30)) 1 0)
+      (if (and (= S2 0) (> A2 30)) 1 0)      
+      (if (and (= S3 0) (> A3 30)) 1 0)      
+      (if (and (= S4 0) (> A4 30)) 1 0)      
+      (if (and (= S5 0) (> A5 30)) 1 0)      
+      (if (and (= S6 0) (> A6 30)) 1 0)      
+      (if (and (= S7 0) (> A7 30)) 1 0)
+      ) 1)
+
+;;; Median age of women is 30
+;;; We know that there are an even number of women
+(= (+ (if (and (= S1 1) (= A1 30)) 1 0)
+      (if (and (= S2 1) (= A2 30)) 1 0)      
+      (if (and (= S3 1) (= A3 30)) 1 0)      
+      (if (and (= S4 1) (= A4 30)) 1 0)      
+      (if (and (= S5 1) (= A5 30)) 1 0)      
+      (if (and (= S6 1) (= A6 30)) 1 0)      
+      (if (and (= S7 1) (= A7 30)) 1 0)
+      ) 0)
+
+(= (+ (if (and (= S1 1) (< A1 30)) 1 0)
+      (if (and (= S2 1) (< A2 30)) 1 0)      
+      (if (and (= S3 1) (< A3 30)) 1 0)      
+      (if (and (= S4 1) (< A4 30)) 1 0)      
+      (if (and (= S5 1) (< A5 30)) 1 0)      
+      (if (and (= S6 1) (< A6 30)) 1 0)      
+      (if (and (= S7 1) (< A7 30)) 1 0)
+      ) 2)
+
+(= (+ (if (and (= S1 1) (> A1 30)) 1 0)
+      (if (and (= S2 1) (> A2 30)) 1 0)      
+      (if (and (= S3 1) (> A3 30)) 1 0)      
+      (if (and (= S4 1) (> A4 30)) 1 0)      
+      (if (and (= S5 1) (> A5 30)) 1 0)      
+      (if (and (= S6 1) (> A6 30)) 1 0)      
+      (if (and (= S7 1) (> A7 30)) 1 0)
+      ) 2)
 
 
 ;(= S1 0) (= A1 18) (= R1 0) (= M1 0)

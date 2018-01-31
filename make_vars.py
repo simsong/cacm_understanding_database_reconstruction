@@ -13,6 +13,10 @@ def dimacs():
             return (int(fields[2]),int(fields[3]))
             
 
+sexmap = {"0":"M", "1":"F"}
+racemap = {"0":"W", "1":"B"}
+marriagemap = {"0":"S", "1":"M"}
+
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
     parser = ArgumentParser(
@@ -33,6 +37,17 @@ if __name__=="__main__":
             if line[0]=='a' and "\t" in line:
                 (var,val) = line[2:].split("\t")
                 vars[var] = val
+
+    # Print classified advertisements
+    for i in range(1,100):
+        si = str(i)
+        try:
+            age=vars["A{}".format(i)]
+        except KeyError:
+            break
+        print("{}{}{}{}".format(marriagemap[vars["M"+si]],racemap[vars["R"+si]],sexmap[vars["S"+si]],
+                                age))
+        
 
     with open("id_table.tex","r") as fin:
         with open("id_table_solved.tex","w") as fout:
