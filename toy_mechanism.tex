@@ -1,0 +1,93 @@
+\documentclass{article}
+\begin{document}
+\title{Proposal for a toy mechanism to prevent database reconstruction and
+evaluate the amount of noise to add.}
+\maketitle
+
+\section{Problems}
+
+\begin{enumerate}
+
+\item Traditional mechanisms such as cell suppression, generalization
+(coarsening), and top-coding do not create sufficient uncertainty to
+prevent reconstruction. Instead, publications of tabular data should
+incorporate noise to prevent database reconstruction.
+
+\item Differential privacy mechanisms tell provide two things: the \emph{kind} of noise
+to add, and the \emph{amount} of noise to add.
+
+\item Although most Differential Privacy mechanisms rely on Laplace
+noise, it's easier to model the error introduced by the privacy
+mechanism when using Gaussian noise. Because Laplace noise has broader
+tails, using Gaussian noise will result with less accuracy for the
+same level of privacy.
+
+\item Using a differential privacy mechanism requires being able to
+calculate the sensitivity of a query. This is easy to do for counting
+queries (the sensitivity is 1), but it's hard to do for complex
+queries involving regressions, and it's not valuable when using
+queries that involve potentially unbounded variables such as wealth or
+income. 
+
+\item Differential privacy mechanisms cannot be based upon an examination
+of the raw data, yet examining the raw data may be the easiest way to
+infer the sensitivity of a query.
+
+\end{enumerate}
+
+\section{Proposed mechanism}
+
+\begin{enumerate}
+\item We propose an \emph{ad hoc} privacy protection mechanism that is based on
+the intuition of differential privacy but which allows relatively
+straightforward deployment for publishing legacy tables.
+
+\item In general, the mechanism will be applied directly to the
+publication tables, ideally without concern for the underlying
+calculations.
+
+\item The amount of noise $g$ to added to values will be:
+
+\begin{equation}
+g = \Delta(f) \times G(1/\epsilon)
+\end{equation}
+
+Where $G(1/\epsilon)$ is Gaussian noise for a value of $\epsilon$ and
+$\Delta(f)$ is the sensitivity of the query.
+
+\item For count data, $\Delta(f)=1$. 
+
+\item For non-count data, $\Delta(f)$ will be determined for each
+  published statistic. The value shall be determined by establishing a
+  bottom code 
+  and a top code for all input variables and performing a
+  systematic exploration of the statistic's range by adding a
+  hypothetical additional data element to the current data set. 
+
+\end{itemize}
+
+For example, consider a hypothetical example of a researcher who
+wishes to publish regression statistics between family income and
+grades in a hypothetical small classroom. The classroom has four
+students in it. Here is the raw data:
+
+\begin{tabular}{rr}
+Income & Grade \\
+\hline
+31,234 & 30 \\
+53,432 & 50 \\
+69,887 & 90 \\
+65,332 & 95 \\
+70,889 & 70 \\
+75,201 & 65 \\
+90,901 & 50 \\
+195,5410 & 95 \\
+\end{tabular}
+
+Using scikit learn's linear regression tool, we can calculate a linear
+regression on these data with:
+
+
+
+\end{enumerate}
+\end{document}

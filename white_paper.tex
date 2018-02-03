@@ -106,15 +106,10 @@ qt=false%
 \fi
 
 \begin{document}
-\title{Database Reconstruction Attack on Public Data}
+\title{Understanding Database Reconstruction Attacks on Public Data}
 \titlerunning{Database Reconstruction}
-\ifanonymized
-\author{Anonymized Author(s)}
-\institute{Institute for Anonymous Papers}
-\else
-\author{Christian Martindale \and Simson Garfinkel \and John Abowd}
-\institute{Center for Disclosure Avoidance, U.S. Census Bureau}
-\fi
+\author{Simson Garfinkel \and John Abowd \and Christian Martindale }
+\institute{U.S. Census Bureau}
 
 \maketitle
 \begin{abstract}
@@ -122,41 +117,17 @@ Statistical agencies are mandated to publish summary statistics and
 micro-data while not providing data users with the ability to derive
 specific attributes for particular individuals or
 establishments. 
-\ifshortversion
-\else
-Today these privacy guarantees are assured through the
+Traditionally, these privacy guarantees are assured through the
 use of \emph{Statistical Disclosure Limitation} (SDL)
 techniques, such as suppressing values in certain cells 
 and/or generalizing (coarsening) categories in
-the summary tables. 
-\fi
-\ifshortversion
-Traditional statistical disclosure limitation (SDL) techniques
-\else
-Although these techniques 
-\fi
-are not sufficient to
+the summary tables.  As these techniques are not sufficient to
 prevent a database reconstruction attack of the sort anticipated by
-Dinur and Nissim\cite{noise}, 
-\ifshortversion
-and
-\else
-\fi
-adopt disclosure limitation techniques based on formal privacy
-techniques such as differential privacy. 
-\ifshortversion
-\else
-Slow adoption may have been due to 
-the belief that current SDL practices, which include random noise infusion,
-are sufficient to protect against feasible reconstruction attacks, the absence
-of off-the-shelf formal privacy software, and the scarcity of expertise on
-these systems within statistical agencies. 
-\fi
-This paper shows how a database
-reconstruction attack functions and demonstrates their effectiveness
-and efficiency on a toy example. We then show how SDL techniques based
-on additive input and output noise infusion can be effective at defending 
-against database reconstruction.
+Dinur and Nissim\cite{noise}, the US Census Bureau is revising the
+publication system use adopt disclosure limitation techniques based on differential privacy. 
+This article shows how the publishing of aggregate statistics is
+susceptible to the database reconstruction attack, and shows how the
+use of differential privacy affords meaningful and measurable protection.
 \end{abstract}
 
 \begin{keywords}
@@ -165,8 +136,42 @@ database reconstruction attack, SAT solver,
 disclosure avoidance
 \end{keywords}
 
-
 \section{Introduction}
+The U.S. Census Bureau is
+charged with collecting information from persons, households, and
+business establishments, compiling this information into useful
+data products, and making these products freely available as official
+statistical publications. These publications must uphold the
+confidentiality standard specified by Title 13 of the U.S. Code, which
+states, in part, that official publications are prohibited from
+identifying ``the data furnished by any particular
+establishment or individual.''[Title 13, Section 9] This section
+prohibits the Bureau from publishing names, addresses, or any other
+information that might identify a person or establishment.
+
+Upholding this confidentiality requirement frequently poses a
+challenge, because many statistical can inadvertently provide
+information in a way that can be attributed to a particular
+entity. For example, a survey of salaries in a region might report the
+average salary earned by people of different occupations. However, if
+there is only one bricklayer, than reporting the average salary of a
+bricklayer will allow anyone who sees to statistical product to infer
+that person's salary. If there are two bricklayers in the region,
+reporting the average salary will allow each bricklayer to infer the
+other's salary. Both of these cases would be clear violations of Title
+13.
+
+Since the 1990s, the Census Bureau and other statistical agencies have
+developed a variety of techniques to prevent statistical disclosure of
+such confidential information. In many publications, the Bureau uses
+\emph{cell suppression}: numbers in a statistical table that are
+sourced from a less than three individuals are simply not reported. 
+
+identify The challenging of 
+
+For decades, the Census Bureau has used a variety of techniques for
+assuring the confidenity 
+
 Working Paper \#22 of the U.S. Federal Committee on Statistical
 Methodology\cite{workingpaper22} outlines the currently accepted best
 practices for U.S. statistical agencies to follow when they prepare and
