@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{graphicx}
 \begin{document}
 \title{Proposal for a toy mechanism to prevent database reconstruction and
 evaluate the amount of noise to add.}
@@ -64,30 +65,50 @@ $\Delta(f)$ is the sensitivity of the query.
   systematic exploration of the statistic's range by adding a
   hypothetical additional data element to the current data set. 
 
-\end{itemize}
+\end{enumerate}
+
+\subsection{An Example}
 
 For example, consider a hypothetical example of a researcher who
 wishes to publish regression statistics between family income and
 grades in a hypothetical small classroom. The classroom has four
 students in it. Here is the raw data:
 
-\begin{tabular}{rr}
-Income & Grade \\
-\hline
-31,234 & 30 \\
-53,432 & 50 \\
-69,887 & 90 \\
-65,332 & 95 \\
-70,889 & 70 \\
-75,201 & 65 \\
-90,901 & 50 \\
-195,5410 & 95 \\
-\end{tabular}
+\input{toy_regression_data.tex}
 
-Using scikit learn's linear regression tool, we can calculate a linear
+Using numpy's linear regression tool, we can calculate a linear
 regression on these data with:
 
+\includegraphics[width=\linewidth]{toy_regression.pdf}
 
+Traditional protections include rounding of output variables (to 4
+significant figures) and top-coding. In the example below, we top-code
+income to \$100,000 and then round output statistics. The regression
+line is drawn using the rounded values:
 
-\end{enumerate}
+\includegraphics[width=\linewidth]{toy_regression_rounded.pdf}
+
+We now recompute the regression four times, each time adding a different
+extreme data point. These data points are chosen to exercise the limits of
+the regression variables:
+
+\input{toy_regression_extreme_data}
+
+This produces four sets of regression parameters, here all plotted on
+the same graph:
+
+\includegraphics[width=\linewidth]{toy_regression_bounds.pdf}
+
+We can now automatically compute the range of the regression
+parameters $b_1$ and $b_0$ which are \Gzero and \Gone. Using Gaussian noise, we can compute 
+privacy-protected values of these variables, as well as $n$ (the
+sample size), for different values of epsilon:
+
+\input{toy_regression_results.tex}
+
+Of course, only the values for a single epsilon may be reported. 
+
+This white paper does not currently discussion the mechanism for
+computing epsilon. 
+
 \end{document}

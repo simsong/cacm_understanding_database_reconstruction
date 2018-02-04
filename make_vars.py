@@ -3,8 +3,8 @@
 def linecount(fname,filter_func):
     return len(list(filter(filter_func,open(fname,"r").read().split("\n"))))
 
-def dimacs():
-    with open("constraints_.cnf","r") as f:
+def tally_dimacs_file(dimacs_file):
+    with open(dimacs_file,"r") as f:
         for line in f:
             if line[0]=='c': continue
             fields = line.strip().split(" ")
@@ -23,6 +23,7 @@ if __name__=="__main__":
         formatter_class = ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("sugar_output",help="Sugar file standard output")
+    parser.add_argument("sugar_cnf",help="Sugar cnf file")
     args = parser.parse_args()
     # Get the varaibles out of constraints.csp
     # Create the solved table
@@ -45,21 +46,27 @@ if __name__=="__main__":
             age=vars["A{}".format(i)]
         except KeyError:
             break
-        print("{}{}{}{}".format(marriagemap[vars["M"+si]],racemap[vars["R"+si]],sexmap[vars["S"+si]],
+        print("{}{}{}{}".format(marriagemap[vars["M"+si]],
+                                racemap[vars["R"+si]],
+                                sexmap[vars["S"+si]],
                                 age))
         
-
     with open("id_table.tex","r") as fin:
         with open("id_table_solved.tex","w") as fout:
             for line in fin:
                 fout.write(" ".join([vars.get(var,var) for var in line.split(" ")]))
                     
     with open("vars.tex","w") as f:
-        print("\\newcommand\\NumConstraintLines{{\\xspace{:,d}\\xspace}}".format(linecount("constraints.csp",lambda a:";" not in a)),file=f)
-        print("\\newcommand\\NumSExpressions{{\\xspace{:,d}\\xspace}}".format(linecount("constraints.csp",lambda a:a.startswith("("))),file=f)
-        (variables,clauses) = dimacs()
-        print("\\newcommand\\NumVariables{{\\xspace{:,d}\\xspace}}".format(variables),file=f)
-        print("\\newcommand\\NumClauses{{\\xspace{:,d}\\xspace}}".format(clauses),file=f)
-        print("\\newcommand\\NumDIMACSLines{{\\xspace{:,d}\\xspace}}".format(linecount("constraints_.cnf",lambda a:True)),file=f)
+        print("\\newcommand\\NumConstraintLines{{\\xspace{:,d}\\xspace}}"
+              .format(linecount("constraints.csp",lambda a:";" not in a)),file=f)
+        print("\\newcommand\\NumSExpressions{{\\xspace{:,d}\\xspace}}"
+              .format(linecount("constraints.csp",lambda a:a.startswith("("))),file=f)
+        (variables,clauses) = tally_dimacs_file(args.sugar_cnf)
+        print("\\newcommand\\NumVariables{{\\xspace{:,d}\\xspace}}"
+              .format(variables),file=f)
+        print("\\newcommand\\NumClauses{{\\xspace{:,d}\\xspace}}"
+              .format(clauses),file=f)
+        print("\\newcommand\\NumDIMACSLines{{\\xspace{:,d}\\xspace}}"
+              .format(linecount("constraints_.cnf",lambda a:True)),file=f)
 
         
