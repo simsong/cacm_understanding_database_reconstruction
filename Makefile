@@ -4,6 +4,7 @@ PROBLEM=one-block.csp
 white_paper.pdf: vars.tex white_paper.tex 
 	latexmk -pdf white_paper.tex </dev/null
 
+toy: toy_mechanism.pdf
 toy_mechanism.pdf: toy_mechanism.tex toy_regression.pdf
 	latexmk -pdf toy_mechanism.tex </dev/null
 

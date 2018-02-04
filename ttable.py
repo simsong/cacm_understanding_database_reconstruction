@@ -47,7 +47,6 @@ def tvar(name,value,desc):
     if not hasattr(tvar,"out"):
         import sys;
         tvar.out=sys.stdout
-    print("%s: %s " % (desc, value))
     tvar.out.write("\\newcommand{\\%s}{%s\\xspace}  %% %s\n" % (name,value,desc))
 
 def icomma(i):
@@ -58,7 +57,6 @@ def icomma(i):
 
 def commas(i,fmt):
     """ Return a number of any format formatted with commas. """
-    print("commas({},{})".format(i,fmt))
     try:
         formatted_number = fmt % i
     except TypeError:
@@ -185,19 +183,14 @@ class ttable:
         if value==0 and self.SUPPRESS_ZERO in self.options:
             return ("",self.LEFT)
         if isnumber(value):
-            print("formatting a number")
             try:
-                print("colNumber=",colNumber,"col_fmt=",self.col_fmt)
                 (prefix,fmt,suffix) = self.col_fmt[colNumber]
-                print("prefix=",prefix,"fmt=",fmt,"suffix=",suffix)
                 fmt = prefix + commas(value,fmt) + suffix
             except KeyError:
                 fmt = commas(value,self.col_fmt_default)
             ret = (fmt,self.RIGHT)
-            print("fmt=",fmt,"ret=",ret)
         if not ret:
             ret = (str(value),self.LEFT)
-            print("ret=",ret,"value=",value)
         return (ret[0], self.col_alignment.get(colNumber,ret[1]))
 
     def col_formatted_width(self,colNum):
@@ -272,10 +265,8 @@ class ttable:
             if colNumber>0:
                 if self.mode=='latex': ret += " & "
                 ret += " "*self.col_margin 
-            print("r[{}]={}".format(colNumber,r[colNumber]))
             (fmt,just)      = self.format_cell(r[colNumber],colNumber)
             val             = self.typeset_cell(fmt,colNumber)
-            print("colNumber:{} fmt:{} just:{} val:{}".format(colNumber,fmt,just,val))
 
             if self.mode=='text':
                 ret += val
@@ -315,7 +306,6 @@ class ttable:
             if self.should_omit_row(r):
                 continue
             for col in col_totals:
-                print(totals[col],r[col])
                 totals[col] += r[col]
         row = ["Total"]
         for col in range(1,self.cols):

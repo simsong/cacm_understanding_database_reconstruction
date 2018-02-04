@@ -88,9 +88,9 @@ line is drawn using the rounded values:
 
 \includegraphics[width=\linewidth]{toy_regression_rounded.pdf}
 
-We now recompute the regression four times, each time adding a different
-extreme data point. These data points are chosen to exercise the limits of
-the regression variables:
+Instead, our proposed mechanism recomputes the regression four times,
+each time adding a different extreme data point. These data points are
+chosen to exercise the limits of the regression variables:
 
 \input{toy_regression_extreme_data}
 
@@ -100,7 +100,7 @@ the same graph:
 \includegraphics[width=\linewidth]{toy_regression_bounds.pdf}
 
 We can now automatically compute the range of the regression
-parameters $b_1$ and $b_0$ which are \Gzero and \Gone. Using Gaussian noise, we can compute 
+parameters $b_1$ and $b_0$ which are \Gzero{} and \Gone. Using Gaussian noise, we can compute 
 privacy-protected values of these variables, as well as $n$ (the
 sample size), for different values of epsilon:
 
