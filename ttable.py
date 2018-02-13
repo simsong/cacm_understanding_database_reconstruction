@@ -4,7 +4,7 @@ Also creates LaTeX variables.
 
 Simson Garfinkel, 2010-
 
-This is really bad python. Let me clean it upb before you copy it.
+This is really bad python. Let me clean it up before you copy it.
 
 Good options for AJAX tables are:
 http://joomlicious.com/mootable/index.php
