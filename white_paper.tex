@@ -33,14 +33,9 @@ qt=false%
 \usepackage{cite}
 %extended enumerate, such as \begin{compactenum}
 \usepackage{paralist}
-%for easy quotations: \enquote{text}
-\usepackage{csquotes}
-
-%enable margin kerning
-\usepackage{microtype}
-
-%tweak \url{...}
-\usepackage{url}
+\usepackage{csquotes}  % for easy quotations: \enquote{text}
+\usepackage{microtype} % enable margin kerning
+\usepackage{url}       % tweak \url{...}
 %improve wrapping of URLs - hint by http://tex.stackexchange.com/a/10419/9075
 \makeatletter
 \g@addto@macro{\UrlBreaks}{\UrlOrds}
@@ -95,16 +90,11 @@ qt=false%
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% END COPYING HERE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Two kinds of cite, for the long version and the short version
-\ifshortversion
-\newcommand{\citelong}[1]{}
-\else
-\newcommand{\citelong}[1]{\cite{#1}}
-\fi
-
 \begin{document}
 \title{Understanding Database Reconstruction Attacks on Public Data}
 \titlerunning{Database Reconstruction}
@@ -119,15 +109,15 @@ specific attributes for particular individuals or
 establishments. 
 Traditionally, these privacy guarantees are assured through the
 use of \emph{Statistical Disclosure Limitation} (SDL)
-techniques, such as suppressing values in certain cells 
-and/or generalizing (coarsening) categories in
-the summary tables.  As these techniques are not sufficient to
+techniques. These techniques are not sufficient to
 prevent a database reconstruction attack of the sort anticipated by
-Dinur and Nissim\cite{noise}, the US Census Bureau is revising the
-publication system use adopt disclosure limitation techniques based on differential privacy. 
-This article shows how the publishing of aggregate statistics is
-susceptible to the database reconstruction attack, and shows how the
-use of differential privacy affords meaningful and measurable protection.
+Dinur and Nissim (2003). To illustrate the problem, this paper
+presents a database reconstruction attack on a hypothetical block for
+which statistics have been published by an official statistics
+agency. We then show how the use of formally private noise reduces the
+privacy risk of the database reconstruction. The paper concludes with
+a discussion of the implications for the 2020 Census of Population and
+Housing. 
 \end{abstract}
 
 \begin{keywords}
@@ -137,17 +127,30 @@ disclosure avoidance
 \end{keywords}
 
 \section{Introduction}
-The U.S. Census Bureau is
-charged with collecting information from persons, households, and
-business establishments, compiling this information into useful
-data products, and making these products freely available as official
-statistical publications. These publications must uphold the
+In 2020 the Census Bureau will conduct the constitutionally mandated
+decennial Census of Population and Housing, with the goal of counting
+every person once, and only once, and in the correct place, and to
+fulfill the Constitutional requirement to apportion the seats in the
+U.S. House of Representatives among the states according to their
+respective numbers.
+
+Beyond the Constitutionally mandated role of the decennial census, the
+US Congress has mandated many other purposes for the data. For
+example, the U.S. Department of Justice uses block-by-block counts by
+race for enforcing the Voting Rights Act. More generally, the results
+of the decennial census, combined with other data, are used to help
+distribute more than \$675 billion in federal funds to states and
+local organizations.
+
+In addition to collecting and distributing data on the American
+people, the Census Bureau is charged with protecting the Privacy confidentiality of
+individual survey responses. Specifically, all Census publications must uphold the
 confidentiality standard specified by Title 13 of the U.S. Code, which
-states, in part, that official publications are prohibited from
+states, in part, that Bureau publications are prohibited from
 identifying ``the data furnished by any particular
 establishment or individual.''[Title 13, Section 9] This section
-prohibits the Bureau from publishing names, addresses, or any other
-information that might identify a person or establishment.
+prohibits the Bureau from publishing respondent names, addresses, or any other
+information that might identify a specific person or establishment.
 
 Upholding this confidentiality requirement frequently poses a
 challenge, because many statistical can inadvertently provide
@@ -159,120 +162,63 @@ bricklayer will allow anyone who sees to statistical product to infer
 that person's salary. If there are two bricklayers in the region,
 reporting the average salary will allow each bricklayer to infer the
 other's salary. Both of these cases would be clear violations of Title
-13.
+13. The Bureau has traditionally used cell suppression to protect
+privacy in situations such as this: the cells of statistical tables
+that result from \emph{small counts} are suppressed and not
+reported. If totals are reported, cell suppression requires that
+additional \emph{complementary} cells be suppressed so that the values
+of the suppressed cells cannot be worked out with simple arithmetic. 
 
-Since the 1990s, the Census Bureau and other statistical agencies have
-developed a variety of techniques to prevent statistical disclosure of
-such confidential information. In many publications, the Bureau uses
-\emph{cell suppression}: numbers in a statistical table that are
-sourced from a less than three individuals are simply not reported. 
+In 2003, Dinur and Nissim showed that simple cell
+suppression is not sufficient to protect the underlying confidential
+data collected and used by a statistical agency to produce official
+statistics\cite{DinurNissim2003}. To the contrary, they showed that
+once an agency publishes more than a critical number of statistics,
+the underlying confidential data can be \emph{reconstructed} by simply
+finding a consistent set of microdata that, when tabulated, produce
+the official statistics. One of the big surprises of the 2003 paper is
+that the number of tabulations required to enable a reconstruction
+attacks is far fewer than might be intuitively expected: this is
+because of the internal constraints and consistency requirements
+in the published data. 
 
-identify The challenging of 
+While it is mathematically impossible prevent reconstruction of the
+underlying data, a data publisher can add noise to the published
+results so that the reconstructed data will not reveal the actual
+confidential responses that was used to create the published
+tables. Clearly, as more noise that is added, the respondents will
+enjoy greater privacy protection, but the data publications will have
+less resulting accuracy. 
 
-For decades, the Census Bureau has used a variety of techniques for
-assuring the confidenity 
+So how much noise needs to be added to protect privacy? Three years
+later, Dwork, McSherry, Nissim and Smith answered that question. In
+their paper ``Calibrating Noise to Sensitivity in Private Data
+Analysis,''\cite{Dwork:2006:CNS:2180286.2180305} the researchers
+introduced the concept of \emph{differential privacy}. The paper
+provides a mathematical definition of the privacy loss that
+individuals suffer as a result of a data publication, and proposes a
+mechanism for determining how much noise needs to be added for any
+given level of privacy protection.
 
-Working Paper \#22 of the U.S. Federal Committee on Statistical
-Methodology\cite{workingpaper22} outlines the currently accepted best
-practices for U.S. statistical agencies to follow when they prepare and
-release both statistical data and ``de-identified''
-micro-data. Broadly, statistical agencies are charged with releasing
-high-quality data to further public policy goals, but they are
-prohibited from releasing statistics or micro-data that might result in the
-identification of data about a specific individual or establishment, or the linkage
-of micro-data to a responding entity.
+The 2020 census is expected to count roughly 320 million people living
+on roughly 8.5 million inhabited blocks, with some blocks having as
+few as a single person and other blocks having thousands. With this
+level of scale and diversity, it is difficult to visualize how such a
+data release might be susceptible to a database reconstruction
+attack. Nevertheless, with recent improvements in both computing power
+and big data applications, such reconstructions now pose a significant
+risk to the confidentiality of microdata that underlies unprotected
+statistical tables.
 
-Working Paper \#22 outlines a number of approaches that statistical
-agencies can use for protecting respondent data. These techniques include:
-\begin{enumerate}
-  \item \textbf{Cell Suppression}, where the values of certain  cells with small counts or few possible
-        generating combinations are removed from the published table
-  \item \textbf{Row Swapping}, where the data rows corresponding to individuals
-        with similar values for certain key cells are switched
-  \item \textbf{Generalization}, where numerical values are grouped into
-        buckets corresponding to ranges, instead of giving the exact
-        values for each entry in the table, also called \emph{coarsening}
-  \item \textbf{Top-and-bottom-coding}, where the statistical groups at the high and low ends
-        of the table are given without upper or lower bound (e.g.
-        reporting the highest group for age as 80+ instead of
-        80-90 and 90-100), a form of coarsening
-\end{enumerate}
-
-While it makes intuitive sense that these techniques hamper the
-ability of a  \emph{data intruder}\citelong{data-intruder} to recover respondent data from the
-statistical release, such hunches do not constitute rigorous
-mathematical proofs. Absent a formal definition of privacy and
-mathematical proofs showing that a specific disclosure limitation
-technique realizes that definition, there is no way to know if
-techniques actually protect privacy, or if that is merely wishful thinking.
-
-In this paper, we use
-the term \emph{database reconstruction attack} (DRA) to describe the process of
-taking a published set of statistical tables and deriving the
-underlying sensitive record-level data. Such attacks are possible and surprisingly
-practical, and this fact has been known for more than 15
-years\cite{noise}. Yet surprisingly, today most of
-statistical agencies still rely on the disclosure
-limitation techniques described in Working Paper \#22, rather than
-having adopted new techniques based on differential
-privacy\cite{Dwork:2006:CNS:2180286.2180305}, or other formal privacy systems 
-that operate with similar principles\cite{KiferMachanavajjhala:2012}.
-
-The contribution of this paper is to present a simple example of how
-a database reconstruction attack might be implemented against a data
-release from an official statistics agency, and then to show how a
-formally private technique can protect against such an
-attack. Although the possibility of database reconstruction is
-presented in Dinur and Nissum's original paper\cite{noise}, we are not
-aware of any \iflongversion end-to-end \fi example showing the threat, a worked attack,
-and the results of modern defenses.
-
-\section{Related Work}
-
-Dinur and Nissim\cite{noise} showed that the underlying
-confidential data of a statistical database can be reconstructed with
-a surprisingly small number of queries. In practice, most statistical
-agencies perform these queries themselves when they release
-statistical tables. Thus, Dinur and Nissim's primary finding
-is: a statistical agency that publishes too many accurate statistical
-tables drawn from the same confidential dataset risks inadvertently
-compromising that dataset unless it takes specific protective measures.
-
-Statistical tables create the possibility of database reconstruction
-because they form a set of constraints for which there is ultimately
-only one exact solution. Restricting
-the number or specific types of queries---for example, by suppressing
-results from a small number of respondents---is often insufficient to prevent access
-to indirectly identifying information, because the system's refusal to
-answer a ``dangerous'' query itself provides the attacker with information. 
-Dinur and Nissim found that, if a database is modeled as a string of $n$ bits,
-then at least $\sqrt{n}$ bits must be modified by adding noise to
-protect individuals from being identified.
-
-Kasiviswanathan, Rudelson, and Smith\cite{Kasiviswanathan:2013:PLR:2627817.2627919} introduced
-the concept of the linear reconstruction attack, which underlies the  DRA. The key concept is that,
-given nonsensitive data such as zip code or gender, an attacker
-can construct a matrix of linear equalities that can often be solved
-in polynomial time. \iflongversion The paper also analyzes a common reconstruction
-technique known as least squares decoding, where the attacker sets up
-a goal function to minimize the square of the distance between two
-databases in order to reconstruct the original database.\fi
-
-\iflongversion
-Brown and Heathers\cite{doi:10.1177/1948550616673876} developed the
-granularity-related inconsistency of means (GRIM) test in response to
-observed inconsistencies in published data from psychological
-journals. This test is centered around the premise that, for
-statistics drawn from integer data, only certain means are
-possible. The GRIM test determines whether reported means could
-possibly have come from data sets with a certain size, granularity,
-and group number. In surveying 71 published articles, the authors
-found 36 papers with one inconsistency and 16 with two or more
-inconsistencies. Although this test was intended to detect possible
-errors or mean falsification in published articles, the concept of
-drawing inferential conclusions about a data set based only on 
-published statistics is a key concept behind the DRA.
-\fi
+To help understand the urgency of adopting formal privacy methods,
+this paper presents a database reconstruction attack on a much smaller
+statistical publication: a demographic publication of a hypothetical
+block containing seven people distributed over two households. We show
+that even a relatively small number of constraints results in an exact
+solution for many of the blocks' inhabitants. After we show the
+successful reconstruction attack, we show how differential privacy can
+protect the published data. Finally, we discuss implications for the
+decennial census.
 
 \section{The Database Reconstruction Attack: An Example}
 
@@ -301,62 +247,36 @@ be done.
 \fi
 
 
-\newcommand{\censored}{\multicolumn{1}{c||}{\rule{6mm}{3mm}}}
+\newcommand{\cens}{\multicolumn{1}{c|}{\rule{6mm}{3mm}}}
 \newcommand{\censoredb}{\multicolumn{1}{c}{\rule{6mm}{3mm}}}
 \begin{table}
 \begin{center}
-\caption{Fictional statistical data published by the fictional
-  statistics agency. Item numbers are for identification purpose
-  only. Note that statistics 2D, 4B, 4E and 5D have been suppressed as part
-  of the statistical disclosure limitation process.
-\ifshortversion
-The rightmost column, ``Average Age Protected,'' shows the value of Average Age protected
-with the addition of Laplace noise sufficient to prevent a database reconstruction attack,
-as discussed in section~\ref{solution}.
-\fi
-}\label{publishedstatsbig}
-\ifshortversion
-\begin{tabular}{l|l|c|c||c}
-\else
-\begin{tabular}{l|l|c|c|}
-\fi
-
-\RC{ &       &        &                 & Average Age\\}
-Item & Group & Number & Average Age \RC{& Protected}\\
+\begin{tabular}{l|l|c|c|c|}
+     &                &       & \multicolumn{2}{|c|}{Age} \\
+Item & Group          & Count & Median & Average \\
 \hline
-1A & Individuals & 10 & 40          \RC{&38.57} \\
-1B & Males       & 5 & 34           \RC{&33.21} \\
-1C & Females     & 5 & 46           \RC{&43.92} \\
-1D & Whites      & 5 & 50           \RC{&47.82} \\
-1E & Blacks      & 5 & 30           \RC{&29.31} \\
+  1A & All            & 7     &  30    & 35.28 \\
 \hline
-2A & Children (0-17) & 3 & 10        \RC{&8.50} \\
-2D & White children  & 1 & \censored \RC{& \censoredb} \\
-2E & Black children  & 2 & 10        \RC{& 8.75} \\
+  2A & Females        & 4     &  30    & 32.75 \\
+  2B & Males          & 3     &  30    & 38.66 \\
+  2C & Blacks         & 4     &  51    & 43.75 \\
+  2D & Whites         & 3     &  24    & 24.00 \\
 \hline
-3A & Parents         & 4 & 32.5 \RC{&31.41} \\
-3B & Male parents    & 2 & 30   \RC{&29.77} \\
-3C & Female parents  & 2 & 35   \RC{&33.06}\\
-3F & Parents over 40 & 0 & --   \RC{&--}\\
+  3A & Single adults  & 2     & \cens  & 21.00 \\
+  3B & Married adults & 4     & \cens  & 50.00 \\
 \hline
-4A & Grandparents        & 3 & 80        \RC{& 78.18} \\
-4B & Male grandparents   & 1 & \censored \RC{& \censoredb} \\
-4C & Female grandparents & 2 & 75        \RC{&72.15}  \\
-4D & White grandparents  & 2 & 80        \RC{&77.64}  \\
-4E & Black grandparents  & 1 & \censored \RC{& \censoredb} \\
+  4A & Black females  & 3     & \cens  & \cens \\
+  4B & White males    & \cens & \cens  & \cens \\
 \hline
-5A & Households                  & 2 & 40 \RC{&38.57} \\
-5B & Tri-generational households & 0 & -- \RC{&--} \\
-5C & Single-parent households    & 0 & -- \RC{&--} \\
-5D & Childless households        & 1 & \censored \RC{& \censoredb} \\
-% Remove these constraints because they aren't needed to reconstruct 
-% Everything except the children.
-% 5E & Interracial married couples & 2 & 32.5 \\
-% 5F & Same-sex married couples & 0 & -- \\
-% 5G & Households $\geq 40\% $ female & 2 & 40 \\
-% 5H & Households $\geq 40\% $ black & 2 & 40 \\
+  5A & Children $\le 5$   & \cens         & \cens  & \cens \\
+  5B & Teenagers (14--17) & \cens         & \cens  & \cens \\
+  5C & Senior Citizens ($\ge 65$) & \cens & \cens  & \cens \\
 \hline
+\multicolumn{5}{l}{Note: Married individuals must be 15 or over}
 \end{tabular}
+\caption{Fictional statistical data for a fictional block published by
+  a fictional statistics agency. Item numbers are for identification
+  purpose only.\label{fictional}}
 \end{center}
 \end{table}
 
@@ -646,6 +566,55 @@ Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
 \caption{Data publication with added Laplace noise}\label{publishedstatsnoise}
 \end{table}
 \fi
+
+\section{Related Work}
+
+Dinur and Nissim\cite{noise} showed that the underlying
+confidential data of a statistical database can be reconstructed with
+a surprisingly small number of queries. In practice, most statistical
+agencies perform these queries themselves when they release
+statistical tables. Thus, Dinur and Nissim's primary finding
+is: a statistical agency that publishes too many accurate statistical
+tables drawn from the same confidential dataset risks inadvertently
+compromising that dataset unless it takes specific protective measures.
+
+Statistical tables create the possibility of database reconstruction
+because they form a set of constraints for which there is ultimately
+only one exact solution. Restricting
+the number or specific types of queries---for example, by suppressing
+results from a small number of respondents---is often insufficient to prevent access
+to indirectly identifying information, because the system's refusal to
+answer a ``dangerous'' query itself provides the attacker with information. 
+Dinur and Nissim found that, if a database is modeled as a string of $n$ bits,
+then at least $\sqrt{n}$ bits must be modified by adding noise to
+protect individuals from being identified.
+
+Kasiviswanathan, Rudelson, and Smith\cite{Kasiviswanathan:2013:PLR:2627817.2627919} introduced
+the concept of the linear reconstruction attack, which underlies the  DRA. The key concept is that,
+given nonsensitive data such as zip code or gender, an attacker
+can construct a matrix of linear equalities that can often be solved
+in polynomial time. \iflongversion The paper also analyzes a common reconstruction
+technique known as least squares decoding, where the attacker sets up
+a goal function to minimize the square of the distance between two
+databases in order to reconstruct the original database.\fi
+
+\iflongversion
+Brown and Heathers\cite{doi:10.1177/1948550616673876} developed the
+granularity-related inconsistency of means (GRIM) test in response to
+observed inconsistencies in published data from psychological
+journals. This test is centered around the premise that, for
+statistics drawn from integer data, only certain means are
+possible. The GRIM test determines whether reported means could
+possibly have come from data sets with a certain size, granularity,
+and group number. In surveying 71 published articles, the authors
+found 36 papers with one inconsistency and 16 with two or more
+inconsistencies. Although this test was intended to detect possible
+errors or mean falsification in published articles, the concept of
+drawing inferential conclusions about a data set based only on 
+published statistics is a key concept behind the DRA.
+\fi
+
+
 
 \section{Conclusion}
 

@@ -12,6 +12,24 @@
 ;; 6  S6=F  A6=66  R6=B   M6=M      PARENT        MBF66
 ;; 7  S7=F  A7=5   R7=B   M7=S      CHILD         SBF5
 
+;; Reconstructed:
+;; MBF31
+;; MBF71
+;; SWF24 +
+;; SWM18 +
+;; MBM68 +
+;; MWM30 +
+;; SBF5  +
+
+;MBF52
+;MBF50
+;SWF24 +
+;SWM18 +
+;MBM68 +
+;MWM30 +
+;SBF5 +
+
+
 
 ;; Sexes (0:male  1:female)
 (int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1) (int S5 0 1) (int S6 0 1) (int S7 0 1)
@@ -27,10 +45,10 @@
 
 ;; Median Age: 30
 
-;; Average ages: (n=7, t=241)
-;; Male:       (n=3, t=110)     Female:    (n=4, t=131)
-;; White:      (n=3, t=72)  Black:     (n=4, t=169)
-;; Single:     (n=3, t=47)  Married:   (n=4, t=194) 
+;; Average ages: (n=7, t=247)
+;; Male:       (n=3, t=116) Female:    (n=4, t=131)
+;; White:      (n=3, t=72)  Black:     (n=4, t=175)
+;; Single:     (n=3, t=47)  Married:   (n=4, t=200) 
 ;; 
 ;; Counts: Race x Sex:
 ;; White Male: 2
@@ -38,9 +56,14 @@
 ;; White Female: 1 <suppressed>
 ;; Black Female: 3
 
-(= (+ A1 A2 A3 A4 A5 A6 A7) 247)      ; average age 
+(= (+ A1 A2 A3 A4 A5 A6 A7) 247)      ; average age = 35.28
 
-(= (+ (if (= S1 0) A1 0)           ; average male age 
+;; Count queries
+(= (+ S1 S2 S3 S4 S5 S6 S7) 4)  ;; 3 men and 4 women
+(= (+ R1 R2 R3 R4 R5 R6 R7) 4)  ;; 3 whites and 4 blacks
+(= (+ M1 M2 M3 M4 M5 M6 M7) 4)  ;; 3 single, 4 married 
+
+(= (+ (if (= S1 0) A1 0)    ; average male age = 116/3 = 38.66
       (if (= S2 0) A2 0)
       (if (= S3 0) A3 0)
       (if (= S4 0) A4 0)
@@ -49,7 +72,7 @@
       (if (= S7 0) A7 0)
       ) 116)
 
-(= (+ (if (= S1 1) A1 0)   ; average female age 
+(= (+ (if (= S1 1) A1 0)   ; average female age = 131/4 = 32.75
       (if (= S2 1) A2 0)
       (if (= S3 1) A3 0)
       (if (= S4 1) A4 0)
@@ -58,7 +81,7 @@
       (if (= S7 1) A7 0)
       ) 131)
 
-(= (+ (if (= R1 0) A1 0)          ; average white age 
+(= (+ (if (= R1 0) A1 0)   ; average white age = 72/3 = 24
       (if (= R2 0) A2 0)
       (if (= R3 0) A3 0)
       (if (= R4 0) A4 0)
@@ -67,7 +90,7 @@
       (if (= R7 0) A7 0)
       ) 72)
 
-(= (+ (if (= R1 1) A1 0)   ; average black age 
+(= (+ (if (= R1 1) A1 0)   ; average black age = 174/4 = 43.75
       (if (= R2 1) A2 0)
       (if (= R3 1) A3 0)
       (if (= R4 1) A4 0)
@@ -76,27 +99,22 @@
       (if (= R7 1) A7 0)
       ) 175)
 
-(= (+ (if (= M1 0) A1 0)         ; average single age
-      (if (= M2 0) A2 0)
-      (if (= M3 0) A3 0)
-      (if (= M4 0) A4 0)
-      (if (= M5 0) A5 0)
-      (if (= M6 0) A6 0)
-      (if (= M7 0) A7 0)
-      ) 47)
+(= (+ (if (and (= M1 0) (> A1 17)) A1 0)    ; average age of single adults = 
+      (if (and (= M2 0) (> A2 17)) A2 0)
+      (if (and (= M3 0) (> A3 17)) A3 0)
+      (if (and (= M4 0) (> A4 17)) A4 0)
+      (if (and (= M5 0) (> A5 17)) A5 0)
+      (if (and (= M6 0) (> A6 17)) A6 0)
+      (if (and (= M7 0) (> A7 17)) A7 0)
+      ) 42)
 
-(= (+ (if (= M1 1) A1 0)                ; average married age
-      (if (= M2 1) A2 0)
-      (if (= M3 1) A3 0)
-      (if (= M4 1) A4 0)
-      (if (= M5 1) A5 0)
-      (if (= M6 1) A6 0)
+(= (+ (if (and (= M1 1) (> A1 17)) A1 0)  ; 200/4 = average age married adults
+      (if (and (= M2 1) (> A2 17)) A2 0)
+      (if (and (= M3 1) (> A3 17)) A3 0)
+      (if (and (= M4 1) (> A4 17)) A4 0)
+      (if (and (= M5 1) (> A5 17)) A5 0)
+      (if (and (= M6 1) (> A6 17)) A6 0)
       ) 200)
-
-;; Count queries
-(= (+ S1 S2 S3 S4 S5 S6 S7) 4)  ;; 3 men and 4 women
-(= (+ R1 R2 R3 R4 R5 R6 R7) 4)  ;; 3 whites and 4 blacks
-(= (+ M1 M2 M3 M4 M5 M6 M7) 4)  ;; 3 single, 4 married 
 
 ;;; Married people must be over 14. Set the minimum age based on the marriage flag
 (< (if (= M1 1) 14 0) A1)
@@ -108,13 +126,13 @@
 (< (if (= M7 1) 14 0) A7)
 
 ;;; Two white males (R=0, S=0)
-(= (+ (if (and (= R1 0) (= S1 0)) 1 0)
-      (if (and (= R2 0) (= S2 0)) 1 0)   
-      (if (and (= R3 0) (= S3 0)) 1 0)   
-      (if (and (= R4 0) (= S4 0)) 1 0)   
-      (if (and (= R5 0) (= S5 0)) 1 0)   
-      (if (and (= R6 0) (= S6 0)) 1 0)
-      ) 2)
+;(= (+ (if (and (= R1 0) (= S1 0)) 1 0)
+;      (if (and (= R2 0) (= S2 0)) 1 0)   
+;      (if (and (= R3 0) (= S3 0)) 1 0)   
+;      (if (and (= R4 0) (= S4 0)) 1 0)   
+;      (if (and (= R5 0) (= S5 0)) 1 0)   
+;      (if (and (= R6 0) (= S6 0)) 1 0)
+;      ) 2)
 
 ;;; Three black females (R=1, S=1)
 (= (+ (if (and (= R1 1) (= S1 1)) 1 0)
@@ -125,38 +143,40 @@
       (if (and (= R6 1) (= S6 1)) 1 0)
       (if (and (= R7 1) (= S7 1)) 1 0)
       ) 3)
-;
+
+; Censored
 ;;; No teenagers
 ;; 
-(and (or (< A1 14) (> A1 17))
-     (or (< A2 14) (> A2 17))
-     (or (< A3 14) (> A3 17))
-     (or (< A4 14) (> A4 17))
-     (or (< A5 14) (> A5 17))
-     (or (< A6 14) (> A6 17))
-     (or (< A7 14) (> A7 17))
-     )
+;(and (or (< A1 14) (> A1 17))
+;     (or (< A2 14) (> A2 17))
+;     (or (< A3 14) (> A3 17))
+;     (or (< A4 14) (> A4 17))
+;     (or (< A5 14) (> A5 17))
+;     (or (< A6 14) (> A6 17))
+;     (or (< A7 14) (> A7 17))
+;     )
 ;         
+; Censored
 ;;; No children under 5
-(= (+ (if (< A1 5) 1 0)
-      (if (< A2 5) 1 0)   
-      (if (< A3 5) 1 0)   
-      (if (< A4 5) 1 0)   
-      (if (< A5 5) 1 0)   
-      (if (< A6 5) 1 0)
-      (if (< A7 5) 1 0)
-      ) 0)
+;(= (+ (if (< A1 5) 1 0)
+;      (if (< A2 5) 1 0)   
+;      (if (< A3 5) 1 0)   
+;      (if (< A4 5) 1 0)   
+;      (if (< A5 5) 1 0)   
+;      (if (< A6 5) 1 0)
+;      (if (< A7 5) 1 0)
+;      ) 0)
          
 ;
 ;;; Two senior citizens
-(= (+ (if (>= A1 65) 1 0)
-      (if (>= A2 65) 1 0)   
-      (if (>= A3 65) 1 0)   
-      (if (>= A4 65) 1 0)   
-      (if (>= A5 65) 1 0)   
-      (if (>= A6 65) 1 0)
-      (if (>= A7 65) 1 0)
-      ) 2)
+;(= (+ (if (>= A1 65) 1 0)
+;      (if (>= A2 65) 1 0)   
+;      (if (>= A3 65) 1 0)   
+;      (if (>= A4 65) 1 0)   
+;      (if (>= A5 65) 1 0)   
+;      (if (>= A6 65) 1 0)
+;      (if (>= A7 65) 1 0)
+;      ) 2)
 ;
 ;
 ;;; Median age 30
@@ -304,11 +324,14 @@
       ) 2)
 
 
-;(= S1 0) (= A1 18) (= R1 0) (= M1 0)
-;(= S2 1) (= A2 24) (= R2 0) (= M2 0)
-;(= S3 0) (= A3 30) (= R3 0) (= M3 1)
-;(= S4 1) (= A4 36) (= R4 1) (= M4 1)
-;(= S5 0) (= A5 68) (= R5 1) (= M5 1)
-;(= S6 1) (= A6 66) (= R6 1) (= M6 1)
-;(= S7 1) (= A7  5) (= R7 1) (= M7 0)
-;
+;; Solution. To verify constraints, uncomment these and everything should satisfy!
+;(= A1 18)
+;(= A2 24)
+;(= A3 30)
+;(= A4 36)
+;(= A5 68)
+;(= A6 66)
+;(= A7 5)
+
+
+

@@ -1,5 +1,12 @@
-SOLVER=picosat
+#
+# We have two reconstructions:
+# two-households.csp 11 people
+# one-block.csp       7 people, with medians
+
+SOLVER="picosat -s 2"
 PROBLEM=one-block.csp
+
+all: white_paper.pdf toy_mechanism.pdf
 
 white_paper.pdf: vars.tex white_paper.tex 
 	latexmk -pdf white_paper.tex </dev/null
@@ -16,14 +23,18 @@ solve:	constraints.sugar.out
 vars.tex: make_vars.py constraints.sugar.out
 	python make_vars.py  constraints.sugar.out constraints_.cnf
 
-constraints.sugar.out: constraints.csp  Makefile
+constraints.sugar.out: constraints.csp  Makefile $(PROBLEM)
 	perl sugar-v2-3-2/bin/sugar -jar sugar-v2-3-2/bin/sugar-v2-3-2.jar \
              -solver $(SOLVER) -keep -tmp constraints_ \
              -output constraints.out $(PROBLEM) > constraints.sugar.out
+	@if grep ERROR constraints.sugar.out >/dev/null ; then \
+	     echo ========= ERROR ============ ; \
+	     cat constraints.sugar.out ; exit 1; \
+	     fi
 
 clean:
 	latexmk -c -C 
 	/bin/rm -f *.bbl *.fls *~ *.spl
-
+	/bin/rm -f vars.tex
 
 

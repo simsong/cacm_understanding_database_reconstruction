@@ -121,10 +121,12 @@ if __name__=="__main__":
                      
     g.savefig("toy_regression_bounds.pdf")
 
-    G = []
-    for i in range(0,2):
-        values = [fit_value[i] for fit_value in fit_values]
-        G.append(max(values) - min(values))
+    G = [0,0]
+    values1 = [fit_value[1] for fit_value in fit_values]
+    G[0] = max(values1) - min(values1)
+
+    values0 = [fit_value[0] for fit_value in fit_values]
+    G[1] = max(values0) - min(values0)
 
     tab.add_variable("Gzero",round_places(G[0],8))
     tab.add_variable("Gone", round_places(G[1],8))
@@ -133,18 +135,38 @@ if __name__=="__main__":
     # Now let's show what adding noise looks like, at different values of epsilon
     n = len(income)
     tab = ttable()
-    tab.append_head(['epsilon','true n','true $b_1$','true $b_0$',
-                     'reported n','reported $b_1$','reported $b_0$'])
-    tab.set_col_fmt(0,"","%2.1f","") # epsilon
-    tab.set_col_fmt(2,"","%4.3e","") # b_1
-    tab.set_col_fmt(3,"","%4.1f","") # b_0
-    tab.set_col_fmt(5,"","%4.3e","") # b_1
-    tab.set_col_fmt(6,"","%4.1f","") # b_0
-    for ε in np.arange(0.2,4.0,.2):
-        tab.append_data([ε, n, true_fit[0], true_fit[1],
-                         int(n + np.random.normal(scale=1)/n),
-                         round_places(true_fit[0] + np.random.normal(scale=G[0])/n),
-                         round_places(true_fit[1] + np.random.normal(scale=G[1])/n)])
+
+    tab.append_head(['$\epsilon$','true','true','true',
+                     '$G_n$','$\\texttt{int}(n+G_n/n)$',
+                     '$G_1$','$b_1 + G_1/n$',
+                     '$G_0$','$b_0 + G_0/n$'])
+    tab.append_head(['','n','$b_1$','$b_0$',
+                     '','(reported n)',
+                     '','(reported $b_1$)',
+                     '','(reported $b_0$)'])
+    tab.append_data(ttable.HR)
+    tab.set_col_fmt(0,"","%3.2f","") # epsilon
+    tab.set_col_fmt(2,"","%4.3e","") # true b_1
+    tab.set_col_fmt(3,"","%4.1f","") # true b_0
+    tab.set_col_fmt(4,"","%4.2f","") # G_n
+    tab.set_col_fmt(6,"","%4.3e","") # G1
+    tab.set_col_fmt(7,"","%4.3e","") # reported b1
+    tab.set_col_fmt(8,"","%4.1f","") # b_0
+    tab.set_col_fmt(9,"","%4.1f","") # b_0
+
+    for r in [(0.01, 0.1, .01),
+              (0.1, 1.0, .1),
+              (1.0, 5.0, .25)]:
+        for ε in np.arange(r[0], r[1], r[2]):
+            Gn = np.random.normal(scale=1/ε)/n
+            G1 = np.random.normal(scale=G[1]/ε)/n
+            G0 = np.random.normal(scale=G[0]/ε)/n
+            tab.append_data([ε, n, true_fit[0], true_fit[1],
+                             Gn,int(n + Gn),
+                             G1,round_places(true_fit[0] + G1),
+                             G0,round_places(true_fit[1] + G0)])
+        tab.append_data(ttable.HR)
+
     tab.save_table("toy_regression_results.tex",mode='latex')
 
             

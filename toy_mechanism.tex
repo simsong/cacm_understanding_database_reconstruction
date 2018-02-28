@@ -77,16 +77,23 @@ students in it. Here is the raw data:
 \input{toy_regression_data.tex}
 
 Using numpy's linear regression tool, we can calculate a linear
-regression on these data with:
+regression on these data, as shown in Figure~\ref{unprotected}.
 
-\includegraphics[width=\linewidth]{toy_regression.pdf}
+\begin{figure}
+\includegraphics[width=.9\linewidth]{toy_regression.pdf}
+\caption{The unprotected regression.}\label{unprotected}
+\end{figure}
 
 Traditional protections include rounding of output variables (to 4
 significant figures) and top-coding. In the example below, we top-code
 income to \$100,000 and then round output statistics. The regression
-line is drawn using the rounded values:
+line is drawn using the rounded values, as shown in Figure~\ref{protected1}.
 
-\includegraphics[width=\linewidth]{toy_regression_rounded.pdf}
+\begin{figure}
+\includegraphics[width=.9\linewidth]{toy_regression_rounded.pdf}
+\caption{The regression, protected with top-coding and
+  rounding.}\label{protected1}
+\end{figure}
 
 Instead, our proposed mechanism recomputes the regression four times,
 each time adding a different extreme data point. These data points are
@@ -94,19 +101,53 @@ chosen to exercise the limits of the regression variables:
 
 \input{toy_regression_extreme_data}
 
-This produces four sets of regression parameters, here all plotted on
-the same graph:
+This produces four sets of regression parameters, all plotted on
+the same graph in Figure~\ref{protected2}.
 
-\includegraphics[width=\linewidth]{toy_regression_bounds.pdf}
+\begin{figure}
+\includegraphics[width=.9\linewidth]{toy_regression_bounds.pdf}
+\caption{Four possible regressions made with the data from
+  Figure~\ref{protected1}, each one with the addition of a single data
+  point that is at one of the dimensional extremes. Note that
+  producing this graph requires choosing a top-code for income, but
+  not for grades, because grades are bounded and (hopefully) do not
+  need to be top-coded to protect privacy.}\label{protected2}
+\end{figure}
 
 We can now automatically compute the range of the regression
 parameters $b_1$ and $b_0$ which are \Gzero{} and \Gone. Using Gaussian noise, we can compute 
 privacy-protected values of these variables, as well as $n$ (the
-sample size), for different values of epsilon:
+sample size), for different values of $\epsilon$. 
 
+Note that $G_n$ is the amount of Gaussian noise added to the $n$,
+where:
+
+\begin{equation}
+G_n = \texttt{np.random.normal}(\texttt{scale}=1/\epsilon) / n
+\end{equation}
+
+Note that $G_1$ is the amount of Gaussian noise added to the slope,
+where:
+
+\begin{equation}
+G_1 = \texttt{np.random.normal}(\texttt{scale}=b_1/\epsilon) / n
+\end{equation}
+
+Note that $G_0$ is the amount of Gaussian noise added to the
+y-intercept ($b$) where:
+
+\begin{equation}
+G_0 = \texttt{np.random.normal}(\texttt{scale}=b_0/\epsilon) / n
+\end{equation}
+
+
+
+{\small\noindent
 \input{toy_regression_results.tex}
+}
 
-Of course, only the values for a single epsilon may be reported. 
+Of course, only the values for a single epsilon may be reported, and
+the errors between the reported values and the true values may not be reported. 
 
 This white paper does not currently discussion the mechanism for
 computing epsilon. 

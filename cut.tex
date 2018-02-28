@@ -1,3 +1,58 @@
+% 2A & Children (0-17) &  &          \\
+% 2D & White children  &  &   \\
+% 2E & Black children  &  &   \\
+% \hline
+% 3A & Parents         &  &   \\
+% 3B & Male parents    &  &     \\
+% 3C & Female parents  &  &    \\
+% 3F & Parents over 40 &  &    \\
+% \hline
+% 4A & Grandparents        &  &          \\
+% 4B & Male grandparents   &  &   \\
+% 4C & Female grandparents &  &           \\
+% 4D & White grandparents  &  &           \\
+% 4E & Black grandparents  &  & \\
+% \hline
+% 5A & Households                  &  &   \\
+% 5B & Tri-generational households &  &   \\
+% 5C & Single-parent households    &  &   \\
+% 5D & Childless households        &  &   \\
+% Remove these constraints because they aren't needed to reconstruct 
+% Everything except the children.
+% 5E & Interracial married couples & 2 & 32.5 \\
+% 5F & Same-sex married couples & 0 & -- \\
+% 5G & Households $\geq 40\% $ female & 2 & 40 \\
+% 5H & Households $\geq 40\% $ black & 2 & 40 \\
+
+
+Working Paper \#22 of the U.S. Federal Committee on Statistical
+Methodology\cite{workingpaper22} outlines the currently accepted best
+practices for U.S. statistical agencies to follow when they prepare and
+release both statistical data and ``de-identified''
+micro-data. Broadly, statistical agencies are charged with releasing
+high-quality data to further public policy goals, but they are
+prohibited from releasing statistics or micro-data that might result in the
+identification of data about a specific individual or establishment, or the linkage
+of micro-data to a responding entity.
+
+Working Paper \#22 outlines a number of approaches that statistical
+agencies can use for protecting respondent data. These techniques include:
+\begin{enumerate}
+  \item \textbf{Cell Suppression}, where the values of certain  cells with small counts or few possible
+        generating combinations are removed from the published table
+  \item \textbf{Row Swapping}, where the data rows corresponding to individuals
+        with similar values for certain key cells are switched
+  \item \textbf{Generalization}, where numerical values are grouped into
+        buckets corresponding to ranges, instead of giving the exact
+        values for each entry in the table, also called \emph{coarsening}
+  \item \textbf{Top-and-bottom-coding}, where the statistical groups at the high and low ends
+        of the table are given without upper or lower bound (e.g.
+        reporting the highest group for age as 80+ instead of
+        80-90 and 90-100), a form of coarsening
+\end{enumerate}
+
+
+
 In order to show how a SAT solver can be used to rapidly narrow down the solution universe for a data set, we will perform a mock DRA on a new, larger set of responses to the survey given earlier.
 
 The ground truth responses from two new households are given in Table~\ref{resultsbig}. The statistical agency publishes the statistics in Table~\ref{publishedstatsbig} after processing the ground truth responses.
@@ -20,4 +75,35 @@ False & False & 1  \\
 
 
 
+
+
+
+While it makes intuitive sense that these techniques hamper the
+ability of a  \emph{data intruder}\citelong{data-intruder} to recover respondent data from the
+statistical release, such hunches do not constitute rigorous
+mathematical proofs. Absent a formal definition of privacy and
+mathematical proofs showing that a specific disclosure limitation
+technique realizes that definition, there is no way to know if
+techniques actually protect privacy, or if that is merely wishful thinking.
+
+In this paper, we use
+the term \emph{database reconstruction attack} (DRA) to describe the process of
+taking a published set of statistical tables and deriving the
+underlying sensitive record-level data. Such attacks are possible and surprisingly
+practical, and this fact has been known for more than 15
+years\cite{noise}. Yet surprisingly, today most of
+statistical agencies still rely on the disclosure
+limitation techniques described in Working Paper \#22, rather than
+having adopted new techniques based on differential
+privacy\cite{Dwork:2006:CNS:2180286.2180305}, or other formal privacy systems 
+that operate with similar principles\cite{KiferMachanavajjhala:2012}.
+
+The contribution of this paper is to present a simple example of how
+a database reconstruction attack might be implemented against a data
+release from an official statistics agency, and then to show how a
+formally private technique can protect against such an
+attack. Although the possibility of database reconstruction is
+presented in Dinur and Nissum's original paper\cite{noise}, we are not
+aware of any \iflongversion end-to-end \fi example showing the threat, a worked attack,
+and the results of modern defenses.
 
