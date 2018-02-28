@@ -15,7 +15,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{siunitx}
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage[ngerman,english]{babel}
 \usepackage{verbatim}
@@ -177,8 +177,8 @@ once an agency publishes more than a critical number of statistics,
 the underlying confidential data can be \emph{reconstructed} by simply
 finding a consistent set of microdata that, when tabulated, produce
 the official statistics. One of the big surprises of the 2003 paper is
-that the number of tabulations required to enable a reconstruction
-attacks is far fewer than might be intuitively expected: this is
+that the number of tabulations required to enable a database reconstruction
+attack (DRA) is far fewer than might be intuitively expected: this is
 because of the internal constraints and consistency requirements
 in the published data. 
 
@@ -222,15 +222,18 @@ decennial census.
 
 \section{The Database Reconstruction Attack: An Example}
 
-To present a DRA, we consider a hypothetical
-census of a fictional geographic frame unit conducted by a fictional statistical
+To present the attack, we consider a hypothetical
+census of a fictional geographic frame (for example, a suburban block)
+conducted by a fictional statistical
 agency. For every household, the agency collects each resident's age,
-sex, race, and their generation in the household.  Because the
-confidential data will not be released in order to protect respondent privacy, the statistical agency
-publishes every conceivable statistic that might be of use to a
-potential demographers, sociologists and economists. Based on user
-feedback\iflongversion from previous census reports\fi, the agency has chosen 
-a set of statistics, which we present here as Table~\ref{publishedstatsbig}.
+sex, race, and their relation in the household. To simplify the example,
+the fictional world has only two races, black and white, and two
+sexes, female and male. The statistical agency
+is prohibited from publishing the raw microdata, and instead publishes
+a tabular report (Table~\ref{fictional}). 
+
+Notice that a substantial amount of information in
+Table~\ref{fictional} has been censored. We have censored 
 
 We assume that the agency applied SDL using only primary cell suppression---deleting items
 in cells with size one (singletons). Normally, an agency would also apply complementary 
@@ -240,32 +243,24 @@ example would have eliminated most of the published data. Our example can be
 extended to larger collections of tables where both types of suppression can 
 be done.
 
-\ifshortversion
-\newcommand{\RC}[1]{#1}
-\else
-\newcommand{\RC[1]{}}
-\fi
-
-
 \newcommand{\cens}{\multicolumn{1}{c|}{\rule{6mm}{3mm}}}
-\newcommand{\censoredb}{\multicolumn{1}{c}{\rule{6mm}{3mm}}}
 \begin{table}
 \begin{center}
 \begin{tabular}{l|l|c|c|c|}
      &                &       & \multicolumn{2}{|c|}{Age} \\
 Item & Group          & Count & Median & Average \\
 \hline
-  1A & All            & 7     &  30    & 35.28 \\
+  1A & Total Pop.    & 7     &  30    & 38 \\
 \hline
-  2A & Females        & 4     &  30    & 32.75 \\
-  2B & Males          & 3     &  30    & 38.66 \\
-  2C & Blacks         & 4     &  51    & 43.75 \\
-  2D & Whites         & 3     &  24    & 24.00 \\
+  2A & Female        & 4     &  30    & 33\textonehalf \\
+  2B & Male          & 3     &  30    & 44 \\
+  2C & Black         & 4     &  51    & 48\textonehalf \\
+  2D & White         & 3     &  24    & 24 \\
 \hline
-  3A & Single adults  & 2     & \cens  & 21.00 \\
-  3B & Married adults & 4     & \cens  & 50.00 \\
+  3A & Single adults  & \cens     & \cens  & \cens \\
+  3B & Married adults & 4     & 52  & 54 \\
 \hline
-  4A & Black females  & 3     & \cens  & \cens \\
+  4A & Black females  & 3     & 36  & 36$\frac{2}{3}$ \\
   4B & White males    & \cens & \cens  & \cens \\
 \hline
   5A & Children $\le 5$   & \cens         & \cens  & \cens \\
@@ -418,7 +413,7 @@ Many SAT solvers take their input in the so-called DIMACS file format,
 which specifies a single equation in conjunctive normal form (CNF). We use
 Sugar\cite{sugar} to transform our system of constraints into DIMACS
 format. Surgar's input is a series of
-\textit{s-expressions}\citelong{McCarthy:1960:RFS:367177.367199}. For
+\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
 example, the constraint in Equation~\ref{eq1} can be encoded as the following
 s-expression:
 \begin{equation}
@@ -648,7 +643,7 @@ an attacker's guess about which solution is the correct one.
 \subsection{SAT and SAT Solvers}
 
 The Boolean satisfiability problem (SAT) was the first
-problem to be proven NP-complete\citelong{cooklevin}. This problem asks,
+problem to be proven NP-complete\cite{cooklevin}. This problem asks,
 for a given Boolean formula, whether replacing each variable with
 either True or False can make the formula evaluate to True.  A
 consequence of SAT being NP-complete is that any problem can be
