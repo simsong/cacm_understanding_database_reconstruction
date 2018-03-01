@@ -8,7 +8,7 @@ PROBLEM=one-block.csp
 
 all: white_paper.pdf toy_mechanism.pdf
 
-white_paper.pdf: vars.tex white_paper.tex 
+white_paper.pdf: vars.tex white_paper.tex medians.tex
 	latexmk -pdf white_paper.tex </dev/null
 
 toy: toy_mechanism.pdf
@@ -22,6 +22,9 @@ solve:	constraints.sugar.out
 
 vars.tex: make_vars.py constraints.sugar.out
 	python make_vars.py  constraints.sugar.out constraints_.cnf
+
+medians.tex: median_calculator.py tytable.py
+	python median_calculator.py
 
 constraints.sugar.out: constraints.csp  Makefile $(PROBLEM)
 	perl sugar-v2-3-2/bin/sugar -jar sugar-v2-3-2/bin/sugar-v2-3-2.jar \
