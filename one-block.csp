@@ -118,31 +118,31 @@
 ;;; Let MaxAFBelow30 be the oldest female age under 30
 ;;; Let MinAFAbove30 be the youngest female over 30
 ;;; The median is then (MaxAFBelow30+MinAFAbove30)/2
-(int MaxAFBelow30 0 29)
-(int MinAFAbove30 31 116)
-
-(= MaxAFBelow30
-   (max (if (and (= S1 0) (< A1 30)) A1 0)
-        (max (if (and (= S2 0) (< A2 30)) A2 0)
-             (max (if (and (= S3 0) (< A3 30)) A3 0)
-                  (max (if (and (= S4 0) (< A4 30)) A4 0)
-                       (max (if (and (= S5 0) (< A5 30)) A5 0)
-                            (max (if (and (= S6 0) (< A6 30)) A6 0)
-                                 (if (and (= S7 0) (< A7 30)) A7 0)
-                                 )))))))
-
-;                            ))))))
-(= MinAFAbove30
-   (min (if (and (= S1 0) (> A1 30)) A1 0)
-        (min (if (and (= S2 0) (> A2 30)) A2 0)
-             (min (if (and (= S3 0) (> A3 30)) A3 0)
-                  (min (if (and (= S4 0) (> A4 30)) A4 0)
-                       (min (if (and (= S5 0) (> A5 30)) A5 0)
-                            (min (if (and (= S6 0) (> A6 30)) A6 0)
-                                 (if (and (= S7 0) (> A7 30)) A7 0)
-                                 )))))))
-; The average of these is 30, so their sum is 60
-(= (+ MaxAFBelow30 MinAFAbove30) 60)
+;(int MaxAFBelow30 0 29)
+;(int MinAFAbove30 31 116)
+;
+;(= MaxAFBelow30
+;   (max (if (and (= S1 0) (< A1 30)) A1 0)
+;        (max (if (and (= S2 0) (< A2 30)) A2 0)
+;             (max (if (and (= S3 0) (< A3 30)) A3 0)
+;                  (max (if (and (= S4 0) (< A4 30)) A4 0)
+;                       (max (if (and (= S5 0) (< A5 30)) A5 0)
+;                            (max (if (and (= S6 0) (< A6 30)) A6 0)
+;                                 (if (and (= S7 0) (< A7 30)) A7 0)
+;                                 )))))))
+;
+;;                            ))))))
+;(= MinAFAbove30
+;   (min (if (and (= S1 0) (> A1 30)) A1 0)
+;        (min (if (and (= S2 0) (> A2 30)) A2 0)
+;             (min (if (and (= S3 0) (> A3 30)) A3 0)
+;                  (min (if (and (= S4 0) (> A4 30)) A4 0)
+;                       (min (if (and (= S5 0) (> A5 30)) A5 0)
+;                            (min (if (and (= S6 0) (> A6 30)) A6 0)
+;                                 (if (and (= S7 0) (> A7 30)) A7 0)
+;                                 )))))))
+;; The average of these is 30, so their sum is 60
+;(= (+ MaxAFBelow30 MinAFAbove30) 60)
 
 ; average female age 
 (= (+ (if (= S1 0) A1 0)  
