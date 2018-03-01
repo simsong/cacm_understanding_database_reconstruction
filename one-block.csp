@@ -16,6 +16,8 @@
 ;; Problem setup 
 
 ;; Sexes (0:female  1:male)
+#define FEMALE 0
+#define MALE   1
 (int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1)
 (int S5 0 1) (int S6 0 1) (int S7 0 1)
 
@@ -24,22 +26,26 @@
 (int A5 1 115) (int A6 1 115) (int A7 1 115)
 
 ;; Races (0:black  1:white)
+#define BLACK 0
+#define WHITE 1
 (int R1 0 1) (int R2 0 1) (int R3 0 1) (int R4 0 1)
 (int R5 0 1) (int R6 0 1) (int R7 0 1)
 
 ;; Marital Status (0:single  1:married)
+#define SINGLE 0
+#define MARRIED 1
 (int M1 0 1) (int M2 0 1) (int M3 0 1) (int M4 0 1)
 (int M5 0 1) (int M6 0 1) (int M7 0 1)
 
 ;; Structural Zeros:
 ;;; Married people must be over 14. Set the minimum age based on the marriage flag
-(< (if (= M1 1) 14 0) A1)
-(< (if (= M2 1) 14 0) A2)
-(< (if (= M3 1) 14 0) A3)
-(< (if (= M4 1) 14 0) A4)
-(< (if (= M5 1) 14 0) A5)
-(< (if (= M6 1) 14 0) A6)
-(< (if (= M7 1) 14 0) A7)
+(< (if (= M1 MARRIED) 14 0) A1)
+(< (if (= M2 MARRIED) 14 0) A2)
+(< (if (= M3 MARRIED) 14 0) A3)
+(< (if (= M4 MARRIED) 14 0) A4)
+(< (if (= M5 MARRIED) 14 0) A5)
+(< (if (= M6 MARRIED) 14 0) A6)
+(< (if (= M7 MARRIED) 14 0) A7)
 
 
 ;; Reported tables
@@ -87,32 +93,33 @@
 ;;; We know that there are an even number of females
 ;;; Right now, this just has that there are no females of age 30
 ;;; and there are an equal number above and below
-(= (+ (if (and (= S1 0) (= A1 30)) 1 0)
-      (if (and (= S2 0) (= A2 30)) 1 0)      
-      (if (and (= S3 0) (= A3 30)) 1 0)      
-      (if (and (= S4 0) (= A4 30)) 1 0)      
-      (if (and (= S5 0) (= A5 30)) 1 0)      
-      (if (and (= S6 0) (= A6 30)) 1 0)      
-      (if (and (= S7 0) (= A7 30)) 1 0)
+(= (+ (if (and (= S1 FEMALE) (= A1 30)) 1 0)
+      (if (and (= S2 FEMALE) (= A2 30)) 1 0)      
+      (if (and (= S3 FEMALE) (= A3 30)) 1 0)      
+      (if (and (= S4 FEMALE) (= A4 30)) 1 0)      
+      (if (and (= S5 FEMALE) (= A5 30)) 1 0)      
+      (if (and (= S6 FEMALE) (= A6 30)) 1 0)      
+      (if (and (= S7 FEMALE) (= A7 30)) 1 0)
       ) 0)
 
-(= (+ (if (and (= S1 0) (< A1 30)) 1 0)
-      (if (and (= S2 0) (< A2 30)) 1 0)      
-      (if (and (= S3 0) (< A3 30)) 1 0)      
-      (if (and (= S4 0) (< A4 30)) 1 0)      
-      (if (and (= S5 0) (< A5 30)) 1 0)      
-      (if (and (= S6 0) (< A6 30)) 1 0)      
-      (if (and (= S7 0) (< A7 30)) 1 0)
+(= (+ (if (and (= S1 FEMALE) (< A1 30)) 1 0)
+      (if (and (= S2 FEMALE) (< A2 30)) 1 0)      
+      (if (and (= S3 FEMALE) (< A3 30)) 1 0)      
+      (if (and (= S4 FEMALE) (< A4 30)) 1 0)      
+      (if (and (= S5 FEMALE) (< A5 30)) 1 0)      
+      (if (and (= S6 FEMALE) (< A6 30)) 1 0)      
+      (if (and (= S7 FEMALE) (< A7 30)) 1 0)
       ) 2)
 
-(= (+ (if (and (= S1 0) (> A1 30)) 1 0)
-      (if (and (= S2 0) (> A2 30)) 1 0)      
-      (if (and (= S3 0) (> A3 30)) 1 0)      
-      (if (and (= S4 0) (> A4 30)) 1 0)      
-      (if (and (= S5 0) (> A5 30)) 1 0)      
-      (if (and (= S6 0) (> A6 30)) 1 0)      
-      (if (and (= S7 0) (> A7 30)) 1 0)
+(= (+ (if (and (= S1 FEMALE) (> A1 30)) 1 0)
+      (if (and (= S2 FEMALE) (> A2 30)) 1 0)      
+      (if (and (= S3 FEMALE) (> A3 30)) 1 0)      
+      (if (and (= S4 FEMALE) (> A4 30)) 1 0)      
+      (if (and (= S5 FEMALE) (> A5 30)) 1 0)      
+      (if (and (= S6 FEMALE) (> A6 30)) 1 0)      
+      (if (and (= S7 FEMALE) (> A7 30)) 1 0)
       ) 2)
+
 
 ;;; Median females is 30. There are an event number
 ;;; Let MaxAFBelow30 be the oldest female age under 30
@@ -145,107 +152,128 @@
 ;(= (+ MaxAFBelow30 MinAFAbove30) 60)
 
 ; average female age 
-(= (+ (if (= S1 0) A1 0)  
-      (if (= S2 0) A2 0)
-      (if (= S3 0) A3 0)
-      (if (= S4 0) A4 0)
-      (if (= S5 0) A5 0)
-      (if (= S6 0) A6 0)
-      (if (= S7 0) A7 0)
+(= (+ (if (= S1 FEMALE) A1 0)  
+      (if (= S2 FEMALE) A2 0)
+      (if (= S3 FEMALE) A3 0)
+      (if (= S4 FEMALE) A4 0)
+      (if (= S5 FEMALE) A5 0)
+      (if (= S6 FEMALE) A6 0)
+      (if (= S7 FEMALE) A7 0)
       )
    134) ; 33.5 * 4
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 2B Male:  n=3, median=30, average=44
 
-(= (+ S1 S2 S3 S4 S5 S6 S7) 4)  ;; 3 male  (female=0, male=1)
+
+(= (+ (if (= S1 MALE) 1 0)  
+      (if (= S2 MALE) 1 0)
+      (if (= S3 MALE) 1 0)
+      (if (= S4 MALE) 1 0)
+      (if (= S5 MALE) 1 0)
+      (if (= S6 MALE) 1 0)
+      (if (= S7 MALE) 1 0)
+      )
+   3) 
+
 
 ;;; Median age of males is 30
 ;;; We know that there are an odd number of males
 ;;; And there are three. So we should have one less than 30, one more, and one 30
-(= (+ (if (and (= S1 1) (= A1 30)) 1 0)
-      (if (and (= S2 1) (= A2 30)) 1 0)      
-      (if (and (= S3 1) (= A3 30)) 1 0)      
-      (if (and (= S4 1) (= A4 30)) 1 0)      
-      (if (and (= S5 1) (= A5 30)) 1 0)      
-      (if (and (= S6 1) (= A6 30)) 1 0)      
-      (if (and (= S7 1) (= A7 30)) 1 0)
-      ) 1)
+(= (+ (if (and (= S1 MALE) (= A1 30)) 1 0)
+      (if (and (= S2 MALE) (= A2 30)) 1 0)      
+      (if (and (= S3 MALE) (= A3 30)) 1 0)      
+      (if (and (= S4 MALE) (= A4 30)) 1 0)      
+      (if (and (= S5 MALE) (= A5 30)) 1 0)      
+      (if (and (= S6 MALE) (= A6 30)) 1 0)      
+      (if (and (= S7 MALE) (= A7 30)) 1 0)
+      )
+   1)
 
-(= (+ (if (and (= S1 1) (< A1 30)) 1 0)
-      (if (and (= S2 1) (< A2 30)) 1 0)      
-      (if (and (= S3 1) (< A3 30)) 1 0)      
-      (if (and (= S4 1) (< A4 30)) 1 0)      
-      (if (and (= S5 1) (< A5 30)) 1 0)      
-      (if (and (= S6 1) (< A6 30)) 1 0)      
-      (if (and (= S7 1) (< A7 30)) 1 0)
-      ) 1)
+(= (+ (if (and (= S1 MALE) (< A1 30)) 1 0)
+      (if (and (= S2 MALE) (< A2 30)) 1 0)      
+      (if (and (= S3 MALE) (< A3 30)) 1 0)      
+      (if (and (= S4 MALE) (< A4 30)) 1 0)      
+      (if (and (= S5 MALE) (< A5 30)) 1 0)      
+      (if (and (= S6 MALE) (< A6 30)) 1 0)      
+      (if (and (= S7 MALE) (< A7 30)) 1 0)
+      )
+   1)
 
-(= (+ (if (and (= S1 1) (> A1 30)) 1 0)
-      (if (and (= S2 1) (> A2 30)) 1 0)      
-      (if (and (= S3 1) (> A3 30)) 1 0)      
-      (if (and (= S4 1) (> A4 30)) 1 0)      
-      (if (and (= S5 1) (> A5 30)) 1 0)      
-      (if (and (= S6 1) (> A6 30)) 1 0)      
-      (if (and (= S7 1) (> A7 30)) 1 0)
-      ) 1)
+(= (+ (if (and (= S1 MALE) (> A1 30)) 1 0)
+      (if (and (= S2 MALE) (> A2 30)) 1 0)      
+      (if (and (= S3 MALE) (> A3 30)) 1 0)      
+      (if (and (= S4 MALE) (> A4 30)) 1 0)      
+      (if (and (= S5 MALE) (> A5 30)) 1 0)      
+      (if (and (= S6 MALE) (> A6 30)) 1 0)      
+      (if (and (= S7 MALE) (> A7 30)) 1 0)
+      )
+   1)
 
 ;; TODO: Add a median calculation for the 30
 
 ; average male age: 44
-(= (+ (if (= S1 0) A1 0)    ; average male age = 44
-      (if (= S2 0) A2 0)
-      (if (= S3 0) A3 0)
-      (if (= S4 0) A4 0)
-      (if (= S5 0) A5 0)
-      (if (= S6 0) A6 0)
-      (if (= S7 0) A7 0)
+(= (+ (if (= S1 MALE) A1 0)    ; average male age = 44
+      (if (= S2 MALE) A2 0)
+      (if (= S3 MALE) A3 0)
+      (if (= S4 MALE) A4 0)
+      (if (= S5 MALE) A5 0)
+      (if (= S6 MALE) A6 0)
+      (if (= S7 MALE) A7 0)
       )
    (* 3 44))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 2C Black.  n=4  median=51  average=48.5
 
-(= (+ R1 R2 R3 R4 R5 R6 R7) 4)  ;; 4 black (black=1, white=0)
+(= (+ (if (= R1 BLACK) 1 0)  
+      (if (= R2 BLACK) 1 0)
+      (if (= R3 BLACK) 1 0)
+      (if (= R4 BLACK) 1 0)
+      (if (= R5 BLACK) 1 0)
+      (if (= R6 BLACK) 1 0)
+      (if (= R7 BLACK) 1 0)
+      )
+   4) 
 
 ;;; Median age of blacks is 51
 ;;; So the same number are over and under 51
 ;;; We could tighten this up...
-(= (+ (if (and (= R1 0) (= A1 51)) 1 0)
-      (if (and (= R2 0) (= A2 51)) 1 0)      
-      (if (and (= R3 0) (= A3 51)) 1 0)      
-      (if (and (= R4 0) (= A4 51)) 1 0)      
-      (if (and (= R5 0) (= A5 51)) 1 0)      
-      (if (and (= R6 0) (= A6 51)) 1 0)      
-      (if (and (= R7 0) (= A7 51)) 1 0)
+(= (+ (if (and (= R1 BLACK) (= A1 51)) 1 0)
+      (if (and (= R2 BLACK) (= A2 51)) 1 0)      
+      (if (and (= R3 BLACK) (= A3 51)) 1 0)      
+      (if (and (= R4 BLACK) (= A4 51)) 1 0)      
+      (if (and (= R5 BLACK) (= A5 51)) 1 0)      
+      (if (and (= R6 BLACK) (= A6 51)) 1 0)      
+      (if (and (= R7 BLACK) (= A7 51)) 1 0)
       ) 0)
 
-(= (+ (if (and (= R1 0) (< A1 51)) 1 0)
-      (if (and (= R2 0) (< A2 51)) 1 0)      
-      (if (and (= R3 0) (< A3 51)) 1 0)      
-      (if (and (= R4 0) (< A4 51)) 1 0)      
-      (if (and (= R5 0) (< A5 51)) 1 0)      
-      (if (and (= R6 0) (< A6 51)) 1 0)      
-      (if (and (= R7 0) (< A7 51)) 1 0)
+(= (+ (if (and (= R1 BLACK) (< A1 51)) 1 0)
+      (if (and (= R2 BLACK) (< A2 51)) 1 0)      
+      (if (and (= R3 BLACK) (< A3 51)) 1 0)      
+      (if (and (= R4 BLACK) (< A4 51)) 1 0)      
+      (if (and (= R5 BLACK) (< A5 51)) 1 0)      
+      (if (and (= R6 BLACK) (< A6 51)) 1 0)      
+      (if (and (= R7 BLACK) (< A7 51)) 1 0)
       ) 2)
 
-(= (+ (if (and (= R1 0) (> A1 51)) 1 0)
-      (if (and (= R2 0) (> A2 51)) 1 0)      
-      (if (and (= R3 0) (> A3 51)) 1 0)      
-      (if (and (= R4 0) (> A4 51)) 1 0)      
-      (if (and (= R5 0) (> A5 51)) 1 0)      
-      (if (and (= R6 0) (> A6 51)) 1 0)      
-      (if (and (= R7 0) (> A7 51)) 1 0)
+(= (+ (if (and (= R1 BLACK) (> A1 51)) 1 0)
+      (if (and (= R2 BLACK) (> A2 51)) 1 0)      
+      (if (and (= R3 BLACK) (> A3 51)) 1 0)      
+      (if (and (= R4 BLACK) (> A4 51)) 1 0)      
+      (if (and (= R5 BLACK) (> A5 51)) 1 0)      
+      (if (and (= R6 BLACK) (> A6 51)) 1 0)      
+      (if (and (= R7 BLACK) (> A7 51)) 1 0)
       ) 2)
 
 ; average black age = 48.5 (x 4 = 194)
-(= (+ (if (= R1 0) A1 0)   
-      (if (= R2 0) A2 0)
-      (if (= R3 0) A3 0)
-      (if (= R4 0) A4 0)
-      (if (= R5 0) A5 0)
-      (if (= R6 0) A6 0)
-      (if (= R7 0) A7 0)
+(= (+ (if (= R1 BLACK) A1 0)   
+      (if (= R2 BLACK) A2 0)
+      (if (= R3 BLACK) A3 0)
+      (if (= R4 BLACK) A4 0)
+      (if (= R5 BLACK) A5 0)
+      (if (= R6 BLACK) A6 0)
+      (if (= R7 BLACK) A7 0)
       )
    194)
 
@@ -253,51 +281,51 @@
 ;;
 ;; 2D. White. n=3 median=24, mean=24  (white=1)
 
-(= (+ (if (= R1 1) 1 0)
-      (if (= R2 1) 1 0)      
-      (if (= R3 1) 1 0)      
-      (if (= R4 1) 1 0)      
-      (if (= R5 1) 1 0)      
-      (if (= R6 1) 1 0)      
-      (if (= R7 1) 1 0)
+(= (+ (if (= R1 WHITE) 1 0)
+      (if (= R2 WHITE) 1 0)      
+      (if (= R3 WHITE) 1 0)      
+      (if (= R4 WHITE) 1 0)      
+      (if (= R5 WHITE) 1 0)      
+      (if (= R6 WHITE) 1 0)      
+      (if (= R7 WHITE) 1 0)
       ) 3)
 
 
 ;;; Median age of whites is 24
-(= (+ (if (and (= R1 1) (= A1 24)) 1 0)
-      (if (and (= R2 1) (= A2 24)) 1 0)      
-      (if (and (= R3 1) (= A3 24)) 1 0)      
-      (if (and (= R4 1) (= A4 24)) 1 0)      
-      (if (and (= R5 1) (= A5 24)) 1 0)      
-      (if (and (= R6 1) (= A6 24)) 1 0)      
-      (if (and (= R7 1) (= A7 24)) 1 0)
+(= (+ (if (and (= R1 WHITE) (= A1 24)) 1 0)
+      (if (and (= R2 WHITE) (= A2 24)) 1 0)      
+      (if (and (= R3 WHITE) (= A3 24)) 1 0)      
+      (if (and (= R4 WHITE) (= A4 24)) 1 0)      
+      (if (and (= R5 WHITE) (= A5 24)) 1 0)      
+      (if (and (= R6 WHITE) (= A6 24)) 1 0)      
+      (if (and (= R7 WHITE) (= A7 24)) 1 0)
       ) 1)
 
-(= (+ (if (and (= R1 1) (< A1 24)) 1 0)
-      (if (and (= R2 1) (< A2 24)) 1 0)      
-      (if (and (= R3 1) (< A3 24)) 1 0)      
-      (if (and (= R4 1) (< A4 24)) 1 0)      
-      (if (and (= R5 1) (< A5 24)) 1 0)      
-      (if (and (= R6 1) (< A6 24)) 1 0)      
-      (if (and (= R7 1) (< A7 24)) 1 0)
+(= (+ (if (and (= R1 WHITE) (< A1 24)) 1 0)
+      (if (and (= R2 WHITE) (< A2 24)) 1 0)      
+      (if (and (= R3 WHITE) (< A3 24)) 1 0)      
+      (if (and (= R4 WHITE) (< A4 24)) 1 0)      
+      (if (and (= R5 WHITE) (< A5 24)) 1 0)      
+      (if (and (= R6 WHITE) (< A6 24)) 1 0)      
+      (if (and (= R7 WHITE) (< A7 24)) 1 0)
       ) 1)
 
-(= (+ (if (and (= R1 1) (> A1 24)) 1 0)
-      (if (and (= R2 1) (> A2 24)) 1 0)      
-      (if (and (= R3 1) (> A3 24)) 1 0)      
-      (if (and (= R4 1) (> A4 24)) 1 0)      
-      (if (and (= R5 1) (> A5 24)) 1 0)      
-      (if (and (= R6 1) (> A6 24)) 1 0)      
-      (if (and (= R7 1) (> A7 24)) 1 0)
+(= (+ (if (and (= R1 WHITE) (> A1 24)) 1 0)
+      (if (and (= R2 WHITE) (> A2 24)) 1 0)      
+      (if (and (= R3 WHITE) (> A3 24)) 1 0)      
+      (if (and (= R4 WHITE) (> A4 24)) 1 0)      
+      (if (and (= R5 WHITE) (> A5 24)) 1 0)      
+      (if (and (= R6 WHITE) (> A6 24)) 1 0)      
+      (if (and (= R7 WHITE) (> A7 24)) 1 0)
       ) 1)
 
-(= (+ (if (= R1 1) A1 0)   ; average white age = 72/3 = 24
-      (if (= R2 1) A2 0)
-      (if (= R3 1) A3 0)
-      (if (= R4 1) A4 0)
-      (if (= R5 1) A5 0)
-      (if (= R6 1) A6 0)
-      (if (= R7 1) A7 0)
+(= (+ (if (= R1 WHITE) A1 0)   ; average white age = 72/3 = 24
+      (if (= R2 WHITE) A2 0)
+      (if (= R3 WHITE) A3 0)
+      (if (= R4 WHITE) A4 0)
+      (if (= R5 WHITE) A5 0)
+      (if (= R6 WHITE) A6 0)
+      (if (= R7 WHITE) A7 0)
       )
    (* 3 24))
 
@@ -321,56 +349,60 @@
 ;;  n=4, median=51 mean=54
 
 ;; Count queries
-(= (+ (if (= M1 1) 1 0)    ; average age of single adults = 
-      (if (= M2 1) 1 0)
-      (if (= M3 1) 1 0)
-      (if (= M4 1) 1 0)
-      (if (= M5 1) 1 0)
-      (if (= M6 1) 1 0)
-      (if (= M7 1) 1 0)
+
+(= (+ (if (= M1 MARRIED) 1 0)    ; average age of single adults = 
+      (if (= M2 MARRIED) 1 0)
+      (if (= M3 MARRIED) 1 0)
+      (if (= M4 MARRIED) 1 0)
+      (if (= M5 MARRIED) 1 0)
+      (if (= M6 MARRIED) 1 0)
+      (if (= M7 MARRIED) 1 0)
       )
    4)
 
 ;; Median age of married adults is = 51
 ;; There are 4, so there are 2 less than 51 and 2 more than 51
 
-(= (+ (if (and (= M1 1) (< A1 51)) 1 0)
-      (if (and (= M2 1) (< A2 51)) 1 0)      
-      (if (and (= M3 1) (< A3 51)) 1 0)      
-      (if (and (= M4 1) (< A4 51)) 1 0)      
-      (if (and (= M5 1) (< A5 51)) 1 0)      
-      (if (and (= M6 1) (< A6 51)) 1 0)      
-      (if (and (= M7 1) (< A7 51)) 1 0)
-      ) 2)
+(= (+ (if (and (= M1 MARRIED) (< A1 51)) 1 0)
+      (if (and (= M2 MARRIED) (< A2 51)) 1 0)      
+      (if (and (= M3 MARRIED) (< A3 51)) 1 0)      
+      (if (and (= M4 MARRIED) (< A4 51)) 1 0)      
+      (if (and (= M5 MARRIED) (< A5 51)) 1 0)      
+      (if (and (= M6 MARRIED) (< A6 51)) 1 0)      
+      (if (and (= M7 MARRIED) (< A7 51)) 1 0)
+      )
+   2)
 
-(= (+ (if (and (= M1 1) (= A1 51)) 1 0)
-      (if (and (= M2 1) (= A2 51)) 1 0)      
-      (if (and (= M3 1) (= A3 51)) 1 0)      
-      (if (and (= M4 1) (= A4 51)) 1 0)      
-      (if (and (= M5 1) (= A5 51)) 1 0)      
-      (if (and (= M6 1) (= A6 51)) 1 0)      
-      (if (and (= M7 1) (= A7 51)) 1 0)
-      ) 0)
+(= (+ (if (and (= M1 MARRIED) (= A1 51)) 1 0)
+      (if (and (= M2 MARRIED) (= A2 51)) 1 0)      
+      (if (and (= M3 MARRIED) (= A3 51)) 1 0)      
+      (if (and (= M4 MARRIED) (= A4 51)) 1 0)      
+      (if (and (= M5 MARRIED) (= A5 51)) 1 0)      
+      (if (and (= M6 MARRIED) (= A6 51)) 1 0)      
+      (if (and (= M7 MARRIED) (= A7 51)) 1 0)
+      )
+   0)
 
-(= (+ (if (and (= M1 1) (> A1 51)) 1 0)
-      (if (and (= M2 1) (> A2 51)) 1 0)      
-      (if (and (= M3 1) (> A3 51)) 1 0)      
-      (if (and (= M4 1) (> A4 51)) 1 0)      
-      (if (and (= M5 1) (> A5 51)) 1 0)      
-      (if (and (= M6 1) (> A6 51)) 1 0)      
-      (if (and (= M7 1) (> A7 51)) 1 0)
-      ) 2)
+(= (+ (if (and (= M1 MARRIED) (> A1 51)) 1 0)
+      (if (and (= M2 MARRIED) (> A2 51)) 1 0)      
+      (if (and (= M3 MARRIED) (> A3 51)) 1 0)      
+      (if (and (= M4 MARRIED) (> A4 51)) 1 0)      
+      (if (and (= M5 MARRIED) (> A5 51)) 1 0)      
+      (if (and (= M6 MARRIED) (> A6 51)) 1 0)      
+      (if (and (= M7 MARRIED) (> A7 51)) 1 0)
+      )
+   2)
 
 
 ;; Mean age = 54
 
-(= (+ (if (and (= M1 1) (> A1 17)) A1 0)    ; average age of single adults = 
-      (if (and (= M2 1) (> A2 17)) A2 0)
-      (if (and (= M3 1) (> A3 17)) A3 0)
-      (if (and (= M4 1) (> A4 17)) A4 0)
-      (if (and (= M5 1) (> A5 17)) A5 0)
-      (if (and (= M6 1) (> A6 17)) A6 0)
-      (if (and (= M7 1) (> A7 17)) A7 0)
+(= (+ (if (and (= M1 MARRIED) (> A1 17)) A1 0)    ; average age of single adults = 
+      (if (and (= M2 MARRIED) (> A2 17)) A2 0)
+      (if (and (= M3 MARRIED) (> A3 17)) A3 0)
+      (if (and (= M4 MARRIED) (> A4 17)) A4 0)
+      (if (and (= M5 MARRIED) (> A5 17)) A5 0)
+      (if (and (= M6 MARRIED) (> A6 17)) A6 0)
+      (if (and (= M7 MARRIED) (> A7 17)) A7 0)
       )
    (* 4 54))
 
@@ -380,63 +412,64 @@
 ;; 4A. Black Females
 
 ;;; Three black females (R=0, S=0)
-(= (+ (if (and (= R1 0) (= S1 0)) 1 0)
-      (if (and (= R2 0) (= S2 0)) 1 0)   
-      (if (and (= R3 0) (= S3 0)) 1 0)   
-      (if (and (= R4 0) (= S4 0)) 1 0)   
-      (if (and (= R5 0) (= S5 0)) 1 0)   
-      (if (and (= R6 0) (= S6 0)) 1 0)
-      (if (and (= R7 0) (= S7 0)) 1 0)
+(= (+ (if (and (= R1 BLACK) (= S1 FEMALE)) 1 0)
+      (if (and (= R2 BLACK) (= S2 FEMALE)) 1 0)   
+      (if (and (= R3 BLACK) (= S3 FEMALE)) 1 0)   
+      (if (and (= R4 BLACK) (= S4 FEMALE)) 1 0)   
+      (if (and (= R5 BLACK) (= S5 FEMALE)) 1 0)   
+      (if (and (= R6 BLACK) (= S6 FEMALE)) 1 0)
+      (if (and (= R7 BLACK) (= S7 FEMALE)) 1 0)
       ) 3)
 
 ;; Median age black females: 36.
 ;; 
-(= (+ (if (and (= R1 0) (= S1 0) (< A1 51)) 1 0)
-      (if (and (= R2 0) (= S2 0) (< A2 51)) 1 0)      
-      (if (and (= R3 0) (= S3 0) (< A3 51)) 1 0)      
-      (if (and (= R4 0) (= S4 0) (< A4 51)) 1 0)      
-      (if (and (= R5 0) (= S5 0) (< A5 51)) 1 0)      
-      (if (and (= R6 0) (= S6 0) (< A6 51)) 1 0)      
-      (if (and (= R7 0) (= S7 0) (< A7 51)) 1 0)
+(= (+ (if (and (= R1 BLACK) (= S1 FEMALE) (< A1 36)) 1 0)
+      (if (and (= R2 BLACK) (= S2 FEMALE) (< A2 36)) 1 0)      
+      (if (and (= R3 BLACK) (= S3 FEMALE) (< A3 36)) 1 0)      
+      (if (and (= R4 BLACK) (= S4 FEMALE) (< A4 36)) 1 0)      
+      (if (and (= R5 BLACK) (= S5 FEMALE) (< A5 36)) 1 0)      
+      (if (and (= R6 BLACK) (= S6 FEMALE) (< A6 36)) 1 0)      
+      (if (and (= R7 BLACK) (= S7 FEMALE) (< A7 36)) 1 0)
       )
    1)
 
-(= (+ (if (and (= R1 0) (= S1 0) (= A1 51)) 1 0)
-      (if (and (= R2 0) (= S2 0) (= A2 51)) 1 0)      
-      (if (and (= R3 0) (= S3 0) (= A3 51)) 1 0)      
-      (if (and (= R4 0) (= S4 0) (= A4 51)) 1 0)      
-      (if (and (= R5 0) (= S5 0) (= A5 51)) 1 0)      
-      (if (and (= R6 0) (= S6 0) (= A6 51)) 1 0)      
-      (if (and (= R7 0) (= S7 0) (= A7 51)) 1 0)
+(= (+ (if (and (= R1 BLACK) (= S1 FEMALE) (= A1 36)) 1 0)
+      (if (and (= R2 BLACK) (= S2 FEMALE) (= A2 36)) 1 0)      
+      (if (and (= R3 BLACK) (= S3 FEMALE) (= A3 36)) 1 0)      
+      (if (and (= R4 BLACK) (= S4 FEMALE) (= A4 36)) 1 0)      
+      (if (and (= R5 BLACK) (= S5 FEMALE) (= A5 36)) 1 0)      
+      (if (and (= R6 BLACK) (= S6 FEMALE) (= A6 36)) 1 0)      
+      (if (and (= R7 BLACK) (= S7 FEMALE) (= A7 36)) 1 0)
+      )
+   1)
+;
+(= (+ (if (and (= R1 BLACK) (= S1 FEMALE) (> A1 36)) 1 0)
+      (if (and (= R2 BLACK) (= S2 FEMALE) (> A2 36)) 1 0)      
+      (if (and (= R3 BLACK) (= S3 FEMALE) (> A3 36)) 1 0)      
+      (if (and (= R4 BLACK) (= S4 FEMALE) (> A4 36)) 1 0)      
+      (if (and (= R5 BLACK) (= S5 FEMALE) (> A5 36)) 1 0)      
+      (if (and (= R6 BLACK) (= S6 FEMALE) (> A6 36)) 1 0)      
+      (if (and (= R7 BLACK) (= S7 FEMALE) (> A7 36)) 1 0)
       )
    1)
 
-(= (+ (if (and (= R1 0) (= S1 0) (> A1 51)) 1 0)
-      (if (and (= R2 0) (= S2 0) (> A2 51)) 1 0)      
-      (if (and (= R3 0) (= S3 0) (> A3 51)) 1 0)      
-      (if (and (= R4 0) (= S4 0) (> A4 51)) 1 0)      
-      (if (and (= R5 0) (= S5 0) (> A5 51)) 1 0)      
-      (if (and (= R6 0) (= S6 0) (> A6 51)) 1 0)      
-      (if (and (= R7 0) (= S7 0) (> A7 51)) 1 0)
-      )
-   1)
-
-;; Mean age = 36.667; total age is 110
-(= (+ (if (and (= R1 0) (= S1 0)) A1 0)
-      (if (and (= R2 0) (= S2 0)) A2 0)      
-      (if (and (= R3 0) (= S3 0)) A3 0)      
-      (if (and (= R4 0) (= S4 0)) A4 0)      
-      (if (and (= R5 0) (= S5 0)) A5 0)      
-      (if (and (= R6 0) (= S6 0)) A6 0)      
-      (if (and (= R7 0) (= S7 0)) A7 0)
-      )
-   110)
+;;; Mean age = 36.667; total age is 110
+;(= (+ (if (and (= R1 0) (= S1 0)) A1 0)
+;      (if (and (= R2 0) (= S2 0)) A2 0)      
+;      (if (and (= R3 0) (= S3 0)) A3 0)      
+;      (if (and (= R4 0) (= S4 0)) A4 0)      
+;      (if (and (= R5 0) (= S5 0)) A5 0)      
+;      (if (and (= R6 0) (= S6 0)) A6 0)      
+;      (if (and (= R7 0) (= S7 0)) A7 0)
+;      )
+;   110)
 
 
 
 ;; Solution. To verify constraints, uncomment these and everything should satisfy!
 ;; female=0        black=0   single=0
 ;; male  =1        white=1   married=1
+#ifdef USE_SOLUTION
 (= S1 1) (= A1 18) (= R1 1) (= M1 0)
 (= S2 0) (= A2 24) (= R2 1) (= M2 0)
 (= S3 1) (= A3 30) (= R3 1) (= M3 1)
@@ -444,5 +477,5 @@
 (= S5 1) (= A5 84) (= R5 0) (= M5 1)
 (= S6 0) (= A6  8) (= R6 0) (= M6 0)
 (= S7 0) (= A7 66) (= R7 0) (= M7 1)
-
+#endif
 

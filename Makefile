@@ -26,14 +26,17 @@ vars.tex: make_vars.py constraints.sugar.out
 medians.tex: median_calculator.py tytable.py
 	python median_calculator.py
 
-constraints.sugar.out: constraints.csp  Makefile $(PROBLEM)
+constraints.sugar.out: constraints.csp  Makefile 
 	perl sugar-v2-3-2/bin/sugar -jar sugar-v2-3-2/bin/sugar-v2-3-2.jar \
              -solver $(SOLVER) -keep -tmp constraints_ \
-             -output constraints.out $(PROBLEM) > constraints.sugar.out
+             -output constraints.out constraints.csp > constraints.sugar.out
 	@if grep ERROR constraints.sugar.out >/dev/null ; then \
 	     echo ========= ERROR ============ ; \
 	     cat constraints.sugar.out ; exit 1; \
 	     fi
+
+constraints.csp: $(PROBLEM)
+	cpp $(PROBLEM) | sed 's/^#/;/' > constraints.csp
 
 clean:
 	latexmk -c -C 
