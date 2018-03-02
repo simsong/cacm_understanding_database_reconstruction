@@ -3,7 +3,7 @@
 # two-households.csp 11 people
 # one-block.csp       7 people, with medians
 
-SOLVER="picosat -s 2"
+SOLVER="picosat -s 3"
 PROBLEM=one-block.csp
 
 all: white_paper.pdf toy_mechanism.pdf
@@ -20,7 +20,7 @@ toy_regression.pdf: toy_regression.py
 
 solve:	constraints.sugar.out
 
-vars.tex: make_vars.py constraints.sugar.out
+vars.tex: make_vars.py constraints.sugar.out id_table.tex
 	python make_vars.py  constraints.sugar.out constraints_.cnf
 
 medians.tex: median_calculator.py tytable.py

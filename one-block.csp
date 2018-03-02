@@ -14,6 +14,8 @@
 
 
 ;; Problem setup 
+#define USE_4A        1
+;#define USE_SOLUTION  0
 
 ;; Sexes (0:female  1:male)
 #define FEMALE 0
@@ -411,6 +413,7 @@
 ;;
 ;; 4A. Black Females
 
+#if USE_4A
 ;;; Three black females (R=0, S=0)
 (= (+ (if (and (= R1 BLACK) (= S1 FEMALE)) 1 0)
       (if (and (= R2 BLACK) (= S2 FEMALE)) 1 0)   
@@ -454,16 +457,16 @@
    1)
 
 ;;; Mean age = 36.667; total age is 110
-;(= (+ (if (and (= R1 0) (= S1 0)) A1 0)
-;      (if (and (= R2 0) (= S2 0)) A2 0)      
-;      (if (and (= R3 0) (= S3 0)) A3 0)      
-;      (if (and (= R4 0) (= S4 0)) A4 0)      
-;      (if (and (= R5 0) (= S5 0)) A5 0)      
-;      (if (and (= R6 0) (= S6 0)) A6 0)      
-;      (if (and (= R7 0) (= S7 0)) A7 0)
-;      )
-;   110)
-
+(= (+ (if (and (= R1 BLACK) (= S1 FEMALE)) A1 0)
+      (if (and (= R2 BLACK) (= S2 FEMALE)) A2 0)      
+      (if (and (= R3 BLACK) (= S3 FEMALE)) A3 0)      
+      (if (and (= R4 BLACK) (= S4 FEMALE)) A4 0)      
+      (if (and (= R5 BLACK) (= S5 FEMALE)) A5 0)      
+      (if (and (= R6 BLACK) (= S6 FEMALE)) A6 0)      
+      (if (and (= R7 BLACK) (= S7 FEMALE)) A7 0)
+      )
+   110)
+#endif
 
 
 ;; Solution. To verify constraints, uncomment these and everything should satisfy!

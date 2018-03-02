@@ -13,9 +13,15 @@ def tally_dimacs_file(dimacs_file):
             return (int(fields[2]),int(fields[3]))
             
 
-sexmap = {"0":"M", "1":"F"}
-racemap = {"0":"W", "1":"B"}
+def reverse_map(m):
+    return {v: k for k, v in m.items()}
+
+sexmap = {"1":"M", "0":"F"}
+rsexmap = reverse_map(sexmap)
+racemap = {"1":"W", "0":"B"}
+rracemap = reverse_map(racemap)
 marriagemap = {"0":"S", "1":"M"}
+rmarraigemap = reverse_map(marriagemap)
 
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
@@ -29,7 +35,24 @@ if __name__=="__main__":
     # Create the solved table
     import sys
     
+    # vars[] is the mapping of the sugar variable to the solution
     vars = {}
+    def unmap(var):
+        # Given a variable that is to be unmapped (e.g. A2)
+        # transform it to text
+        try:
+            rvar = vars[var]        # rvar is what we are returning
+        except KeyError:
+            return var
+        if var[0]=='S':
+            return sexmap[rvar]
+        if var[0]=='R':
+            return racemap[rvar]
+        if var[0]=='M':
+            return marriagemap[rvar]
+        # Must be an age
+        return rvar
+
     with open(args.sugar_output,"r") as f:
         for line in f:
             line = line.strip()
@@ -51,10 +74,11 @@ if __name__=="__main__":
                                 sexmap[vars["S"+si]],
                                 age))
         
+    # Now create the solved table
     with open("id_table.tex","r") as fin:
         with open("id_table_solved.tex","w") as fout:
             for line in fin:
-                fout.write(" ".join([vars.get(var,var) for var in line.split(" ")]))
+                fout.write(" ".join([ unmap(var) for var in line.split(" ")]))
                     
     with open("vars.tex","w") as f:
         print("\\newcommand\\NumConstraintLines{{\\xspace{:,d}\\xspace}}"

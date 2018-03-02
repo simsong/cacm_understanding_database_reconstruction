@@ -245,24 +245,24 @@ sometimes called ``the rule of three.''
      &                           &       & \multicolumn{2}{|c|}{Age} \\
 Item & Group                     & Count & Median & Average \\
 \hline
-  1A & Total Population          & 7     &  30    & 38 \\
+  1A & total population          & 7     &  30    & 38 \\
 \hline
-  2A & Female                    & 4     &  30    & 33.5 \\
-  2B & Male                      & 3     &  30    & 44 \\
+  2A & female                    & 4     &  30    & 33.5 \\
+  2B & male                      & 3     &  30    & 44 \\
   2C & Black or African American & 4     &  51    & 48.5 \\
   2D & White                     & 3     &  24    & 24 \\
 \hline
-  3A & Single adults             & \cens & \cens  & \cens \\
-  3B & Married adults            & 4     & 51     & 54 \\
+  3A & single adults             & \cens & \cens  & \cens \\
+  3B & married adults            & 4     & 51     & 54 \\
 \hline
-  4A & Black or African American females             & 3     & 36     & 36.7 \\
-  4A & Black or African American males               & \cens & \cens  & \cens \\
-  4B & White males               & \cens & \cens  & \cens \\
-  4B & White females             & \cens & \cens  & \cens \\
+  4A & Black or African American female              & 3     & 36     & 36.7 \\
+  4A & Black or African American male                & \cens & \cens  & \cens \\
+  4B & White male                & \cens & \cens  & \cens \\
+  4B & White female              & \cens & \cens  & \cens \\
 \hline
-  5A & Persons under 5 years     & \cens & \cens  & \cens \\
-  5B & Persons under 18 years    & \cens & \cens  & \cens \\
-  5C & Persons 64 years or over  & \cens & \cens  & \cens \\
+  5A & persons under 5 years     & \cens & \cens  & \cens \\
+  5B & persons under 18 years    & \cens & \cens  & \cens \\
+  5C & persons 64 years or over  & \cens & \cens  & \cens \\
 \hline
 \multicolumn{5}{l}{Note: Married persons must be 15 or over}
 \end{tabular}
@@ -325,8 +325,8 @@ Person & Sex & Race & Status  & Age \\
 \\
 \multicolumn{1}{l}{Key:}\\
 \hline
-male   &  0  &     & \\
-female &  1  &     & \\
+female &  0  &     & \\
+male   &  1  &     & \\
 \hline
 black  &     &     &  0   & \\
 white  &     &     &  1   & \\
@@ -341,20 +341,23 @@ married&     &     &      &   1\\
 \end{center}
 
 To continue with our example, statistic 2B contains three
-constraints. In our example, males are represented by 0s and females
-by 1s, so the constraint that there are four females can be represented as:
+constraints. In our example, female persons
+are represented by 0
+and male persons by 1, so the constraint that there are four female persons can be represented as:
 
 \begin{equation}\label{eq1}
-S1 + S2 + S3 + S3 + S5 + S6 + S7 = 4
+S1 + S2 + S3 + S3 + S5 + S6 + S7 = 3
 \end{equation}
 
-or
+Alternatively, we could create subtract each variable $S_n$ from one
+to create a variable that is 1 for male and 0 for female. With this
+notation, a constraint for the number of male persons could be written as:
 
-\begin{equation}\label{eq1}
+\begin{equation}
 (1-S1) + (1-S2) + (1-S3) + (1-S3) + (1-S5) + (1-S6) + (1-S7) = 3
 \end{equation}
 
-The average age of the males is thus equal to;
+From here, we can write a constraint for the average age of the male persons:
 
 \begin{equation}
 \frac{
@@ -370,39 +373,38 @@ programming language.
 
 
 Once all the published statistics
-into equations like the ones above, the equations together form a
-system of many equations in 50 unknowns.
-There is a \textit{solution universe} of all possible solutions to
+are translated into constraints, the equations together form a
+system of many 21 variables with 28 unknowns. However, there are
+other, less obvious constraints. One constraint is that the variables
+are all integers. Another constraint, imposed by the statistical
+agency, is that there is a minimum age difference between a child and
+their parent.
+
+There exists a \textit{solution universe} of all the possible solutions to
 this set of simultaneous equations. If there is a single possible
 solution, then the published statistics completely reveal the
-underlying confidential data---the \emph{ground truth}. However, if
+underlying confidential data---the ground truth. However, if
 there is more than one possible solution, then one of those solutions
 is correct, and the others are not. If the equations have no solution,
 then the set of published statistics is inconsistent.
 
 \section{Performing the Attack}
-A straightforward but possibly inefficient approach to solving this
+A straightforward but wildly inefficient approach to solving this
 system of simultaneous equations is to perform a brute force
 search---that is, to try all possible values of all possible variables
 and record the ones that work.
 
 Ordinarily a brute force search on even this toy problem would be
-unreasonable: there are 10 age variables that can range from 0,...,120,
-30 binary variables (household, sex and race), and ten trinary
-variables. All together, there are $120^{10} \times 2^{30} \times
-3^{10} \approx 4 \times 10^{34}$ possible combinations. Even if we
-could try a billion a second, trying all possible combinations would
-take a billion billion years.
+unreasonable: there are 7 age variables that can range from 0 to 115
+and 21 binary variables (sex, race race and marital status). All
+together, there are $116^{10} \times 2^{21} \approx 9.25
+\times 10^{26}$ possible combinations. Even if we could try a billion
+a second, trying all possible combinations would take 90,000 trillion
+years. 
 
-Those familiar with complexity theory will have recognized by now that
-the system of variables can be expressed as a satisfiability (SAT)
-problem of purely Boolean variables. This is done by encoding each of the
-integer and trinary variables as themselves being derived
-from a set of Boolean variables with still more constraints. Encoding
-the DRA as a SAT problem allows it to be solved using a SAT solver, which are 
-programs that have been developed over the past two
-decades that use sophisticated heuristics that can rapidly solve many
-SAT problems.
+But there is no need to try all possible combinations: the highly
+constrained system can frequently be solved automatically using a
+program called a Satisfiability (SAT) solver. 
 
 Those not familiar with modern SAT solvers may be somewhat
 incredulous at trying to  solve
@@ -423,28 +425,40 @@ can often solve hard structured problems with over a million variables and
 several million constraints.''\cite[references omitted]{Gomes200889}.
 
 Many SAT solvers take their input in the so-called DIMACS file format,
-which specifies a single equation in conjunctive normal form (CNF). We use
-Sugar\cite{sugar} to transform our system of constraints into DIMACS
-format. Surgar's input is a series of
+which specifies a single equation in conjunctive normal form (CNF). To use these solvers, a
+preprocessor transforms the equations into CNF, runs the SAT solver,
+and then translates the results back. The program we use below is
+called Sugar\cite{sugar}, which takes as input a a series of
 \textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
 example, the constraint in Equation~\ref{eq1} can be encoded as the following
 s-expression:
 \begin{equation}
-\texttt{(= (+ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10) 400)}
+\texttt{(= (+ S1 S2 S3 S4 S5 S6 S7) 3)}
 \end{equation}
 
-Notice that we do not encode the division operator. Because SAT
-solvers can only perform operations on Boolean values, an integer division
-operator would not yield an exact solutions due to integer round-off error.
+Likewise, constraint for mean age can be encoded as:
 
-Our source input file consists of \NumSExpressions s-expressions in \NumConstraintLines{} lines (minus comments).\footnote{The entire file can be downloaded from our website \emph{ANONYMIZED}.}
+\begin{equation}
+\texttt{(= (+ A1 A2 A3 A4 A5 A6 A7)\\ (* 7 38))}
+\end{equation}
+
+
+Notice that we avoid round-off error by not encoding the division
+operator. This is vital, as the SAT encoding used by Sugar only allows
+for integer arithmetic. 
+
+Our source input file consists of \NumSExpressions s-expressions in \NumConstraintLines{} lines (minus comments).\footnote{The entire file can be downloaded from our website.}
 This converts into
 \NumVariables Boolean variables and \NumClauses CNF clauses. Using the
 open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
-to solve this system in 11.86 seconds on a 2013 MacBook Pro with a 2.8GHz Intel
-i7 processor and 16GiB of RAM (although the program was not limited by RAM). Output is given in Table~\ref{sugarbig} and is tabulated for readability and sorted by household.
+to solve this system in typically less than 2 seconds on a 2013 MacBook Pro with a 2.8GHz Intel
+i7 processor and 16GiB of RAM (although the program was not limited by
+RAM). Output is given in Table~\ref{sugarbig} and is tabulated for readability.
 
-Examining the output, we see that 8 of the 10 fictional respondents are exactly solved, while the remaining two are each off by 4 years (one 4 years too high, the other 4 years too low, so that the average age constraint is maintained). In this case there are a number of permutations of children's ages that satisfy the constraints. We could eliminate this by adding more constraints. Indeed, the size and characteristics of the solution set can be explored by systematically adding and removing additional constraints. 
+Examining the output, we see that 5 of the 7 fictional respondents are
+exactly solved. Because PicoSAT stops at the first satisfying
+solution, other runs of the SAT solver might solve correctly for
+more or fewer. 
 
 %At past international SAT solver competitions, 
 SAT solvers such as PicoSAT can solve problems
@@ -455,125 +469,62 @@ published today by official statistics agencies.
 
 
 \begin{table*}
-\begin{minipage}[t]{.45\linewidth}
+\begin{minipage}[t]{.33\linewidth}
 ~\\
-\caption{Sugar output when run on the encoded statistics in Appendix 3}\label{sugarbig}
-\input{id_table_solved.tex}
+\input{id_table_ground.tex}
+\caption{Ground Truth Data}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{.45\linewidth}
+\begin{minipage}[t]{.33\linewidth}
 ~\\
-\caption{Responses from a two fictional households
-for a survey that collects Age, Sex, Race and Generation of each resident. This is
-the unpublished, confidential data collected by a fictional statistical
-agency.}\label{responses}
-\begin{tabular}{rllp{1in}}
-\hline
-\multicolumn{4}{c}{Household \#1}   \\
-Age & Sex & Race & Generation     \\
-\hline
-90  & 0 Male   & 0 White & 2 Grandparent   \\      
-80  & 1 Female & 1 Black & 2 Grandparent \\    
-70  & 1 Female & 0 White & 2 Grandparent \\  
-40  & 0 Male   & 0 White & 1 Parent        \\
-30  & 1 Female & 1 Black & 1 Parent      \\
-\hline
-\\
-\multicolumn{4}{c}{Household \#2} \\
-Age & Sex & Race & Generation     \\
-\hline
-40 & 1 Female & 0 White & 1 Parent      \\
-20 & 0 Male   & 1 Black & 1 Parent        \\
-10 & 1 Female & 0 White & 0 Child       \\
-10 & 0 Male   & 1 Black & 0 Child         \\
-10 & 0 Male   & 1 Black & 0 Child         \\
-\hline
-\end{tabular}
+\input{id_table_solved.tex}
+\caption{Solved with all statics}
 \end{minipage}
+\hfill
+\begin{minipage}[t]{.33\linewidth}
+~\\
+\input{id_table_n4a.tex}
+\caption{Solved without the use of statistic 4A}
+\end{minipage}
+\hfill
 \end{table*}
 
-
-
 \section{Defending Against a DRA}\label{solution}
-There are three approaches for defending against a DRA: publish less
-statistical data, and apply noise (randomness) to either the
-statistical data being tabulated (input noise infusion in SDL), or to the results of those
-tabulations (output noise infusion). We consider them in order below.
+There are three approaches for defending against a database reconstruction: publish less
+statistical data, and apply noise (random changes) to the
+statistical data being tabulated, or apply noise to the results after
+the tabulation. We consider them in order below.
 
 Although it might seem that publishing less statistical data is a
 reasonable defense against the DRA, this choice may severely limit the number
 of tabulations that can be published. A
 related problem is that it may be computationally infeasible to
-determine when a reconstruction is possible from limited publications, a direct result of DRA being an NP-complete
-problem. \iflongversion That is, the inability of a SAT
-solver to find a solution to a SAT problem does not mean that a
-solution is not possible---it may just mean that the attacker hasn't waited
-long enough.\fi
+determine when a reconstruction is possible from limited publications.
 
 A second approach is to apply noise to the data before
-tabulation. For example, each respondent's age might be randomly altered by $-2 \ldots 2$; 
+tabulation. For example, each respondent's age might be randomly
+altered by a small amount, perhaps $-2 \ldots 2$; 
 the statistical agency then tabulates the values. 
 In this scenario, if the attacker performs a DRA, the result is the altered dataset, and not the underlying true values. Thus, if two responses
 are processed with noise of this sort, there are now $5^2 = 25$
-possible solutions. If 10 people undergo noise infusion of this type,
-there are $5^{10}$---nearly 10 million---possible
+possible solutions. If noise infusion is applied to all 7 age
+variables, there are $5^{7}=78,125$ possible
 solutions. Database reconstruction may still be possible, but there is no
-way to know which solution is correct.
+way to know which reconstructed databse is correct. 
 
-A third approach is to use output noise infusion, for example, using
-the Laplace mechanism\cite{Dwork:2006:CNS:2180286.2180305}. Output
-noise infusion has the advantage of being easier to apply, but the resulting tables may not be internally consistent without postprocessing.
-\ifshortversion
-The rightmost column of Table~\ref{publishedstatsbig} shows the results of output noise infusion.
-\else
-\\
-For example, in Table~\ref{publishedstatsnoise} we present the results
-of the original Table~\ref{publishedstatsbig}, but with Laplace noise
-added.  
-\fi
-With output noise infusion, the attacker must revise each constraint from an equality to a bounded range, resulting in an explosion of possible solutions that is exponential in the number of constraints. Exact solutions can still be found, but there is no way for an attacker to determine which are correct. 
- Like input noise infusion, output noise infusion does not prevent an attacker from reconstructing the database, but it prevents the attacker from knowing if the reconstruction is correct.
+A third approach is to use output noise infusion. Instead of reporting
+precise answers for each of the quoted statics, each is reported with
+the addition of noise.  With output noise infusion, the attacker must
+revise each constraint from an equality to a bounded range, resulting
+again in an explosion of possible solutions that is exponential in the
+number of constraints. Exact solutions can still be found, but there
+is no way for an attacker to determine which are correct.  Like input
+noise infusion, output noise infusion does not prevent an attacker
+from reconstructing the database, but it prevents the attacker from
+knowing if the reconstruction is correct.
 
-\iflongversion
-\begin{table}[t]
-\begin{tabular}{c|c|c}
-Group & Number & Average Age \\
-\hline
-Persons & 10 & 38.57 \\
-Males & 5 & 33.21 \\
-Females & 5 & 43.92 \\
-Whites & 5 & 47.82 \\
-Blacks & 5 & 29.31 \\
-\hline
-Children (0-12) & 3 & 8.50 \\
-White children & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Black children & 2 & 8.75 \\
-\hline
-Parents & 4 & 31.41 \\
-Male parents & 2 & 29.77 \\
-Female parents & 2 & 33.06 \\
-Parents over 40 & 0 & -- \\
-\hline
-Grandparents & 3 & 78.18 \\
-White grandparents & 2 & 77.64 \\
-Black grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Male grandparents & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-Female grandparents & 2 & 72.76 \\
-\hline
-Households & 2 & 38.57 \\
-Tri-generational households & 0 & -- \\
-Single-parent households & 0 & -- \\
-Childless households & 1 & \multicolumn{1}{c}{\rule{6mm}{3mm}} \\
-% Interracial married couples & 2 & 31.41 \\
-% Same-sex married couples & 0 & -- \\
-% Households $\geq 40\% $ female & 2 & 38.57 \\
-% Households $\geq 40\% $ black & 2 & 38.57 \\
-
-\hline
-\end{tabular}
-\caption{Data publication with added Laplace noise}\label{publishedstatsnoise}
-\end{table}
-\fi
+\textbf{How much noise should be added? --- have a brief intro to
+  differential privacy here, and then the big finish.}
 
 \section{Related Work}
 
