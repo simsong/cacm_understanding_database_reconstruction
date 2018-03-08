@@ -14,8 +14,10 @@
 
 
 ;; Problem setup 
-#define USE_4A        1
-;#define USE_SOLUTION  0
+#define USE_3A
+#define USE_3B
+#define USE_4A        
+;#define USE_SOLUTION  
 
 ;; Sexes (0:female  1:male)
 #define FEMALE 0
@@ -336,15 +338,16 @@
 ;; 3A. Single Adults
 ;; n = 3, median = 22, 
 
-;(= (+ (if (and (= M1 0) (> A1 17)) A1 0)    ; average age of single adults = 
-;      (if (and (= M2 0) (> A2 17)) A2 0)
-;      (if (and (= M3 0) (> A3 17)) A3 0)
-;      (if (and (= M4 0) (> A4 17)) A4 0)
-;      (if (and (= M5 0) (> A5 17)) A5 0)
-;      (if (and (= M6 0) (> A6 17)) A6 0)
-;      (if (and (= M7 0) (> A7 17)) A7 0)
-;      ) 42)
-
+#ifdef USE_3A
+(= (+ (if (and (= M1 0) (> A1 17)) A1 0)    ; average age of single adults = 
+      (if (and (= M2 0) (> A2 17)) A2 0)
+      (if (and (= M3 0) (> A3 17)) A3 0)
+      (if (and (= M4 0) (> A4 17)) A4 0)
+      (if (and (= M5 0) (> A5 17)) A5 0)
+      (if (and (= M6 0) (> A6 17)) A6 0)
+      (if (and (= M7 0) (> A7 17)) A7 0)
+      ) 42)
+#endif
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 3B. Married Adults
@@ -352,6 +355,7 @@
 
 ;; Count queries
 
+#ifdef USE_3B
 (= (+ (if (= M1 MARRIED) 1 0)    ; average age of single adults = 
       (if (= M2 MARRIED) 1 0)
       (if (= M3 MARRIED) 1 0)
@@ -407,13 +411,14 @@
       (if (and (= M7 MARRIED) (> A7 17)) A7 0)
       )
    (* 4 54))
+#endif
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; 4A. Black Females
 
-#if USE_4A
+#ifdef USE_4A
 ;;; Three black females (R=0, S=0)
 (= (+ (if (and (= R1 BLACK) (= S1 FEMALE)) 1 0)
       (if (and (= R2 BLACK) (= S2 FEMALE)) 1 0)   
@@ -481,4 +486,5 @@
 (= S6 0) (= A6  8) (= R6 0) (= M6 0)
 (= S7 0) (= A7 66) (= R7 0) (= M7 1)
 #endif
+
 

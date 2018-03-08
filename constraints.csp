@@ -1,10 +1,3 @@
-; 1 "one-block.csp"
-; 1 "<built-in>" 1
-; 1 "<built-in>" 3
-; 330 "<built-in>" 3
-; 1 "<command line>" 1
-; 1 "<built-in>" 2
-; 1 "one-block.csp" 2
 ;; -*- mode: lisp; -*-
 ;; Define variables and their domains
 ;; Households (either 1 or 2)
@@ -22,7 +15,9 @@
 
 ;; Problem setup 
 
-;#define USE_SOLUTION  0
+
+
+;#define USE_SOLUTION  
 
 ;; Sexes (0:female  1:male)
 
@@ -343,14 +338,15 @@
 ;; 3A. Single Adults
 ;; n = 3, median = 22, 
 
-;(= (+ (if (and (= M1 0) (> A1 17)) A1 0)    ; average age of single adults = 
-;      (if (and (= M2 0) (> A2 17)) A2 0)
-;      (if (and (= M3 0) (> A3 17)) A3 0)
-;      (if (and (= M4 0) (> A4 17)) A4 0)
-;      (if (and (= M5 0) (> A5 17)) A5 0)
-;      (if (and (= M6 0) (> A6 17)) A6 0)
-;      (if (and (= M7 0) (> A7 17)) A7 0)
-;      ) 42)
+
+(= (+ (if (and (= M1 0) (> A1 17)) A1 0)    ; average age of single adults = 
+      (if (and (= M2 0) (> A2 17)) A2 0)
+      (if (and (= M3 0) (> A3 17)) A3 0)
+      (if (and (= M4 0) (> A4 17)) A4 0)
+      (if (and (= M5 0) (> A5 17)) A5 0)
+      (if (and (= M6 0) (> A6 17)) A6 0)
+      (if (and (= M7 0) (> A7 17)) A7 0)
+      ) 42)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -358,6 +354,7 @@
 ;;  n=4, median=51 mean=54
 
 ;; Count queries
+
 
 (= (+ (if (= M1 1) 1 0)    ; average age of single adults = 
       (if (= M2 1) 1 0)
@@ -414,6 +411,7 @@
       (if (and (= M7 1) (> A7 17)) A7 0)
       )
    (* 4 54))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -480,6 +478,7 @@
 ;; female=0        black=0   single=0
 ;; male  =1        white=1   married=1
 
-; 484 "one-block.csp"
+
+
 
 
