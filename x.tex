@@ -1,0 +1,51 @@
+\documentclass{article}
+\newlength{\nspace}
+\settowidth{\nspace}{~}
+\newcommand{\tablewidth}{1in}
+\begin{document}
+\begin{figure}
+  \begin{tabular}{|c|}
+    \hline
+    ~\hspace{\tablewidth}~\\[-8pt]
+        15MBS \\
+        20MBS \\
+        25MBS \\
+        30MBS \\
+        35MBS \\
+        40MBS \\
+        45MBS \\
+        \hline
+  \multicolumn{1}{p{\tablewidth}}{\textit{\small Reconstruction \#1}}
+  \end{tabular}
+  ~
+  \begin{tabular}{|c|}
+    \hline
+    ~\hspace{\tablewidth}~\\[-8pt]
+        15MBS \\
+        20MBS \\
+        25MBS \\
+        30MBS \\
+        35MBS \\
+        40MBS \\
+        45MBS \\
+        \hline
+  \multicolumn{1}{p{\tablewidth}}{\textit{\small Reconstruction \#2}}
+  \end{tabular}
+  ~
+  \begin{tabular}{|c|}
+    \hline
+    ~\hspace{\tablewidth}~\\[-8pt]
+        15MBS \\
+        20MBS \\
+        25MBS \\
+        30MBS \\
+        35MBS \\
+        40MBS \\
+        45MBS \\
+        \hline
+  \multicolumn{1}{p{\tablewidth}}{\textit{\small Reconstruction \#3}}
+  \end{tabular}
+
+  \caption{Three database reconstructions with a set of common records}
+\end{figure}
+\end{document}

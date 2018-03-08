@@ -20,3 +20,11 @@ constraints_.cnf
 constraints_.map
 *.pyc
 .DS_Store
+
+Walksat_V51
+constraints_.cnf.cnf
+constraints_.cnf.map
+latex_tools
+sf1.pdf
+*.pdf
+

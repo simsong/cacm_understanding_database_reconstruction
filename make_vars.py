@@ -62,17 +62,21 @@ if __name__=="__main__":
                 (var,val) = line[2:].split("\t")
                 vars[var] = val
 
-    # Print classified advertisements
+    # Print information about reconstruction, sorted
+    results = []
     for i in range(1,100):
         si = str(i)
         try:
             age=vars["A{}".format(i)]
         except KeyError:
             break
-        print("{}{}{}{}".format(marriagemap[vars["M"+si]],
-                                racemap[vars["R"+si]],
-                                sexmap[vars["S"+si]],
-                                age))
+        desc = "{:>2}{}{}{}".format(age,
+                                 sexmap[vars["S"+si]],
+                                 racemap[vars["R"+si]],
+                                 marriagemap[vars["M"+si]])
+        results.append((int(age),desc))
+    for (age,desc) in sorted(results):
+        print(desc)
         
     # Now create the solved table
     with open("id_table.tex","r") as fin:
