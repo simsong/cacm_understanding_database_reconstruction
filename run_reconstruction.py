@@ -64,7 +64,7 @@ def extract_vars(outdata):
         line = line.strip()
         if len(line)==0: continue
         if line[0]=='s' and line!='s SATISFIABLE':
-            raise RuntimeError("Constarints not satisfied")
+            raise RuntimeError("Constraints not satisfied")
         if line[0]=='a' and "\t" in line:
             (var,val) = line[2:].split("\t")
             vars[var] = val
@@ -115,21 +115,21 @@ if __name__=="__main__":
 
     if args.parseall:
         out = ""
-        linenumber = 0
-        solution = 0
+        solutions = 0
         for line in open(args.parseall,"r"):
-            linenumber += 1
+            if line.startswith('s'):
+                if out:
+                    solutions += 1
+                    print("Solution:{}  out(lines)={}".format(solutions,out.count("\n")))
+                    print("out first line: {}".format(out.split("\n")[0]))
+                    print("out last line: {}".format(out.split("\n")[-1]))
+                    parse_and_print(out)
+                    out = ''
+            if line.startswith('s SOLUTIONS'):
+                print("line=",line)
+                assert str(solutions) in line
+                break
             out += line
-            if line=="s SATISFIABLE\n" and linenumber>1:
-                solution += 1
-                print("Solution:",solution)
-                parse_and_print(out)
-                out = ""
-                continue
-        # Handle the last
-        solution += 1
-        print("Solution:",solution)
-        parse_and_print(out)
         exit(1)
         
 
@@ -161,6 +161,7 @@ if __name__=="__main__":
         exit(1)
 
     # keep a copy of the sugar output
+    # Not strictly necessary, but useful for debugging
     with open(args.sugar_output,'w') as f:
         f.write(sugar_out)
 

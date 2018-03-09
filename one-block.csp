@@ -19,8 +19,8 @@
 ;; Problem setup 
 #define USE_3A
 #define USE_3B
-#define USE_4A        
-#define USE_SOLUTION  
+; #define USE_4A        
+; #define USE_SOLUTION   // for debugging
 
 ;; Sexes (0:female  1:male)
 #define FEMALE 0
@@ -57,6 +57,11 @@
 
 ;; Assure that the output is sorted by age. This does a good job 
 ;; eliminating dupliate answers that simply have swapped records.
+(<= A1 A2)
+(<= A2 A3)
+(<= A3 A4)
+(<= A4 A5)
+(<= A6 A7)
 
 
 ;; Reported tables
