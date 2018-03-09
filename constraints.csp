@@ -2,22 +2,25 @@
 ;; Define variables and their domains
 ;; Households (either 1 or 2)
 ;;
-;; #   SEX   AGE  RACE  MARITAL   RELATION
-;; 1  S1=M  A1=18  R1=W   M1=SA     #1           SWM18
-;; 2  S2=F  A2=24  R2=W   M2=SA     SPOUSE        SWF24
+;; HOUSEHOLD  SEX   AGE  RACE  MARITAL   RELATION
+;;
+;;     1      S=M   A=18 R=W   M=SA        #1        
+;;     1      S=F   A=24 R=W   M=SA        SPO       
 
-;; 3  S3=M  A3=30  R3=W   M3=MA     #1            MWM30
-;; 4  S4=F  A4=36  R4=B   M4=MA     SPOUSE        MBF36
-;; 5  S5=M  A5=84  R5=B   M5=MA     PARENT        MBM68
-;; 6  S6=F  A6=8   R6=B   M6=SC     CHILD         MBF66
-;; 7  S7=F  A7=66  R7=B   M7=MA     PARENT        SBF5
+;;     2      S=M   A=30 R=W   M=MA        #1        
+;;     2      S=F   A=36 R=B   M=MA        SPO       
+;;     2      S=M   A=84 R=B   M=MA        PAR       
+;;     2      S=F   A=8  R=B   M=SC        CHI       
+;;     2      S=F   A=66 R=B   M=MA        PAR       
+
+;; But we will report this sorted by age:
 
 
 ;; Problem setup 
 
 
 
-;#define USE_SOLUTION  
+
 
 ;; Sexes (0:female  1:male)
 
@@ -50,6 +53,10 @@
 (< (if (= M5 1) 14 0) A5)
 (< (if (= M6 1) 14 0) A6)
 (< (if (= M7 1) 14 0) A7)
+
+
+;; Assure that the output is sorted by age. This does a good job 
+;; eliminating dupliate answers that simply have swapped records.
 
 
 ;; Reported tables
@@ -477,6 +484,15 @@
 ;; Solution. To verify constraints, uncomment these and everything should satisfy!
 ;; female=0        black=0   single=0
 ;; male  =1        white=1   married=1
+;; Note that this is the sorted by age
+
+(= S1 0) (= A1  8) (= R1 0) (= M1 0)
+(= S2 1) (= A2 18) (= R2 1) (= M2 0)
+(= S3 0) (= A3 24) (= R3 1) (= M3 0)
+(= S4 1) (= A4 30) (= R4 1) (= M4 1)
+(= S5 0) (= A5 36) (= R5 0) (= M5 1)
+(= S6 0) (= A6 66) (= R6 0) (= M6 1)
+(= S7 1) (= A7 84) (= R7 0) (= M7 1)
 
 
 
