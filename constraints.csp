@@ -96,6 +96,7 @@
       (if (< A7 30) 1 0)
       ) 3)
 
+
 ; mean age
 (= (+ A1 A2 A3 A4 A5 A6 A7)
    (* 7 38))
@@ -137,35 +138,39 @@
       ) 2)
 
 
+;;; Begin correct median calculation
 ;;; Median females is 30. There are an event number
 ;;; Let MaxAFBelow30 be the oldest female age under 30
 ;;; Let MinAFAbove30 be the youngest female over 30
 ;;; The median is then (MaxAFBelow30+MinAFAbove30)/2
-;(int MaxAFBelow30 0 29)
-;(int MinAFAbove30 31 116)
+(int MaxAFBelow30 0 29)
+(int MinAFAbove30 31 116)
 ;
-;(= MaxAFBelow30
-;   (max (if (and (= S1 0) (< A1 30)) A1 0)
-;        (max (if (and (= S2 0) (< A2 30)) A2 0)
-;             (max (if (and (= S3 0) (< A3 30)) A3 0)
-;                  (max (if (and (= S4 0) (< A4 30)) A4 0)
-;                       (max (if (and (= S5 0) (< A5 30)) A5 0)
-;                            (max (if (and (= S6 0) (< A6 30)) A6 0)
-;                                 (if (and (= S7 0) (< A7 30)) A7 0)
-;                                 )))))))
-;
+(= MaxAFBelow30
+   (max (max (max (if (and (= S1 0) (< A1 30)) A1 0)
+                  (if (and (= S2 0) (< A2 30)) A2 0))
+             (max (if (and (= S3 0) (< A3 30)) A3 0)
+                  (if (and (= S4 0) (< A4 30)) A4 0)))
+        (max (max (if (and (= S5 0) (< A5 30)) A5 0)
+                  (if (and (= S6 0) (< A6 30)) A6 0))
+             (max (if (and (= S7 0) (< A7 30)) A7 0)
+                  0))))
+
 ;;                            ))))))
-;(= MinAFAbove30
-;   (min (if (and (= S1 0) (> A1 30)) A1 0)
-;        (min (if (and (= S2 0) (> A2 30)) A2 0)
-;             (min (if (and (= S3 0) (> A3 30)) A3 0)
-;                  (min (if (and (= S4 0) (> A4 30)) A4 0)
-;                       (min (if (and (= S5 0) (> A5 30)) A5 0)
-;                            (min (if (and (= S6 0) (> A6 30)) A6 0)
-;                                 (if (and (= S7 0) (> A7 30)) A7 0)
-;                                 )))))))
+(= MinAFAbove30
+   (min (min (min (if (and (= S1 0) (> A1 30)) A1 115)
+                  (if (and (= S2 0) (> A2 30)) A2 115))
+             (min (if (and (= S3 0) (> A3 30)) A3 115)
+                  (if (and (= S4 0) (> A4 30)) A4 115)))
+        (min (min (if (and (= S5 0) (> A5 30)) A5 115)
+                  (if (and (= S6 0) (> A6 30)) A6 115))
+             (min (if (and (= S7 0) (> A7 30)) A7 115)
+                  115))))
+
+
 ;; The average of these is 30, so their sum is 60
-;(= (+ MaxAFBelow30 MinAFAbove30) 60)
+(= (+ MaxAFBelow30 MinAFAbove30) 60)
+;;;;;;;;;;;;;;;; end median calculation
 
 ; average female age 
 (= (+ (if (= S1 0) A1 0)  
@@ -181,7 +186,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 2B Male:  n=3, median=30, average=44
 
-
 (= (+ (if (= S1 1) 1 0)  
       (if (= S2 1) 1 0)
       (if (= S3 1) 1 0)
@@ -195,7 +199,7 @@
 
 ;;; Median age of males is 30
 ;;; We know that there are an odd number of males
-;;; And there are three. So we should have one less than 30, one more, and one 30
+;;; And there are three. So we should have one or more less than 30, and one or more that are more than 30.one more that are , and one 30
 (= (+ (if (and (= S1 1) (= A1 30)) 1 0)
       (if (and (= S2 1) (= A2 30)) 1 0)      
       (if (and (= S3 1) (= A3 30)) 1 0)      
@@ -206,27 +210,25 @@
       )
    1)
 
-(= (+ (if (and (= S1 1) (< A1 30)) 1 0)
-      (if (and (= S2 1) (< A2 30)) 1 0)      
-      (if (and (= S3 1) (< A3 30)) 1 0)      
-      (if (and (= S4 1) (< A4 30)) 1 0)      
-      (if (and (= S5 1) (< A5 30)) 1 0)      
-      (if (and (= S6 1) (< A6 30)) 1 0)      
-      (if (and (= S7 1) (< A7 30)) 1 0)
-      )
-   1)
+(>= (+ (if (and (= S1 1) (<= A1 30)) 1 0)
+       (if (and (= S2 1) (<= A2 30)) 1 0)      
+       (if (and (= S3 1) (<= A3 30)) 1 0)      
+       (if (and (= S4 1) (<= A4 30)) 1 0)      
+       (if (and (= S5 1) (<= A5 30)) 1 0)      
+       (if (and (= S6 1) (<= A6 30)) 1 0)      
+       (if (and (= S7 1) (<= A7 30)) 1 0)
+       )
+    1)
 
-(= (+ (if (and (= S1 1) (> A1 30)) 1 0)
-      (if (and (= S2 1) (> A2 30)) 1 0)      
-      (if (and (= S3 1) (> A3 30)) 1 0)      
-      (if (and (= S4 1) (> A4 30)) 1 0)      
-      (if (and (= S5 1) (> A5 30)) 1 0)      
-      (if (and (= S6 1) (> A6 30)) 1 0)      
-      (if (and (= S7 1) (> A7 30)) 1 0)
-      )
-   1)
-
-;; TODO: Add a median calculation for the 30
+(>= (+ (if (and (= S1 1) (>= A1 30)) 1 0)
+       (if (and (= S2 1) (>= A2 30)) 1 0)      
+       (if (and (= S3 1) (>= A3 30)) 1 0)      
+       (if (and (= S4 1) (>= A4 30)) 1 0)      
+       (if (and (= S5 1) (>= A5 30)) 1 0)      
+       (if (and (= S6 1) (>= A6 30)) 1 0)      
+       (if (and (= S7 1) (>= A7 30)) 1 0)
+       )
+    1)
 
 ; average male age: 44
 (= (+ (if (= S1 1) A1 0)    ; average male age = 44

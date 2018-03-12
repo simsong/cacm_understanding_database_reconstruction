@@ -3,6 +3,7 @@
 # two-households.csp 11 people
 # one-block.csp       7 people, with medians
 
+PROBLEM=one-block.csp
 all: white_paper.pdf toy_mechanism.pdf
 
 white_paper.pdf: vars.tex white_paper.tex medians.tex
@@ -15,20 +16,16 @@ toy_mechanism.pdf: toy_mechanism.tex toy_regression.pdf
 toy_regression.pdf: toy_regression.py
 	python3 toy_regression.py
 
-solve:	constraints.sugar.out
-
-vars.tex: run_reconstruction.py constraints.csp
+vars.tex: run_reconstruction.py $(PROBLEM)
 	python run_reconstruction.py
 
 medians.tex: median_calculator.py tytable.py
 	python median_calculator.py
 
-constraints.csp: $(PROBLEM)
-	cpp $(PROBLEM) | sed 's/^#/;/' > constraints.csp
-
 clean:
 	latexmk -c -C 
 	/bin/rm -f *.bbl *.fls *~ *.spl
-	/bin/rm -f vars.tex
+	/bin/rm -f constraints.sugar.out vars.tex medians.tex toy_mechanism.pdf
+
 
 

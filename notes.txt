@@ -1,0 +1,5 @@
+encoding of sugar:
+integers: go to the offset. Count the number of negative numbers. Add the number of negative numbers. If the range of the integer is 1..115 and there are 7 negative numbers, add 7, and the answer is 8.
+
+Java to decode:
+java -cp ./sugar-v2-3-2/bin/sugar-v2-3-2.jar jp.kobe_u.sugar.SugarMain -decode constraints_1.out constraints_.map

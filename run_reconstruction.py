@@ -8,6 +8,7 @@ SOLVER="picosat"
 
 import sys
 from subprocess import Popen,PIPE,call
+from collections import defaultdict
 
 JARFILE='./sugar-v2-3-2/bin/sugar-v2-3-2.jar'
 # Our encodings
@@ -56,10 +57,11 @@ def decode_picosat_out(outdata,mapfile):
     return out
 
 def extract_vars(outdata):
-    """Extract the variables from the sugar output."""
+    """Extract the variables from the sugar output. Returns a dictionary
+    with the key the variable name and the value being the variable
+    value"""
     # vars[] is the mapping of the sugar variable to the solution
     vars = {}
-
     for line in outdata.split("\n"):
         line = line.strip()
         if len(line)==0: continue
@@ -73,19 +75,16 @@ def extract_vars(outdata):
 def vars_to_codes(vars):
     """Transform the variables to a list of (age,code) person codes"""
     results = []
-    for i in range(1,100):
-        si = str(i)
-        try:
-            age=vars["A{}".format(i)]
-        except KeyError:
-            break
+    ids = [int(k[1:]) for k in  vars.keys() if k[0]=='A'] # everybody has an age
+    for i in ids:
+        si  = str(i)
+        age = vars["A{}".format(i)]
         desc = "{:>2}{}{}{}".format(age,
                                  SEXMAP[vars["S"+si]],
                                  RACEMAP[vars["R"+si]],
                                  MARRIAGEMAP[vars["M"+si]])
         results.append((int(age),desc))
-    results.sort()
-    return results
+    return sorted(results)
 
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
@@ -102,34 +101,48 @@ if __name__=="__main__":
     args = parser.parse_args()
     args.sugar_output = "constraints.sugar.out"
 
-    def parse_and_print(out):
-        res = decode_picosat_out(out,args.map)
-        vars = extract_vars(res)
-        for (age,code) in sorted(vars_to_codes(vars)):
-            print(code)
+    def parse_vars_to_printable(out):
+        ret = []
+        for (age,code) in vars_to_codes(vars):
+            ret.append(code)
+            ret.append("\n")
+        return "".join(ret)
 
     if args.parseout:
         out = open(args.parseout,"r").read()
-        parse_and_print(out)
+        decoded_picosat = decode_picosat_out( out, args.map)
+        vars = extract_vars( decoded_picosat )
+        print(parse_vars_to_printable(out))
         exit(1)
 
     if args.parseall:
         out = ""
+        total_solutions = 0
         solutions = 0
+        seen = set()
+        code_count = defaultdict(int)
         for line in open(args.parseall,"r"):
             if line.startswith('s'):
                 if out:
-                    solutions += 1
-                    print("Solution:{}  out(lines)={}".format(solutions,out.count("\n")))
-                    print("out first line: {}".format(out.split("\n")[0]))
-                    print("out last line: {}".format(out.split("\n")[-1]))
-                    parse_and_print(out)
+                    decoded_picosat = decode_picosat_out(out,args.map)
+                    vars = extract_vars(decoded_picosat)
+                    codes = parse_vars_to_printable(vars)
+                    if codes not in seen:
+                        solutions += 1
+                        print("Solution:{}\n{}".format(solutions,codes))
+                        seen.add(codes)
+                        # Now add each code to the histogram
+                        for (age,code) in vars_to_codes(vars):
+                            code_count[code] += 1
                     out = ''
             if line.startswith('s SOLUTIONS'):
-                print("line=",line)
-                assert str(solutions) in line
+                total_solutions = int(line.split(" ")[2])
                 break
             out += line
+        print("distinct solutions: {}  additional degenerate solutions: {}".
+              format(solutions,total_solutions-solutions))
+        for (key,value) in code_count.items():
+            print("{} = {:3}".format(key,value))
         exit(1)
         
 
@@ -150,7 +163,11 @@ if __name__=="__main__":
     cmd = ['perl','sugar-v2-3-2/bin/sugar',
            '-jar','sugar-v2-3-2/bin/sugar-v2-3-2.jar',
            '-solver',solver_cmd,'-keep','-tmp','constraints',
-           '-output','constraints.out','constraints.csp']
+           '-output','constraints.out']
+    if args.all:
+        cmd += ['-nodecode']
+
+    cmd += ['constraints.csp']
     print(" ".join(cmd))
     p = Popen(cmd,stdout=PIPE,stderr=PIPE)
     (out,err) = p.communicate()
@@ -177,7 +194,6 @@ if __name__=="__main__":
     results = vars_to_codes(vars)
 
     # Print information about reconstruction, sorted
-    print("Seed: {}".format(args.seed))
     for (age,desc) in sorted(results):
         print(desc)
         

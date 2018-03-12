@@ -92,6 +92,7 @@ class ttable:
        typeset(mode=[TEXT,HTML,LATEX]) to typeset. returns table
        save_table(fname,mode=)
        add_variable(name,value)  -- add variables to output (for LaTeX mostly)
+       set_latex_colspec(str)    -- sets the LaTeX column specification, rather than have it auto calculated
     """
     HR = "<hr>"
     SUPPRESS_ZERO="suppress_zero"
@@ -146,6 +147,8 @@ class ttable:
         e.g. prefix{:,}suffix.
         """
         self.col_fmt[col] = fmt
+    def set_latex_colspec(self,latex_colspec):
+        self.latex_colspec = latex_colspec
 
     def add_head(self,values):
         """ Append a row of VALUES to the table header. The VALUES should be a list of columsn."""
@@ -360,6 +363,12 @@ class ttable:
                     ret.append("\\begin{center}")
                 if OPTION_TABLE in self.options:
                     ret.append("\\begin{table}")
+                if LONGTABLE not in self.options:
+                    ret += ["\\caption{",self.caption, "}"]
+                    if self.label:
+                        ret.append("\\label{")
+                        ret.append(self.label)
+                        ret.append("}")
                 ret += ["\\begin{tabular}{",colspec,"}\n"]
                 ret += self.typeset_headings()
             if LONGTABLE in self.options:
@@ -411,13 +420,6 @@ class ttable:
         if self.mode==LATEX:
             if LONGTABLE not in self.options:
                 ret.append("\\end{tabular}\n")
-                ret.append("\\caption{")
-                ret.append(self.caption)
-                ret.append("}")
-                if self.label:
-                    ret.append("\\label{")
-                    ret.append(self.label)
-                    ret.append("}")
                 if OPTION_TABLE in self.options:
                     ret.append("\\end{table}")
                 if OPTION_CENTER in self.options:

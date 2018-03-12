@@ -1,15 +1,15 @@
 \documentclass[runningheads]{llncs}
 \include{vars}
-\newif\ifanonymized
-\anonymizedtrue
-\newif\ifshortversion
-\shortversionfalse
-\newif\iflongversion
-\longversiontrue
+%\newif\ifanonymized
+%\anonymizedtrue
+%\newif\ifshortversion
+%\shortversionfalse
+%\newif\iflongversion
+%\longversiontrue
 
-\anonymizedfalse
-\shortversionfalse
-\longversiontrue
+%\anonymizedfalse
+%\shortversionfalse
+%\longversiontrue
 % cmap has to be loaded before any font package (such as cfr-lm)
 \usepackage{cmap}
 \usepackage{amsmath}
@@ -18,15 +18,15 @@
 %\usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage[ngerman,english]{babel}
-\usepackage{verbatim}
+\usepackage{fancyvrb}
 %better font, similar to the default springer font
 %cfr-lm is preferred over lmodern. Reasoning at http://tex.stackexchange.com/a/247543/9075
-\usepackage[%
-rm={oldstyle=false,proportional=true},%
-sf={oldstyle=false,proportional=true},%
-tt={oldstyle=false,proportional=true,variable=true},%
-qt=false%
-]{cfr-lm}
+%\usepackage[%
+%rm={oldstyle=false,proportional=true},%
+%sf={oldstyle=false,proportional=true},%
+%tt={oldstyle=false,proportional=true,variable=true},%
+%qt=false%
+%]{cfr-lm}
 %Sorts the citations in the brackets
 %It also allows \cite{refa, refb}. Otherwise, the document does not compile.
 %  Error message: "White space in argument"
@@ -75,18 +75,18 @@ qt=false%
 \newcommand{\ie}{i.\,e.,\ }
 
 %introduce \powerset - hint by http://matheplanet.com/matheplanet/nuke/html/viewtopic.php?topic=136492&post_id=997377
-\DeclareFontFamily{U}{MnSymbolC}{}
-\DeclareSymbolFont{MnSyC}{U}{MnSymbolC}{m}{n}
-\DeclareFontShape{U}{MnSymbolC}{m}{n}{
-    <-6>  MnSymbolC5
-   <6-7>  MnSymbolC6
-   <7-8>  MnSymbolC7
-   <8-9>  MnSymbolC8
-   <9-10> MnSymbolC9
-  <10-12> MnSymbolC10
-  <12->   MnSymbolC12%
-}{}
-\DeclareMathSymbol{\powerset}{\mathord}{MnSyC}{180}
+%\DeclareFontFamily{U}{MnSymbolC}{}
+%\DeclareSymbolFont{MnSyC}{U}{MnSymbolC}{m}{n}
+%\DeclareFontShape{U}{MnSymbolC}{m}{n}{
+%    <-6>  MnSymbolC5
+%   <6-7>  MnSymbolC6
+%   <7-8>  MnSymbolC7
+%   <8-9>  MnSymbolC8
+%   <9-10> MnSymbolC9
+%  <10-12> MnSymbolC10
+%  <12->   MnSymbolC12%
+%}{}
+%\DeclareMathSymbol{\powerset}{\mathord}{MnSyC}{180}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -121,9 +121,7 @@ Housing.
 \end{abstract}
 
 \begin{keywords}
-database reconstruction attack, SAT solver, 
-\ifshortversion\else privacy,\fi 
-disclosure avoidance
+database reconstruction attack, SAT solver, privacy, disclosure avoidance
 \end{keywords}
 
 \section{Introduction}
@@ -210,23 +208,22 @@ and big data applications, such reconstructions now pose a significant
 risk to the confidentiality of microdata that underlies unprotected
 statistical tables.
 
-To help understand the urgency of adopting formal privacy methods,
-this paper presents a database reconstruction attack on a much smaller
-statistical publication: a demographic publication of a hypothetical
-block containing seven people distributed over two households. We show
-that even a relatively small number of constraints results in an exact
-solution for many of the blocks' inhabitants. After we show the
-successful reconstruction attack, we show how differential privacy can
-protect the published data. Finally, we discuss implications for the
-decennial census.
+To help understand the importance of adopting formal privacy methods, in
+this article we presents a database reconstruction attack on a much
+smaller statistical publication: a hypothetical block containing seven
+people distributed over two households. We show that even a relatively
+small number of constraints results in an exact solution the blocks'
+inhabitants. Finally, we show how differential privacy can protect the
+published data by creating uncertainty. Finally, we discuss
+implications for the decennial census.
 
 \section{The Database Reconstruction Attack: An Example}
 
-To present the attack, we consider a hypothetical
-census of a fictional geographic frame (for example, a suburban block)
+To present the attack, we consider the 
+census of a fictional geographic frame (for example, a suburban block),
 conducted by a fictional statistical
-agency. For every household, the agency collects each resident's age,
-sex, race, and their relation in the household. To simplify the example,
+agency. For every block, the agency collects each resident's age,
+sex and race, and publishes a variety of statistics. To simplify the example,
 the fictional world has only two races, black and white, and two
 sexes, female and male. The statistical agency
 is prohibited from publishing the raw microdata, and instead publishes
@@ -234,12 +231,16 @@ a tabular report (Table~\ref{fictional}).
 
 Notice that a substantial amount of information in
 Table~\ref{fictional} has been suppressed (censored). In this case,
-statistics resulting from one or two people are supported, but
-statistics from three people are provided. This suppression rule is
-sometimes called ``the rule of three.''
+the statistical agency's disclosure avoidance rules prohibit it from
+publishing statistics based on one or two people. This suppression rule is
+sometimes called ``the rule of three,'' because cells in the report
+sourced from fewer than three people are suppressed.
 
 \newcommand{\cens}{\multicolumn{1}{c|}{\rule{6mm}{3mm}}}
 \begin{table}
+\caption{Fictional statistical data for a fictional block published by
+  a fictional statistics agency. Item numbers are for identification
+  purpose only.\label{fictional}}
 \begin{center}
 \begin{tabular}{l|l|c|c|c|}
      &                           &       & \multicolumn{2}{|c|}{Age} \\
@@ -266,13 +267,8 @@ Item & Group                     & Count & Median & Average \\
 \hline
 \multicolumn{5}{l}{Note: Married persons must be 15 or over}
 \end{tabular}
-\caption{Fictional statistical data for a fictional block published by
-  a fictional statistics agency. Item numbers are for identification
-  purpose only.\label{fictional}}
 \end{center}
 \end{table}
-
-\input{medians}
 
 To perform the database reconstruction attack, we view the attributes
 of the persons living on the block as a collection of 
@@ -284,29 +280,29 @@ possible, and that reconstruction should be the same as the underlying
 microdata used to create original table.
 
 For example, statistic 2B states that there are 3 males living in the
-geography.  Because age is typically reported to the nearest year, and
-age must necessarily be $\ge 0$ and $\le 115$, and as a result there
-are only a finite number of possible combinations, specifically:
+geography.  Because age is reported to the nearest year, and
+age must necessarily $0 \le \textrm{age} \le 115$. As a result, there
+are only a finite number of possible age combinations, specifically:
 
 \[ \binom{116}{3}=\frac{116 \times 115 \times 114}{3 \times 2 \times
   1} = 253,460 \]
 
+\input{medians} % brings in \mycount also
+
 Within these sets, there are \mycount{} combinations that satisfy the
 constraint of having a median of \mymedian{} and a mean of \mymean{}
-(from Table~\ref{fictional}). This means that there are
-\mycount{} different databases that satisfy statistic 2B.
+(Table~\ref{fictional}). So by applying the constraints imposed by the
+published statistical tables, we are able to reduce the possible
+combinations of ages for the three males from 253,460 to \mycount.
 
 To mount a full reconstruction attack, an attacker extracts all of the
 constraints specified by the published statistics and then creates a
 single mathematical model that reflects all of the
-constraints. Although this might seem difficult to do in practice,
+constraints.  
+Although this might seem difficult to compute in practice,
 computational advances within the past decade have made such
 reconstruction attacks relatively straightforward.
 
-In this example, the census has collected four attributes for each
-individual: sex, age, race, and marital status. With seven individuals,
-there are $7\times 4 = 28$ variables that need to be solved. These
-variables appear in Table~\ref{variables}
 
 \begin{center}
 \begin{table}
@@ -338,26 +334,21 @@ married&     &     &      &   1\\
 \caption{The variables associated with the database reconstruction
   attack. The coding for categorical attributes is presented in the key.}\label{variables}
 \end{table}
+
 \end{center}
 
-To continue with our example, statistic 2B contains three
-constraints. In our example, female persons
+To continue with our example, recall that statistic 2B contains three
+constraints: there are three males, their median age is 30, and their
+average age is 44. In our example, female persons
 are represented by 0
-and male persons by 1, so the constraint that there are four female persons can be represented as:
-
-\begin{equation}\label{eq1}
-S1 + S2 + S3 + S3 + S5 + S6 + S7 = 3
-\end{equation}
-
-Alternatively, we could create subtract each variable $S_n$ from one
-to create a variable that is 1 for male and 0 for female. With this
-notation, a constraint for the number of male persons could be written as:
+and male persons by 1, so the constraint that there are three males can be represented as:
 
 \begin{equation}
 (1-S1) + (1-S2) + (1-S3) + (1-S3) + (1-S5) + (1-S6) + (1-S7) = 3
 \end{equation}
 
-From here, we can write a constraint for the average age of the male persons:
+We can use this to represent the constraint for the average age of the
+male persons which sums each age if the corresponding sex is 1 (males):
 
 \begin{equation}
 \frac{
@@ -368,17 +359,93 @@ From here, we can write a constraint for the average age of the male persons:
 }{3} = 44
 \end{equation}
 
-More complicated constraints can be represented using a functional
-programming language. 
+At this point it is more useful to represent the constraints using a
+programming language. We will use a language called Sugar\cite{sugar},
+which represents constraints as a series of Lisp-like
+\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. Sugar
+allows exceedingly complex constraints to by created and tested in a
+straightforward manner. 
+
+For example, the constraint in Equation~\ref{eq1} can be encoded as the following
+s-expressions, which declares each of the variables to have the values
+0 or 1 and then states that they must sum to three:
+\begin{Verbatim}
+(int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1)
+(int S5 0 1) (int S6 0 1) (int S7 0 1)
+(= (+ S1 S2 S3 S4 S5 S6 S7) 3)
+\end{Verbatim}
+
+Although this directly represents the problem, we can write code
+that's easier to understand by using the C preprocessor to implement
+simple text macros, and using Sugar's \texttt{if} clause, to make it
+very clear that we have a constraint that counts the number of males:
+
+\begin{Verbatim}
+#define FEMALE 0
+#define MALE   1
+(= (+ (if (= S1 MALE) 1 0)  
+      (if (= S2 MALE) 1 0)
+      (if (= S3 MALE) 1 0)
+      (if (= S4 MALE) 1 0)
+      (if (= S5 MALE) 1 0)
+      (if (= S6 MALE) 1 0)
+      (if (= S7 MALE) 1 0)
+      )
+   3)
+\end{Verbatim}
+
+With this notation, it is straightforward to create a constraint for
+mean age of male persons:
+
+\begin{Verbatim}
+(= (+ (if (= S1 MALE) A1 0)    ; average male age = 44
+      (if (= S2 MALE) A2 0)
+      (if (= S3 MALE) A3 0)
+      (if (= S4 MALE) A4 0)
+      (if (= S5 MALE) A5 0)
+      (if (= S6 MALE) A6 0)
+      (if (= S7 MALE) A7 0)
+      )
+   (* 3 44))
+\end{Verbatim}
+
+Creating constraints for medians is more complicated. For odd numbered samples, the median is the value in the middle. With a sample size of three and a median of 30, there must be one age that is 30, one or more ages that are less than 30, and one or more ages that are more than 30:
+
+\begin{Verbatim}
+(= (+ (if (and (= S1 MALE) (= A1 30)) 1 0)
+      (if (and (= S2 MALE) (= A2 30)) 1 0)      
+      (if (and (= S3 MALE) (= A3 30)) 1 0)      
+      (if (and (= S4 MALE) (= A4 30)) 1 0)      
+      (if (and (= S5 MALE) (= A5 30)) 1 0)      
+      (if (and (= S6 MALE) (= A6 30)) 1 0)      
+      (if (and (= S7 MALE) (= A7 30)) 1 0)
+      )
+   1)
+
+(>= (+ (if (and (= S1 MALE) (<= A1 30)) 1 0)
+       (if (and (= S2 MALE) (<= A2 30)) 1 0)      
+       (if (and (= S3 MALE) (<= A3 30)) 1 0)      
+       (if (and (= S4 MALE) (<= A4 30)) 1 0)      
+       (if (and (= S5 MALE) (<= A5 30)) 1 0)      
+       (if (and (= S6 MALE) (<= A6 30)) 1 0)      
+       (if (and (= S7 MALE) (<= A7 30)) 1 0)
+       )
+    1)
+
+(>= (+ (if (and (= S1 MALE) (>= A1 30)) 1 0)
+       (if (and (= S2 MALE) (>= A2 30)) 1 0)      
+       (if (and (= S3 MALE) (>= A3 30)) 1 0)      
+       (if (and (= S4 MALE) (>= A4 30)) 1 0)      
+       (if (and (= S5 MALE) (>= A5 30)) 1 0)      
+       (if (and (= S6 MALE) (>= A6 30)) 1 0)      
+       (if (and (= S7 MALE) (>= A7 30)) 1 0)
+       )
+    1)
+\end{Verbatim}
 
 
-Once all the published statistics
-are translated into constraints, the equations together form a
-system of many 21 variables with 28 unknowns. However, there are
-other, less obvious constraints. One constraint is that the variables
-are all integers. Another constraint, imposed by the statistical
-agency, is that there is a minimum age difference between a child and
-their parent.
+We translated Table~\ref{fictional} into \NumSExpressions{} individual
+S-expressions extending over \NumConstraintLines{} lines. 
 
 There exists a \textit{solution universe} of all the possible solutions to
 this set of simultaneous equations. If there is a single possible
@@ -388,6 +455,7 @@ there is more than one possible solution, then one of those solutions
 is correct, and the others are not. If the equations have no solution,
 then the set of published statistics is inconsistent.
 
+\textbf{This is where Simson is at in the rewrite}
 \section{Performing the Attack}
 A straightforward but wildly inefficient approach to solving this
 system of simultaneous equations is to perform a brute force
@@ -428,19 +496,8 @@ Many SAT solvers take their input in the so-called DIMACS file format,
 which specifies a single equation in conjunctive normal form (CNF). To use these solvers, a
 preprocessor transforms the equations into CNF, runs the SAT solver,
 and then translates the results back. The program we use below is
-called Sugar\cite{sugar}, which takes as input a a series of
-\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
-example, the constraint in Equation~\ref{eq1} can be encoded as the following
-s-expression:
-\begin{equation}
-\texttt{(= (+ S1 S2 S3 S4 S5 S6 S7) 3)}
-\end{equation}
+called 
 
-Likewise, constraint for mean age can be encoded as:
-
-\begin{equation}
-\texttt{(= (+ A1 A2 A3 A4 A5 A6 A7)\\ (* 7 38))}
-\end{equation}
 
 
 Notice that we avoid round-off error by not encoding the division
@@ -552,12 +609,11 @@ Kasiviswanathan, Rudelson, and Smith\cite{Kasiviswanathan:2013:PLR:2627817.26279
 the concept of the linear reconstruction attack, which underlies the  DRA. The key concept is that,
 given nonsensitive data such as zip code or gender, an attacker
 can construct a matrix of linear equalities that can often be solved
-in polynomial time. \iflongversion The paper also analyzes a common reconstruction
+in polynomial time. The paper also analyzes a common reconstruction
 technique known as least squares decoding, where the attacker sets up
 a goal function to minimize the square of the distance between two
-databases in order to reconstruct the original database.\fi
+databases in order to reconstruct the original database.
 
-\iflongversion
 Brown and Heathers\cite{doi:10.1177/1948550616673876} developed the
 granularity-related inconsistency of means (GRIM) test in response to
 observed inconsistencies in published data from psychological
@@ -571,8 +627,6 @@ inconsistencies. Although this test was intended to detect possible
 errors or mean falsification in published articles, the concept of
 drawing inferential conclusions about a data set based only on 
 published statistics is a key concept behind the DRA.
-\fi
-
 
 
 \section{Conclusion}
@@ -593,14 +647,10 @@ to the DBA constraints. In this expanded universe, the real confidential data
 are but a single solution, and no evidence in the published data can improve 
 an attacker's guess about which solution is the correct one.
 
-\iflongversion \section{References}\fi
+\section{References}\
 
 \bibliographystyle{splncs03}
 \bibliography{white_paper}
-\iflongversion
-\newpage
-\emph{These appendices will not be part of the FC2018 submission, but
-  would be part of a technical report.}
 
 \section{Appendices}
 
@@ -660,8 +710,7 @@ what statistics they encode.
 
 Input for the model in this paper is as follows:
 
-\verbatiminput{constraints.csp}
-\fi
+\VerbatimInput{constraints.csp}
 
 \end{document}
 
