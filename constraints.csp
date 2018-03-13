@@ -96,7 +96,6 @@
       (if (< A7 30) 1 0)
       ) 3)
 
-
 ; mean age
 (= (+ A1 A2 A3 A4 A5 A6 A7)
    (* 7 38))
@@ -107,9 +106,16 @@
 (= (+ S1 S2 S3 S4 S5 S6 S7) 3)  ;; 4 female (0=female, 1=male)
 
 ;;; Median age of female is 30
-;;; We know that there are an even number of females
-;;; Right now, this just has that there are no females of age 30
-;;; and there are an equal number above and below
+;;; This tell us that:
+;;; 1. There are We know that there are an even number of females
+;;; 2. There are either no females of age 30, or more than 2.
+;;; 3. If there are no females age 30, then average of the age
+;;;    of the oldest woman under 30 and the youngest woman over 30 must be 30.
+;;; 4. Otherwise, the number of women under thirty plus the number of women over 30
+;;;    must be less than the number of women who are 30.
+;;;
+;;; To solve this, we create some temporary variables
+
 (= (+ (if (and (= S1 0) (= A1 30)) 1 0)
       (if (and (= S2 0) (= A2 30)) 1 0)      
       (if (and (= S3 0) (= A3 30)) 1 0)      
@@ -137,12 +143,10 @@
       (if (and (= S7 0) (> A7 30)) 1 0)
       ) 2)
 
-
-;;; Begin correct median calculation
-;;; Median females is 30. There are an event number
 ;;; Let MaxAFBelow30 be the oldest female age under 30
 ;;; Let MinAFAbove30 be the youngest female over 30
 ;;; The median is then (MaxAFBelow30+MinAFAbove30)/2
+
 (int MaxAFBelow30 0 29)
 (int MinAFAbove30 31 116)
 ;

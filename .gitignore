@@ -28,3 +28,5 @@ latex_tools
 sf1.pdf
 *.pdf
 
+*.cnf
+*.map

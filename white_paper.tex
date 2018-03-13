@@ -19,48 +19,31 @@
 \usepackage{graphicx}
 \usepackage[ngerman,english]{babel}
 \usepackage{fancyvrb}
-%better font, similar to the default springer font
-%cfr-lm is preferred over lmodern. Reasoning at http://tex.stackexchange.com/a/247543/9075
-%\usepackage[%
-%rm={oldstyle=false,proportional=true},%
-%sf={oldstyle=false,proportional=true},%
-%tt={oldstyle=false,proportional=true,variable=true},%
-%qt=false%
-%]{cfr-lm}
-%Sorts the citations in the brackets
-%It also allows \cite{refa, refb}. Otherwise, the document does not compile.
-%  Error message: "White space in argument"
 \usepackage{cite}
-%extended enumerate, such as \begin{compactenum}
-\usepackage{paralist}
-\usepackage{csquotes}  % for easy quotations: \enquote{text}
-\usepackage{microtype} % enable margin kerning
-\usepackage{url}       % tweak \url{...}
+\usepackage{paralist}  % extended enumerate, such as \begin{compactenum}
+%\usepackage{csquotes}  % for easy quotations: \enquote{text}
+%\usepackage{microtype} % enable margin kerning
+\usepackage{url}       % provides \url{...}
 %improve wrapping of URLs - hint by http://tex.stackexchange.com/a/10419/9075
 \makeatletter
 \g@addto@macro{\UrlBreaks}{\UrlOrds}
 \makeatother
-%required for pdfcomment later
-\usepackage{xcolor}
-%enable nice comments
-%this also loads hyperref
-\usepackage{pdfcomment}
-%enable hyperref without colors and without bookmarks
-\hypersetup{hidelinks,
+\usepackage{xcolor}      % required for pdfcomment later
+\usepackage{pdfcomment}  % enable nice comments, also loads hyperref
+\hypersetup{hidelinks,   % enable hyperref without colors and without bookmarks
    colorlinks=true,
    allcolors=black,
    pdfstartview=Fit,
    breaklinks=true}
-%enables correct jumping to figures when referencing
-\usepackage[all]{hypcap}
+\usepackage[all]{hypcap} %enables correct jumping to figures when referencing
 
-\newcommand{\commentontext}[2]{\colorbox{yellow!60}{#1}\pdfcomment[color={0.234 0.867 0.211},hoffset=-6pt,voffset=10pt,opacity=0.5]{#2}}
-\newcommand{\commentatside}[1]{\pdfcomment[color={0.045 0.278 0.643},icon=Note]{#1}}
+\newcommand{\commentontext}[2]{%
+  \colorbox{yellow!60}{#1}\pdfcomment[color={0.234 0.867 0.211},hoffset=-6pt,voffset=10pt,opacity=0.5]{#2}}
+\newcommand{\commentatside}[1]{%
+  \pdfcomment[color={0.045 0.278 0.643},icon=Note]{#1}}
 
-%compatibality with packages todo, easy-todo, todonotes
-\newcommand{\todo}[1]{\commentatside{#1}}
-%compatiblity with package fixmetodonotes
-\newcommand{\TODO}[1]{\commentatside{#1}}
+\newcommand{\todo}[1]{\commentatside{#1}} %compatibality with packages todo, easy-todo, todonotes
+\newcommand{\TODO}[1]{\commentatside{#1}} %compatiblity with package fixmetodonotes
 
 %enable \cref{...} and \Cref{...} instead of \ref: Type of reference included in the link
 \usepackage[capitalise,nameinlink]{cleveref}
@@ -69,24 +52,8 @@
 \Crefname{section}{Section}{Sections}
 
 \usepackage{xspace}
-%\newcommand{\eg}{e.\,g.\xspace}
-%\newcommand{\ie}{i.\,e.\xspace}
-\newcommand{\eg}{e.\,g.,\ }
-\newcommand{\ie}{i.\,e.,\ }
-
-%introduce \powerset - hint by http://matheplanet.com/matheplanet/nuke/html/viewtopic.php?topic=136492&post_id=997377
-%\DeclareFontFamily{U}{MnSymbolC}{}
-%\DeclareSymbolFont{MnSyC}{U}{MnSymbolC}{m}{n}
-%\DeclareFontShape{U}{MnSymbolC}{m}{n}{
-%    <-6>  MnSymbolC5
-%   <6-7>  MnSymbolC6
-%   <7-8>  MnSymbolC7
-%   <8-9>  MnSymbolC8
-%   <9-10> MnSymbolC9
-%  <10-12> MnSymbolC10
-%  <12->   MnSymbolC12%
-%}{}
-%\DeclareMathSymbol{\powerset}{\mathord}{MnSyC}{180}
+\newcommand{\eg}{e.\,g.\xspace}
+\newcommand{\ie}{i.\,e.\xspace}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -217,7 +184,7 @@ inhabitants. Finally, we show how differential privacy can protect the
 published data by creating uncertainty. Finally, we discuss
 implications for the decennial census.
 
-\section{The Database Reconstruction Attack: An Example}
+\section{An Example Database Reconstruction Attack}
 
 To present the attack, we consider the 
 census of a fictional geographic frame (for example, a suburban block),
@@ -269,6 +236,8 @@ Item & Group                     & Count & Median & Average \\
 \end{tabular}
 \end{center}
 \end{table}
+
+\subsection{Encoding the Constraints}
 
 To perform the database reconstruction attack, we view the attributes
 of the persons living on the block as a collection of 
@@ -447,23 +416,22 @@ Creating constraints for medians is more complicated. For odd numbered samples, 
 We translated Table~\ref{fictional} into \NumSExpressions{} individual
 S-expressions extending over \NumConstraintLines{} lines. 
 
-There exists a \textit{solution universe} of all the possible solutions to
-this set of simultaneous equations. If there is a single possible
-solution, then the published statistics completely reveal the
-underlying confidential data---the ground truth. However, if
-there is more than one possible solution, then one of those solutions
-is correct, and the others are not. If the equations have no solution,
-then the set of published statistics is inconsistent.
+There exists a \textit{solution universe} of all the possible
+solutions to this set of simultaneous equations. If the solution
+universe contains a single possible solution, then the published
+statistics completely reveal the underlying confidential data. If
+there are multiple satisfying solutions, then any element (person) in
+common between all of the solutions is revealed. If the equations have
+no solution, the set of published statistics are inconsistent.
 
-\textbf{This is where Simson is at in the rewrite}
-\section{Performing the Attack}
+\section{Solving the Constraints}
 A straightforward but wildly inefficient approach to solving this
 system of simultaneous equations is to perform a brute force
 search---that is, to try all possible values of all possible variables
 and record the ones that work.
 
 Ordinarily a brute force search on even this toy problem would be
-unreasonable: there are 7 age variables that can range from 0 to 115
+computationally infeasable: there are 7 age variables that can range from 0 to 115
 and 21 binary variables (sex, race race and marital status). All
 together, there are $116^{10} \times 2^{21} \approx 9.25
 \times 10^{26}$ possible combinations. Even if we could try a billion
@@ -472,79 +440,48 @@ years.
 
 But there is no need to try all possible combinations: the highly
 constrained system can frequently be solved automatically using a
-program called a Satisfiability (SAT) solver. 
-
-Those not familiar with modern SAT solvers may be somewhat
-incredulous at trying to  solve
-a problem with a work factor of roughly $10^{34}\approx2^{113}$.
-However, ``The past few years have seen an enormous progress in the performance
-of Boolean satisfiability (SAT) solvers. Despite the worst-case
-exponential run time of all known algorithms, satisfiability solvers
-are increasingly leaving their mark as a general-purpose tool in areas
-as diverse as software and hardware verification,
-automatic test pattern generation, planning,
-scheduling, and even challenging problems from algebra. Annual SAT
-competitions have led to the development of dozens
-of clever implementations of such solvers, an exploration of many new
-techniques, and the creation of an extensive suite of real-world
-instances as well as challenging hand-crafted benchmark
-problems. Modern SAT solvers provide a ``black-box'' procedure that
-can often solve hard structured problems with over a million variables and
-several million constraints.''\cite[references omitted]{Gomes200889}.
+program called a satisfiability (SAT) solver. These programs use
+clever heuristics to solve a system of boolean equations and variables
+that are represented in the conjunctive normal form (CNF). Even though worst case SAT
+problems require exponential time to solve, modern SAT solvers can
+frequently solve ``hard structured problems with over a million variables and
+several million constraints,'' according to a review of SAT solvers by Gomes.\cite{Gomes200889} 
 
 Many SAT solvers take their input in the so-called DIMACS file format,
-which specifies a single equation in conjunctive normal form (CNF). To use these solvers, a
-preprocessor transforms the equations into CNF, runs the SAT solver,
-and then translates the results back. The program we use below is
-called 
+which specifies a single equation in conjunctive normal form
+(CNF). This format was popularized by the annual SAT Solver
+Competition, which saw dramatic improvements in the speed of SAT
+solvers between 2000 and 2015. 
 
+Because the DIMACS file format is difficult to work with, we use Sugar
+to encode the system of integer and logical constraints into a
+system of boolean equations and variables. Integers, for example, are
+encoded in a unary, with a variable that can range from 0 to 4 being
+encoded as \Verb|0 0 0 0|, \Verb|1 0 0 0|, \Verb|1 1 0 0|,
+\Verb|1 1 1 0| or \Verb|1 1 1 1|.  Sugar then runs the SAT
+solver. Finally, Sugar decodes the boolean solution back into a list
+of integers and their satisfying value. 
 
-
-Notice that we avoid round-off error by not encoding the division
-operator. This is vital, as the SAT encoding used by Sugar only allows
-for integer arithmetic. 
-
-Our source input file consists of \NumSExpressions s-expressions in \NumConstraintLines{} lines (minus comments).\footnote{The entire file can be downloaded from our website.}
+Our source input file consists of \NumSExpressions s-expressions in
+\NumConstraintLines{} lines (minus comments).
 This converts into
 \NumVariables Boolean variables and \NumClauses CNF clauses. Using the
 open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
 to solve this system in typically less than 2 seconds on a 2013 MacBook Pro with a 2.8GHz Intel
-i7 processor and 16GiB of RAM (although the program was not limited by
-RAM). Output is given in Table~\ref{sugarbig} and is tabulated for readability.
+i7 processor and 16GiB of RAM (although the program is not limited by
+RAM). Sugar is able to find an exact solution with the constraints presented
+in Table~\ref{fictional}; the output is given in Table~\ref{sugarbig} and is tabulated for readability.
 
-Examining the output, we see that 5 of the 7 fictional respondents are
-exactly solved. Because PicoSAT stops at the first satisfying
-solution, other runs of the SAT solver might solve correctly for
-more or fewer. 
+\subsection{Exploring the Solution Universe}
 
-%At past international SAT solver competitions, 
-SAT solvers such as PicoSAT can solve problems
-with tens of millions of variables in less than 20 minutes
-\cite{satcomp}, making it likely that today's SAT solvers could solve
-realistic database reconstruction problems based on data being
-published today by official statistics agencies.
+Instead of simply finding a single satisfying solution, some SAT
+solvers can find all possible solutions---that is, the sovler can
+experimentally determine the entire solution universe. This lets us
+experimentally determine the impact of censoring additional
+statistics.
 
+For example, 
 
-\begin{table*}
-\begin{minipage}[t]{.33\linewidth}
-~\\
-\input{id_table_ground.tex}
-\caption{Ground Truth Data}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{.33\linewidth}
-~\\
-\input{id_table_solved.tex}
-\caption{Solved with all statics}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{.33\linewidth}
-~\\
-\input{id_table_n4a.tex}
-\caption{Solved without the use of statistic 4A}
-\end{minipage}
-\hfill
-\end{table*}
 
 \section{Defending Against a DRA}\label{solution}
 There are three approaches for defending against a database reconstruction: publish less
