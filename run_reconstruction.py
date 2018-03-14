@@ -7,8 +7,10 @@
 SOLVER="picosat"
 
 import sys
+import re
 from subprocess import Popen,PIPE,call
 from collections import defaultdict
+import time
 
 JARFILE='./sugar-v2-3-2/bin/sugar-v2-3-2.jar'
 # Our encodings
@@ -47,16 +49,21 @@ def unmap(var):
 def latex_def(name,value):
     return "\\newcommand\\{}{{\\xspace{:,d}\\xspace}}\n".format(name,value)
 
-def decode_picosat_out(outdata,mapfile):
+def sugar_decode_picosat_out(outdata,mapfile):
     cmd = ['java','-cp',JARFILE,'jp.kobe_u.sugar.SugarMain','-decode','/dev/stdin',mapfile]
+    print(" ".join(cmd))
+    print("len(outdata)={}".format(len(outdata)))
+    t0 = time.time()
     (out,err) = Popen(cmd,stdin=PIPE,stdout=PIPE,stderr=PIPE).communicate(outdata.encode('utf-8'))
+    t1 = time.time()
+    print("time={}".format(t1-t0))
     out = out.decode('utf-8')
     err = err.decode('utf-8')
     if err:
         raise RuntimeError("sugar decode error: "+err)
     return out
 
-def extract_vars(outdata):
+def extract_vars_from_sugar_decode(outdata):
     """Extract the variables from the sugar output. Returns a dictionary
     with the key the variable name and the value being the variable
     value"""
@@ -72,6 +79,47 @@ def extract_vars(outdata):
             vars[var] = val
     return vars
 
+def sugar_decode_picostat_and_extract_vars(outdata,mapfile):
+    return extract_vars_from_sugar_decode( sugar_decode_picosat_out( outdata, mapfile))
+
+def python_decode_picosat_and_extract_vars(outdata,mapfile):
+    vars    = {}                # extracted variables
+    mapvars = {}
+    with open(mapfile,"r") as f:
+        for line in f:
+            (var,name,start,_) = line.strip().split(" ")
+            assert var=="int"
+            (r0,r1) = _.split("..")
+            start = int(start)
+            r0 = int(r0)
+            r1 = int(r1)
+            mapvars[name] = (start,r0,r1)
+    # Compute the highest possible variable
+    highest = max(v[0]+v[2]-v[1] for v in mapvars.values())
+    # Now read the boolean variables and map them back
+    coefs = set()
+    for line in lines_iter(outdata):
+        if line[0]!='v': continue
+        vals = [int(v) for v in line[2:].split(" ")]
+        if abs(vals[0]) > highest:
+            break               # no need to read any more
+        coefs.update(vals)
+    # Now for each variable, report its value
+    for var in mapvars:
+        (start,r0,r1) = mapvars[var]
+        found = False
+        for i in range(r1-r0):
+            if start+i in coefs:
+                print("{} = {}".format(var,r0+i))
+                vars[var] = r0+i
+                found = True
+                break
+        if not found:
+            print("{} = {}".format(var,r0+1))
+            vars[var] = r0+1
+    return vars
+
+
 def vars_to_codes(vars):
     """Transform the variables to a list of (age,code) person codes"""
     results = []
@@ -86,6 +134,50 @@ def vars_to_codes(vars):
         results.append((int(age),desc))
     return sorted(results)
 
+def lines_iter(data):
+    return (x.group(0) for x in re.finditer(".*", data) if x.group(0))
+
+def parseall(data):
+    picosat_out = ""
+    total_solutions = 0
+    solutions = 0
+    seen = set()
+    code_count = defaultdict(int)
+    for line in lines_iter(data):
+        if line.startswith('s'):
+            if picosat_out:
+                print("{}".format(total_solutions),end='')
+                print("picosat_out = {} lines".format(picosat_out.count("\n")))
+                sys.stdout.flush()
+                vars = sugar_decode_picostat_and_extract_vars(picosat_out, args.map)
+                print("vars=",vars)
+                codes = parse_vars_to_printable(vars)
+                print("codes=",codes)
+                if codes not in seen:
+                    solutions += 1
+                    print("Solution:{}\n{}".format(solutions,codes))
+                    seen.add(codes)
+                    # Now add each code to the histogram
+                    for (age,code) in vars_to_codes(vars):
+                        code_count[code] += 1
+                picosat_out = ''
+        if line.startswith('s SOLUTIONS'):
+            total_solutions = int(line.split(" ")[2])
+            break
+        picosat_out += line
+    print("distinct solutions: {}  additional degenerate solutions: {}".
+          format(solutions,total_solutions-solutions))
+    for (key,value) in code_count.items():
+        print("{} = {:3}".format(key,value))
+
+
+            
+        
+            
+    
+
+
+
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
     parser = ArgumentParser( formatter_class = ArgumentDefaultsHelpFormatter,
@@ -98,6 +190,7 @@ if __name__=="__main__":
     parser.add_argument("--out",help='sugar output file',default='constraints.out')
     parser.add_argument("--map",help="Specify map file",default='constraints.map')
     parser.add_argument("--all",help="Compute all possible solutions",action="store_true")
+    parser.add_argument("--decode",help="test the decode function")
     args = parser.parse_args()
     args.sugar_output = "constraints.sugar.out"
 
@@ -110,41 +203,18 @@ if __name__=="__main__":
 
     if args.parseout:
         out = open(args.parseout,"r").read()
-        decoded_picosat = decode_picosat_out( out, args.map)
-        vars = extract_vars( decoded_picosat )
+        vars = sugar_decode_picostat_and_extract_vars( out, args.map) 
         print(parse_vars_to_printable(out))
         exit(1)
 
     if args.parseall:
-        out = ""
-        total_solutions = 0
-        solutions = 0
-        seen = set()
-        code_count = defaultdict(int)
-        for line in open(args.parseall,"r"):
-            if line.startswith('s'):
-                if out:
-                    decoded_picosat = decode_picosat_out(out,args.map)
-                    vars = extract_vars(decoded_picosat)
-                    codes = parse_vars_to_printable(vars)
-                    if codes not in seen:
-                        solutions += 1
-                        print("Solution:{}\n{}".format(solutions,codes))
-                        seen.add(codes)
-                        # Now add each code to the histogram
-                        for (age,code) in vars_to_codes(vars):
-                            code_count[code] += 1
-                    out = ''
-            if line.startswith('s SOLUTIONS'):
-                total_solutions = int(line.split(" ")[2])
-                break
-            out += line
-        print("distinct solutions: {}  additional degenerate solutions: {}".
-              format(solutions,total_solutions-solutions))
-        for (key,value) in code_count.items():
-            print("{} = {:3}".format(key,value))
-        exit(1)
-        
+        parseall(open(args.parseall,"r").read())
+        exit(0)
+
+    if args.decode:
+        decode(open(args.decode,"r").read())
+        exit(0)
+
 
     # Run the pre-processor and remove the files that begin with a '#'
     cmd = ['cpp',args.problem]
@@ -169,13 +239,16 @@ if __name__=="__main__":
 
     cmd += ['constraints.csp']
     print(" ".join(cmd))
+    t0 = time.time()
     p = Popen(cmd,stdout=PIPE,stderr=PIPE)
     (out,err) = p.communicate()
+    t1 = time.time()
     sugar_out = out.decode('utf-8')
     sugar_err = err.decode('utf-8')
     if p.returncode!=0:
         raise RuntimeError("sugar returned {}. out='{}' err='{}'".format(p.returncode,sugar_out,sugar_err))
         exit(1)
+    print("sugar run time: {:.4} sec".format(t1-t0))
 
     # keep a copy of the sugar output
     # Not strictly necessary, but useful for debugging
@@ -183,14 +256,17 @@ if __name__=="__main__":
         f.write(sugar_out)
 
     # Now constraints.out has the output from picosat
-    # args.sugar_output has the output from sugar
 
     if "ERROR" in sugar_out:
         print("Error in running sugar:")
         print(sugar_out)
         exit(1)
     
-    vars    = extract_vars(sugar_out)
+    if args.all:
+        parseall(out)
+        exit(0)
+
+    vars    = extract_vars_from_sugar_decode(sugar_out)
     results = vars_to_codes(vars)
 
     # Print information about reconstruction, sorted

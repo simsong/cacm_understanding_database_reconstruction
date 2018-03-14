@@ -19,30 +19,32 @@
 ;; Problem setup 
 #define USE_3A
 #define USE_3B
-; #define USE_4A        
-; #define USE_SOLUTION   // for debugging
+#define USE_4A        
+;#define USE_SOLUTION   // for debugging
 
 ;; Sexes (0:female  1:male)
 #define FEMALE 0
 #define MALE   1
-(int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1)
-(int S5 0 1) (int S6 0 1) (int S7 0 1)
+(int S1 FEMALE MALE) (int S2 FEMALE MALE) (int S3 FEMALE MALE) (int S4 FEMALE MALE)
+(int S5 FEMALE MALE) (int S6 FEMALE MALE) (int S7 FEMALE MALE)
 
 ;; Ages (between 1 and 115 years old)
-(int A1 1 115) (int A2 1 115) (int A3 1 115) (int A4 1 115)
-(int A5 1 115) (int A6 1 115) (int A7 1 115)
+#define MIN_AGE 1
+#define MAX_AGE 115
+(int A1 MIN_AGE MAX_AGE) (int A2 MIN_AGE MAX_AGE) (int A3 MIN_AGE MAX_AGE) (int A4 MIN_AGE MAX_AGE)
+(int A5 MIN_AGE MAX_AGE) (int A6 MIN_AGE MAX_AGE) (int A7 MIN_AGE MAX_AGE)
 
 ;; Races (0:black  1:white)
 #define BLACK 0
 #define WHITE 1
-(int R1 0 1) (int R2 0 1) (int R3 0 1) (int R4 0 1)
-(int R5 0 1) (int R6 0 1) (int R7 0 1)
+(int R1 BLACK WHITE) (int R2 BLACK WHITE) (int R3 BLACK WHITE) (int R4 BLACK WHITE)
+(int R5 BLACK WHITE) (int R6 BLACK WHITE) (int R7 BLACK WHITE)
 
 ;; Marital Status (0:single  1:married)
 #define SINGLE 0
 #define MARRIED 1
-(int M1 0 1) (int M2 0 1) (int M3 0 1) (int M4 0 1)
-(int M5 0 1) (int M6 0 1) (int M7 0 1)
+(int M1 SINGLE MARRIED) (int M2 SINGLE MARRIED) (int M3 SINGLE MARRIED) (int M4 SINGLE MARRIED)
+(int M5 SINGLE MARRIED) (int M6 SINGLE MARRIED) (int M7 SINGLE MARRIED)
 
 ;; Structural Zeros:
 ;;; Married people must be over 14. Set the minimum age based on the marriage flag
@@ -162,14 +164,14 @@
 
 ;;                            ))))))
 (= MinAFAbove30
-   (min (min (min (if (and (= S1 0) (> A1 30)) A1 115)
-                  (if (and (= S2 0) (> A2 30)) A2 115))
-             (min (if (and (= S3 0) (> A3 30)) A3 115)
-                  (if (and (= S4 0) (> A4 30)) A4 115)))
-        (min (min (if (and (= S5 0) (> A5 30)) A5 115)
-                  (if (and (= S6 0) (> A6 30)) A6 115))
-             (min (if (and (= S7 0) (> A7 30)) A7 115)
-                  115))))
+   (min (min (min (if (and (= S1 0) (> A1 30)) A1 MAX_AGE)
+                  (if (and (= S2 0) (> A2 30)) A2 MAX_AGE))
+             (min (if (and (= S3 0) (> A3 30)) A3 MAX_AGE)
+                  (if (and (= S4 0) (> A4 30)) A4 MAX_AGE)))
+        (min (min (if (and (= S5 0) (> A5 30)) A5 MAX_AGE)
+                  (if (and (= S6 0) (> A6 30)) A6 MAX_AGE))
+             (min (if (and (= S7 0) (> A7 30)) A7 MAX_AGE)
+                  MAX_AGE))))
 
 
 ;; The average of these is 30, so their sum is 60

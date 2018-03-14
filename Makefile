@@ -25,7 +25,7 @@ medians.tex: median_calculator.py tytable.py
 clean:
 	latexmk -c -C 
 	/bin/rm -f *.bbl *.fls *~ *.spl
-	/bin/rm -f constraints.sugar.out vars.tex medians.tex toy_mechanism.pdf
-
+	/bin/rm -f vars.tex medians.tex toy_mechanism.pdf
+	/bin/rm -f constraints.* constraints_.* id_table_*
 
 

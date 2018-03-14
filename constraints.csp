@@ -19,8 +19,8 @@
 ;; Problem setup 
 
 
-; #define USE_4A        
-; #define USE_SOLUTION   // for debugging
+
+;#define USE_SOLUTION   // for debugging
 
 ;; Sexes (0:female  1:male)
 
@@ -29,6 +29,8 @@
 (int S5 0 1) (int S6 0 1) (int S7 0 1)
 
 ;; Ages (between 1 and 115 years old)
+
+
 (int A1 1 115) (int A2 1 115) (int A3 1 115) (int A4 1 115)
 (int A5 1 115) (int A6 1 115) (int A7 1 115)
 
@@ -436,6 +438,59 @@
 ;;
 ;; 4A. Black Females
 
+
+;;; Three black females (R=0, S=0)
+(= (+ (if (and (= R1 0) (= S1 0)) 1 0)
+      (if (and (= R2 0) (= S2 0)) 1 0)   
+      (if (and (= R3 0) (= S3 0)) 1 0)   
+      (if (and (= R4 0) (= S4 0)) 1 0)   
+      (if (and (= R5 0) (= S5 0)) 1 0)   
+      (if (and (= R6 0) (= S6 0)) 1 0)
+      (if (and (= R7 0) (= S7 0)) 1 0)
+      ) 3)
+
+;; Median age black females: 36.
+;; 
+(= (+ (if (and (= R1 0) (= S1 0) (< A1 36)) 1 0)
+      (if (and (= R2 0) (= S2 0) (< A2 36)) 1 0)      
+      (if (and (= R3 0) (= S3 0) (< A3 36)) 1 0)      
+      (if (and (= R4 0) (= S4 0) (< A4 36)) 1 0)      
+      (if (and (= R5 0) (= S5 0) (< A5 36)) 1 0)      
+      (if (and (= R6 0) (= S6 0) (< A6 36)) 1 0)      
+      (if (and (= R7 0) (= S7 0) (< A7 36)) 1 0)
+      )
+   1)
+
+(= (+ (if (and (= R1 0) (= S1 0) (= A1 36)) 1 0)
+      (if (and (= R2 0) (= S2 0) (= A2 36)) 1 0)      
+      (if (and (= R3 0) (= S3 0) (= A3 36)) 1 0)      
+      (if (and (= R4 0) (= S4 0) (= A4 36)) 1 0)      
+      (if (and (= R5 0) (= S5 0) (= A5 36)) 1 0)      
+      (if (and (= R6 0) (= S6 0) (= A6 36)) 1 0)      
+      (if (and (= R7 0) (= S7 0) (= A7 36)) 1 0)
+      )
+   1)
+;
+(= (+ (if (and (= R1 0) (= S1 0) (> A1 36)) 1 0)
+      (if (and (= R2 0) (= S2 0) (> A2 36)) 1 0)      
+      (if (and (= R3 0) (= S3 0) (> A3 36)) 1 0)      
+      (if (and (= R4 0) (= S4 0) (> A4 36)) 1 0)      
+      (if (and (= R5 0) (= S5 0) (> A5 36)) 1 0)      
+      (if (and (= R6 0) (= S6 0) (> A6 36)) 1 0)      
+      (if (and (= R7 0) (= S7 0) (> A7 36)) 1 0)
+      )
+   1)
+
+;;; Mean age = 36.667; total age is 110
+(= (+ (if (and (= R1 0) (= S1 0)) A1 0)
+      (if (and (= R2 0) (= S2 0)) A2 0)      
+      (if (and (= R3 0) (= S3 0)) A3 0)      
+      (if (and (= R4 0) (= S4 0)) A4 0)      
+      (if (and (= R5 0) (= S5 0)) A5 0)      
+      (if (and (= R6 0) (= S6 0)) A6 0)      
+      (if (and (= R7 0) (= S7 0)) A7 0)
+      )
+   110)
 
 
 
