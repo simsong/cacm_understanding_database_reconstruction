@@ -18,6 +18,10 @@ SEXMAP = {"1":"M", "0":"F"}
 RACEMAP = {"1":"W", "0":"B"}
 MARRIAGEMAP = {"0":"S", "1":"M"}
 
+def lines_iter(data):
+    """Returns the lines without a newline"""
+    return (x.group(0) for x in re.finditer(".*", data) if x.group(0))
+
 def linecount(fname,filter_func):
     return len(list(filter(filter_func,open(fname,"r").read().split("\n"))))
 
@@ -121,18 +125,20 @@ def vars_to_codes(vars):
     ids = [int(k[1:]) for k in  vars.keys() if k[0]=='A'] # everybody has an age
     for i in ids:
         si  = str(i)
-        print("si=",si)
         age = vars["A{}".format(i)]
         sex = vars["S"+si]
         race =vars["R"+si]
         marriage = vars["M"+si]
-        print("sex=",sex)
         desc = "{:>2}{}{}{}".format(age, SEXMAP[sex], RACEMAP[race], MARRIAGEMAP[marriage])
         results.append((int(age),desc))
     return sorted(results)
 
-def lines_iter(data):
-    return (x.group(0) for x in re.finditer(".*", data) if x.group(0))
+def parse_vars_to_printable(vars):
+    ret = []
+    for (age,code) in vars_to_codes(vars):
+        ret.append(code)
+        ret.append("\n")
+    return "".join(ret)
 
 def parseall(data):
     picosat_out = ""
@@ -140,16 +146,14 @@ def parseall(data):
     solutions = 0
     seen = set()
     code_count = defaultdict(int)
+    ctr = 0
     for line in lines_iter(data):
         if line.startswith('s'):
             if picosat_out:
-                print("{}".format(total_solutions),end='')
-                print("picosat_out = {} lines".format(picosat_out.count("\n")))
-                sys.stdout.flush()
-                vars = sugar_decode_picostat_and_extract_vars(picosat_out, args.map)
-                print("vars=",vars)
+                ctr += 1; print("{}\r".format(ctr),end='')
+                #vars = sugar_decode_picostat_and_extract_vars(picosat_out, args.map)
+                vars = python_decode_picostat_and_extract_vars(picosat_out, args.map)
                 codes = parse_vars_to_printable(vars)
-                print("codes=",codes)
                 if codes not in seen:
                     solutions += 1
                     print("Solution:{}\n{}".format(solutions,codes))
@@ -161,7 +165,7 @@ def parseall(data):
         if line.startswith('s SOLUTIONS'):
             total_solutions = int(line.split(" ")[2])
             break
-        picosat_out += line
+        picosat_out += line + "\n"
     print("distinct solutions: {}  additional degenerate solutions: {}".
           format(solutions,total_solutions-solutions))
     for (key,value) in code_count.items():
@@ -185,21 +189,13 @@ if __name__=="__main__":
     args = parser.parse_args()
     args.sugar_output = "constraints.sugar.out"
 
-    def parse_vars_to_printable(out):
-        ret = []
-        for (age,code) in vars_to_codes(vars):
-            ret.append(code)
-            ret.append("\n")
-        return "".join(ret)
-
     if args.parseout:
         out = open(args.parseout,"r").read()
         t0 = time.time()
         #vars = sugar_decode_picostat_and_extract_vars( out, args.map) 
         vars = python_decode_picostat_and_extract_vars( out, args.map) 
-        print("vars:",vars)
         t1 = time.time()
-        print(parse_vars_to_printable(out))
+        print(parse_vars_to_printable(vars))
         print("time: {}".format(t1-t0))
         exit(1)
 
