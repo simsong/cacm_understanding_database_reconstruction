@@ -53,10 +53,7 @@ def sugar_decode_picosat_out(outdata,mapfile):
     cmd = ['java','-cp',JARFILE,'jp.kobe_u.sugar.SugarMain','-decode','/dev/stdin',mapfile]
     print(" ".join(cmd))
     print("len(outdata)={}".format(len(outdata)))
-    t0 = time.time()
     (out,err) = Popen(cmd,stdin=PIPE,stdout=PIPE,stderr=PIPE).communicate(outdata.encode('utf-8'))
-    t1 = time.time()
-    print("time={}".format(t1-t0))
     out = out.decode('utf-8')
     err = err.decode('utf-8')
     if err:
@@ -82,7 +79,7 @@ def extract_vars_from_sugar_decode(outdata):
 def sugar_decode_picostat_and_extract_vars(outdata,mapfile):
     return extract_vars_from_sugar_decode( sugar_decode_picosat_out( outdata, mapfile))
 
-def python_decode_picosat_and_extract_vars(outdata,mapfile):
+def python_decode_picostat_and_extract_vars(outdata,mapfile):
     vars    = {}                # extracted variables
     mapvars = {}
     with open(mapfile,"r") as f:
@@ -110,13 +107,11 @@ def python_decode_picosat_and_extract_vars(outdata,mapfile):
         found = False
         for i in range(r1-r0):
             if start+i in coefs:
-                print("{} = {}".format(var,r0+i))
-                vars[var] = r0+i
+                vars[var] = str(r0+i)
                 found = True
                 break
         if not found:
-            print("{} = {}".format(var,r0+1))
-            vars[var] = r0+1
+            vars[var] = str(r0+1)
     return vars
 
 
@@ -126,11 +121,13 @@ def vars_to_codes(vars):
     ids = [int(k[1:]) for k in  vars.keys() if k[0]=='A'] # everybody has an age
     for i in ids:
         si  = str(i)
+        print("si=",si)
         age = vars["A{}".format(i)]
-        desc = "{:>2}{}{}{}".format(age,
-                                 SEXMAP[vars["S"+si]],
-                                 RACEMAP[vars["R"+si]],
-                                 MARRIAGEMAP[vars["M"+si]])
+        sex = vars["S"+si]
+        race =vars["R"+si]
+        marriage = vars["M"+si]
+        print("sex=",sex)
+        desc = "{:>2}{}{}{}".format(age, SEXMAP[sex], RACEMAP[race], MARRIAGEMAP[marriage])
         results.append((int(age),desc))
     return sorted(results)
 
@@ -172,12 +169,6 @@ def parseall(data):
 
 
             
-        
-            
-    
-
-
-
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
     parser = ArgumentParser( formatter_class = ArgumentDefaultsHelpFormatter,
@@ -203,8 +194,13 @@ if __name__=="__main__":
 
     if args.parseout:
         out = open(args.parseout,"r").read()
-        vars = sugar_decode_picostat_and_extract_vars( out, args.map) 
+        t0 = time.time()
+        #vars = sugar_decode_picostat_and_extract_vars( out, args.map) 
+        vars = python_decode_picostat_and_extract_vars( out, args.map) 
+        print("vars:",vars)
+        t1 = time.time()
         print(parse_vars_to_printable(out))
+        print("time: {}".format(t1-t0))
         exit(1)
 
     if args.parseall:
