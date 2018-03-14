@@ -18,6 +18,9 @@ SEXMAP = {"1":"M", "0":"F"}
 RACEMAP = {"1":"W", "0":"B"}
 MARRIAGEMAP = {"0":"S", "1":"M"}
 
+def latex_def(name,value):
+    return "\\newcommand\\{}{{\\xspace{:,d}\\xspace}}\n".format(name,value)
+
 def lines_iter(data):
     """Returns the lines without a newline"""
     return (x.group(0) for x in re.finditer(".*", data) if x.group(0))
@@ -49,9 +52,6 @@ def unmap(var):
         return MARRIAGEMAP[rvar]
     # Must be an age
     return rvar
-
-def latex_def(name,value):
-    return "\\newcommand\\{}{{\\xspace{:,d}\\xspace}}\n".format(name,value)
 
 def sugar_decode_picosat_out(outdata,mapfile):
     cmd = ['java','-cp',JARFILE,'jp.kobe_u.sugar.SugarMain','-decode','/dev/stdin',mapfile]
@@ -166,13 +166,14 @@ def parseall(data):
             total_solutions = int(line.split(" ")[2])
             break
         picosat_out += line + "\n"
-    print("distinct solutions: {}  additional degenerate solutions: {}".
-          format(solutions,total_solutions-solutions))
-    for (key,value) in code_count.items():
-        print("{} = {:3}".format(key,value))
+    with open("vars_multiple.tex","w") as f:
+        print("distinct solutions: {}  additional degenerate solutions: {}".
+              format(solutions,total_solutions-solutions))
+        print(latex_def("NumDistinctSolutions",solutions),file=f)
+        print(latex_def("DegenerateSolutions",total_solutions-solutions),file=f)
+        for (key,value) in code_count.items():
+            print("{} = {:3}".format(key,value))
 
-
-            
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
     parser = ArgumentParser( formatter_class = ArgumentDefaultsHelpFormatter,
@@ -180,7 +181,8 @@ if __name__=="__main__":
     parser.add_argument("--seed",type=int,default=0,help="specify the seed for the solver")
     parser.add_argument("--problem",default="one-block.csp",help="specify the problem CSP")
     parser.add_argument("--cnf",default="constraints.cnf",help="specify cnf file")
-    parser.add_argument("--parseout",help="Parse the variables out of an .out file. A map file must be specified")
+    parser.add_argument("--parseout",
+                        help="Parse the variables out of an .out file. A map file must be specified")
     parser.add_argument("--parseall",help='Evaluate output file of the picosat --all')
     parser.add_argument("--out",help='sugar output file',default='constraints.out')
     parser.add_argument("--map",help="Specify map file",default='constraints.map')
