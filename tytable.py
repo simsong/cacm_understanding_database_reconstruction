@@ -359,10 +359,10 @@ class ttable:
             except AttributeError:
                 colspec = "r"*self.cols 
             if LONGTABLE not in self.options:
-                if OPTION_CENTER in self.options:
-                    ret.append("\\begin{center}")
                 if OPTION_TABLE in self.options:
                     ret.append("\\begin{table}")
+                if OPTION_CENTER in self.options:
+                    ret.append("\\begin{center}")
                 if LONGTABLE not in self.options:
                     ret += ["\\caption{",self.caption, "}"]
                     if self.label:
@@ -420,10 +420,10 @@ class ttable:
         if self.mode==LATEX:
             if LONGTABLE not in self.options:
                 ret.append("\\end{tabular}\n")
-                if OPTION_TABLE in self.options:
-                    ret.append("\\end{table}")
                 if OPTION_CENTER in self.options:
                     ret.append("\\end{center}")
+                if OPTION_TABLE in self.options:
+                    ret.append("\\end{table}")
             else:
                 ret.append("\\end{longtable}\n")
         elif self.mode==HTML:
@@ -436,7 +436,7 @@ class ttable:
         # Finally, add any variables that have been defined
         for (name,value) in self.variables.items():
             if self.mode==LATEX:
-                ret += ["\\newcommand\\",name, "{",  str(value), "}"]
+                ret += latex_var(name,value)
             if self.mode==HTML:
                 ret += ["Note: ",name," is ", value, "<br>"]
         return "".join(ret)

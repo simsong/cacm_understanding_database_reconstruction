@@ -210,27 +210,27 @@ sourced from fewer than three people are suppressed.
   purpose only.\label{fictional}}
 \begin{center}
 \begin{tabular}{l|l|c|c|c|}
-     &                           &       & \multicolumn{2}{|c|}{Age} \\
-Item & Group                     & Count & Median & Average \\
+          &                           &       & \multicolumn{2}{|c|}{Age} \\
+Statistic & Group                     & Count & Median & Mean \\
 \hline
-  1A & total population          & 7     &  30    & 38 \\
+       1A & total population          & 7     &  30    & 38 \\
 \hline
-  2A & female                    & 4     &  30    & 33.5 \\
-  2B & male                      & 3     &  30    & 44 \\
-  2C & Black or African American & 4     &  51    & 48.5 \\
-  2D & White                     & 3     &  24    & 24 \\
+       2A & female                    & 4     &  30    & 33.5 \\
+       2B & male                      & 3     &  30    & 44 \\
+       2C & Black or African American & 4     &  51    & 48.5 \\
+       2D & White                     & 3     &  24    & 24 \\
 \hline
-  3A & single adults             & \cens & \cens  & \cens \\
-  3B & married adults            & 4     & 51     & 54 \\
+       3A & single adults             & \cens & \cens  & \cens \\
+       3B & married adults            & 4     & 51     & 54 \\
 \hline
-  4A & Black or African American female              & 3     & 36     & 36.7 \\
-  4A & Black or African American male                & \cens & \cens  & \cens \\
-  4B & White male                & \cens & \cens  & \cens \\
-  4B & White female              & \cens & \cens  & \cens \\
+       4A & Black or African American female              & 3     & 36     & 36.7 \\
+       4B & Black or African American male                & \cens & \cens  & \cens \\
+       4C & White male                & \cens & \cens  & \cens \\
+       4D & White female              & \cens & \cens  & \cens \\
 \hline
-  5A & persons under 5 years     & \cens & \cens  & \cens \\
-  5B & persons under 18 years    & \cens & \cens  & \cens \\
-  5C & persons 64 years or over  & \cens & \cens  & \cens \\
+       5A & persons under 5 years     & \cens & \cens  & \cens \\
+       5B & persons under 18 years    & \cens & \cens  & \cens \\
+       5C & persons 64 years or over  & \cens & \cens  & \cens \\
 \hline
 \multicolumn{5}{l}{Note: Married persons must be 15 or over}
 \end{tabular}
@@ -250,7 +250,7 @@ microdata used to create original table.
 
 For example, statistic 2B states that there are 3 males living in the
 geography.  Because age is reported to the nearest year, and
-age must necessarily $0 \le \textrm{age} \le 115$. As a result, there
+age must necessarily be $[ 0 .. 115]$, there
 are only a finite number of possible age combinations, specifically:
 
 \[ \binom{116}{3}=\frac{116 \times 115 \times 114}{3 \times 2 \times
@@ -258,40 +258,48 @@ are only a finite number of possible age combinations, specifically:
 
 \input{medians} % brings in \mycount also
 
-Within these sets, there are \mycount{} combinations that satisfy the
+However, within the 253,460 possible age combinations, there are \mycount{} combinations that satisfy the
 constraint of having a median of \mymedian{} and a mean of \mymean{}
-(Table~\ref{fictional}). So by applying the constraints imposed by the
+(see Table~\ref{fictional}). So by applying the constraints imposed by the
 published statistical tables, we are able to reduce the possible
 combinations of ages for the three males from 253,460 to \mycount.
 
-To mount a full reconstruction attack, an attacker extracts all of the
-constraints specified by the published statistics and then creates a
-single mathematical model that reflects all of the
-constraints.  
-Although this might seem difficult to compute in practice,
-computational advances within the past decade have made such
-reconstruction attacks relatively straightforward.
+To mount a full reconstruction attack, an attacker extracts all of these
+constraints and then creates a
+single mathematical model that reflects them all. An automated solver can then
+find an assignment of the variables that satisfies these constraints. 
+
+To continue with our example, statistic 1A establishes the universe of
+the constraint system. Because the block contains 7 people, and there
+are four attributes for each (age, sex, race and marital status), we
+create 28 free variables representing those four attributes for each
+person. These variables are $\textrm{A}1..\textrm{A}7$ (age),
+$\textrm{S}1..\textrm{S}7$ (sex), $\textrm{R}1..\textrm{R}7$ (race),
+and $\textrm{M}1..\textrm{M}7$ (marital status), as shown in
+Table~\ref{variables}.
 
 
-\begin{center}
 \begin{table}
+\caption{The variables associated with the database reconstruction
+  attack. The coding for the categorical attributes is presented in the key.}\label{variables}
+\begin{center}
 \begin{tabular}{l|cccc}
        &     &     &      & Marital  \\
 Person & Age & Sex & Race & Status   \\
 \hline                             
-1      & S1  & S1  & R1   & M1       \\
-2      & S2  & S2  & R2   & M2       \\
-3      & S3  & S3  & R3   & M3       \\
-4      & S4  & S4  & R4   & M4       \\
-5      & S5  & S5  & R5   & M5       \\
-6      & S6  & S6  & R6   & M6       \\
-7      & S7  & S7  & R7   & M7       \\
+1      & A1  & S1  & R1   & M1       \\
+2      & A2  & S2  & R2   & M2       \\
+3      & A3  & S3  & R3   & M3       \\
+4      & A4  & S4  & R4   & M4       \\
+5      & A5  & S5  & R5   & M5       \\
+6      & A6  & S6  & R6   & M6       \\
+7      & A7  & S7  & R7   & M7       \\
 \hline
-\\
+\multicolumn{1}{l}{}\\
 \multicolumn{1}{l}{Key:}\\
 \hline
 female &     &  0  & \\
-male   &     &     & \\
+male   &     &  1  & \\
 \hline
 black  &     &     &  0   & \\
 white  &     &     &  1   & \\
@@ -300,71 +308,98 @@ single &     &     &      &   0\\
 married&     &     &      &   1\\
 \hline
 \end{tabular}
-\caption{The variables associated with the database reconstruction
-  attack. The coding for categorical attributes is presented in the key.}\label{variables}
+\end{center}
 \end{table}
 
-\end{center}
-
-To continue with our example, recall that statistic 2B contains three
-constraints: there are three males, their median age is 30, and their
-average age is 44. In our example, female persons
-are represented by 0
-and male persons by 1, so the constraint that there are three males can be represented as:
+Because the mean age is 38, we know that:
 
 \begin{equation}
-(1-S1) + (1-S2) + (1-S3) + (1-S3) + (1-S5) + (1-S6) + (1-S7) = 3
+A1 + A2 + A3 + A4 + A5 + A6 + A7 = 7 \times 38
+\ref{mean_age_38}
 \end{equation}
 
-We can use this to represent the constraint for the average age of the
-male persons which sums each age if the corresponding sex is 1 (males):
+We use a language called Sugar\cite{sugar} to encode the constraints
+into a form that can be processed by our solver. Sugar represents
+constraints as
+\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
+example, equation~\ref{mean_age_38} is can be represented this way:
 
-\begin{equation}
-\frac{
-  \begin{split}
-  A1 \times (1-S1) + A2 \times (1-S2) + A3 \times (1-S3) + \\
-   A4 \times (1-S4) + A5 \times (1-S5) + A6 \times (1-S6) + A7 \times (1-S7)
-  \end{split}
-}{3} = 44
-\end{equation}
-
-At this point it is more useful to represent the constraints using a
-programming language. We will use a language called Sugar\cite{sugar},
-which represents constraints as a series of Lisp-like
-\textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. Sugar
-allows exceedingly complex constraints to by created and tested in a
-straightforward manner. 
-
-For example, the constraint in Equation~\ref{eq1} can be encoded as the following
-s-expressions, which declares each of the variables to have the values
-0 or 1 and then states that they must sum to three:
 \begin{Verbatim}
-(int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1)
-(int S5 0 1) (int S6 0 1) (int S7 0 1)
+; First define the integer variables, with the range 0..115
+(int A1 0 115)
+(int A2 0 115)
+(int A3 0 115)
+(int A4 0 115)
+(int A5 0 115)
+(int A6 0 115)
+(int A7 0 115)
+
+; Statistic 1A: Mean age is 30
+(= (+ A1 A2 A3 A4 A5 A6 A7)
+   (* 7 38)
+)
+\end{Verbatim}
+Once the constraints in the statistical table are turned into
+s-expressions, Sugar encodes the s-expressions into a
+set of Boolean constraints that can be fed into a SAT-solver. For example, each age variable
+is encoded using uniary notation as 116 Boolean variables. Using this
+notation, the decimal value 0 is encoded as 116 false Boolean
+variables, the decimal value 1 is encoded as 1 true and 115 false
+values, and so on. Although this
+conversion is not space efficient, it is fast, and the uniary notation makes
+it easy to encode integer inequalities as simple functions of Boolean
+variables. 
+
+Although Sugar makes it relatively simple to encode constraints that
+represent counts and means, encoding medians is more complicated. The
+approach we settled upon requires that we first order the ages of the
+person records. An unanticipated advantage of ordering the ages is
+that it eliminates many degenerate solutions that different only in
+permuted labels for the reconstructed individuals:
+
+\begin{Verbatim}
+;; Assure that the output is sorted by age. This does a good job 
+;; eliminating dupliate answers that simply have swapped records.
+(<= A1 A2)
+(<= A2 A3)
+(<= A3 A4)
+(<= A4 A5)
+(<= A6 A7)
+\end{Verbatim}
+
+Having sorted the ages, we know that the middle variable must
+be median:
+
+\begin{Verbatim}
+(= A4 30)
+\end{Verbatim}
+
+Sugar has an \texttt{if} function that allows us to encode constraints
+for a subset of the population. Recall that statistic 2B contains three
+constraints: there are three males, their median age is 30, and their
+average age is 44. We can use the value \texttt{0} to represent a female
+and \texttt{1} to represent a male:
+
+\begin{Verbatim}
+(int FEMALE 0)
+(int MALE   1)
+\end{Verbatim} 
+
+Using the variable \texttt{S\emph{n}} to represent the sex of person
+$n$, we then have the constraint:
+
+\begin{equation}
+S1 + S2 + S3 + S4 + S5 + S6 + S7 = 3
+\end{equation}
+
+This can be represented as:
+
+\begin{Verbatim}
 (= (+ S1 S2 S3 S4 S5 S6 S7) 3)
 \end{Verbatim}
 
-Although this directly represents the problem, we can write code
-that's easier to understand by using the C preprocessor to implement
-simple text macros, and using Sugar's \texttt{if} clause, to make it
-very clear that we have a constraint that counts the number of males:
-
-\begin{Verbatim}
-#define FEMALE 0
-#define MALE   1
-(= (+ (if (= S1 MALE) 1 0)  
-      (if (= S2 MALE) 1 0)
-      (if (= S3 MALE) 1 0)
-      (if (= S4 MALE) 1 0)
-      (if (= S5 MALE) 1 0)
-      (if (= S6 MALE) 1 0)
-      (if (= S7 MALE) 1 0)
-      )
-   3)
-\end{Verbatim}
-
-With this notation, it is straightforward to create a constraint for
-mean age of male persons:
+Now, using the \texttt{if} function, it is straightforward to create a constraint for
+mean age of male persons is 44:
 
 \begin{Verbatim}
 (= (+ (if (= S1 MALE) A1 0)    ; average male age = 44
@@ -378,110 +413,119 @@ mean age of male persons:
    (* 3 44))
 \end{Verbatim}
 
-Creating constraints for medians is more complicated. For odd numbered samples, the median is the value in the middle. With a sample size of three and a median of 30, there must be one age that is 30, one or more ages that are less than 30, and one or more ages that are more than 30:
-
-\begin{Verbatim}
-(= (+ (if (and (= S1 MALE) (= A1 30)) 1 0)
-      (if (and (= S2 MALE) (= A2 30)) 1 0)      
-      (if (and (= S3 MALE) (= A3 30)) 1 0)      
-      (if (and (= S4 MALE) (= A4 30)) 1 0)      
-      (if (and (= S5 MALE) (= A5 30)) 1 0)      
-      (if (and (= S6 MALE) (= A6 30)) 1 0)      
-      (if (and (= S7 MALE) (= A7 30)) 1 0)
-      )
-   1)
-
-(>= (+ (if (and (= S1 MALE) (<= A1 30)) 1 0)
-       (if (and (= S2 MALE) (<= A2 30)) 1 0)      
-       (if (and (= S3 MALE) (<= A3 30)) 1 0)      
-       (if (and (= S4 MALE) (<= A4 30)) 1 0)      
-       (if (and (= S5 MALE) (<= A5 30)) 1 0)      
-       (if (and (= S6 MALE) (<= A6 30)) 1 0)      
-       (if (and (= S7 MALE) (<= A7 30)) 1 0)
-       )
-    1)
-
-(>= (+ (if (and (= S1 MALE) (>= A1 30)) 1 0)
-       (if (and (= S2 MALE) (>= A2 30)) 1 0)      
-       (if (and (= S3 MALE) (>= A3 30)) 1 0)      
-       (if (and (= S4 MALE) (>= A4 30)) 1 0)      
-       (if (and (= S5 MALE) (>= A5 30)) 1 0)      
-       (if (and (= S6 MALE) (>= A6 30)) 1 0)      
-       (if (and (= S7 MALE) (>= A7 30)) 1 0)
-       )
-    1)
-\end{Verbatim}
-
-
 We translated Table~\ref{fictional} into \NumSExpressions{} individual
-S-expressions extending over \NumConstraintLines{} lines. 
+S-expressions extending over \NumConstraintLines{} lines. Sugar then
+translated this into \NumVariables Boolean variables consisting of
+\NumClauses clauses in the conjunctive normal form (CNF). 
+
+Translating the constraints into CNF allows them to be solved using
+either a SAT (satisfiability), SMT (satisfiability module theories),
+or MIPM (mixed integer programming model) solver. There are many such
+solvers, and many of them take input in the so-called DIMACS file
+format, which is a standardized form for representing CNF problems.
+The DIMACS format was popularized by a series of annual SAT solver
+competitions; one of the results of these competitions was a
+tremendous speed-up of SAT solvers over the past two decades. Many
+solvers can now solve CNF systems with millions of variables and
+clauses in just a few minutes. In our case, the open source
+PicoSAT\cite{Biere_picosatessentials} SAT solver is able to find a
+solution to the CNF problem in less than 2 seconds on a 2013 MacBook
+Pro with a 2.8GHz Intel i7 processor and 16GiB of RAM (although the
+program is not limited by RAM).
+
+\subsection{Exploring the Solution Universe}
+
+PicoSAT's solution is a satisfying assignment for the \NumVariables{}
+Boolean variables. After PicoSAT runs, we can use Sugar to translate
+these assignments back into integer values of the constructed
+variables. (SMT and MIPM solvers can represent the constraints at a higher
+level of abstraction, but for our purposes a SAT solver is
+sufficient.)
 
 There exists a \textit{solution universe} of all the possible
-solutions to this set of simultaneous equations. If the solution
+solutions to this set of constraints. If the solution
 universe contains a single possible solution, then the published
 statistics completely reveal the underlying confidential data. If
 there are multiple satisfying solutions, then any element (person) in
 common between all of the solutions is revealed. If the equations have
 no solution, the set of published statistics are inconsistent.
 
-\section{Solving the Constraints}
-A straightforward but wildly inefficient approach to solving this
-system of simultaneous equations is to perform a brute force
-search---that is, to try all possible values of all possible variables
-and record the ones that work.
+Normally SAT, SMT and MIPM solvers will stop when they find a single
+satisfying solution. One of the advantages of PicoSAT is that it can
+produce the solution universe of all possible solutions to the CNF
+problem. Many of these solutions are degenerate, in that they are
+different assignments of the internal Boolean variables that result in
+the same higher-level variables.  In the case of this problem, there
+are actually 3,554 degenerate satisfying solutions, each of which maps
+to the same distinct assignment of attributes to the microdata that produce the statistics in
+Table~\ref{fictional}. That assignment is:
 
-Ordinarily a brute force search on even this toy problem would be
-computationally infeasable: there are 7 age variables that can range from 0 to 115
-and 21 binary variables (sex, race race and marital status). All
-together, there are $116^{10} \times 2^{21} \approx 9.25
-\times 10^{26}$ possible combinations. Even if we could try a billion
-a second, trying all possible combinations would take 90,000 trillion
-years. 
+\begin{center}
+\begin{minipage}{1.5in}
+  \input{id_table_solved.tex}
+\end{minipage}
+\begin{minipage}{.5in}
+  =
+\end{minipage}
+\begin{minipage}{1.5in}
+\begin{tabular}{c}
+  Solution \#1\\
+  \hline
+\texttt{ 8FBS}\\
+\texttt{18MWS}\\
+\texttt{24FWS}\\
+\texttt{30MWM}\\
+\texttt{36FBM}\\
+\texttt{66FBM}\\
+\texttt{84MBM}\\
+\end{tabular}
+\end{minipage}
+\end{center}  
+Table~\ref{fictional} is actually over-constrained: some (but not all) of the
+constraints can be dropped while preserving a unique
+solution.
 
-But there is no need to try all possible combinations: the highly
-constrained system can frequently be solved automatically using a
-program called a satisfiability (SAT) solver. These programs use
-clever heuristics to solve a system of boolean equations and variables
-that are represented in the conjunctive normal form (CNF). Even though worst case SAT
-problems require exponential time to solve, modern SAT solvers can
-frequently solve ``hard structured problems with over a million variables and
-several million constraints,'' according to a review of SAT solvers by Gomes.\cite{Gomes200889} 
+However, rather than looking for the ways that the table is
+over-constrained, it is more useful here to explore what happens when
+a critical statistic is suppressed. After all, statistical agencies
+have long used suppression (censoring) in an attempt to provide
+privacy to those whose attributes are presented in the microdata. How
+effective is this approach?
 
-Many SAT solvers take their input in the so-called DIMACS file format,
-which specifies a single equation in conjunctive normal form
-(CNF). This format was popularized by the annual SAT Solver
-Competition, which saw dramatic improvements in the speed of SAT
-solvers between 2000 and 2015. 
+Reviewing Table~\ref{fictional}, statistic 4A is an obvious candidate
+for suppression---especially given that statistics 4B, 4C and 4D have
+already been suppressed to avoid an inappropriate statistical
+disclosure.
 
-Because the DIMACS file format is difficult to work with, we use Sugar
-to encode the system of integer and logical constraints into a
-system of boolean equations and variables. Integers, for example, are
-encoded in a unary, with a variable that can range from 0 to 4 being
-encoded as \Verb|0 0 0 0|, \Verb|1 0 0 0|, \Verb|1 1 0 0|,
-\Verb|1 1 1 0| or \Verb|1 1 1 1|.  Sugar then runs the SAT
-solver. Finally, Sugar decodes the boolean solution back into a list
-of integers and their satisfying value. 
+Removing the constraints for statistic 4A increases the number of
+degenerate solutions from 3,554 to 12,498. More importantly, it
+increases the number of distinct solutions from 1 to 3. The three
+satisfying solutions are:
 
-Our source input file consists of \NumSExpressions s-expressions in
-\NumConstraintLines{} lines (minus comments).
-This converts into
-\NumVariables Boolean variables and \NumClauses CNF clauses. Using the
-open source SAT solver PicoSAT\cite{Biere_picosatessentials}, we are able
-to solve this system in typically less than 2 seconds on a 2013 MacBook Pro with a 2.8GHz Intel
-i7 processor and 16GiB of RAM (although the program is not limited by
-RAM). Sugar is able to find an exact solution with the constraints presented
-in Table~\ref{fictional}; the output is given in Table~\ref{sugarbig} and is tabulated for readability.
+\begin{center}
+\begin{tabular}{c|c|c}
+  Solution \#1 & Solution \#2 & Solution \#3\\
+\hline
+ \texttt{ 8FBS } &  \texttt{ 8FBS} & \texttt{ 8MBS} \\
+ \texttt{18MWS } &  \texttt{18FWS} & \texttt{18FWS} \\
+ \texttt{24FWS } &  \texttt{24MWS} & \texttt{24FWS} \\
+ \texttt{30MWM } &  \texttt{30MWM} & \texttt{30MWM} \\
+ \texttt{36FBM } &  \texttt{42FBM} & \texttt{36FBM} \\
+ \texttt{66FBM } &  \texttt{66FBM} & \texttt{56FBM} \\
+ \texttt{84MBM } &  \texttt{78MBM} & \texttt{94MBM} \\
+  \end{tabular}
+\end{center}
 
-\subsection{Exploring the Solution Universe}
-
-Instead of simply finding a single satisfying solution, some SAT
-solvers can find all possible solutions---that is, the sovler can
-experimentally determine the entire solution universe. This lets us
-experimentally determine the impact of censoring additional
-statistics.
-
-For example, 
-
+Notice that each of these solutions contains 30MWM (age 30, Male,
+White, Married). Since a record with these attributes is common to all
+of the solutions, this record is revealed even when statistic 4A is
+suppressed.  For the remaining persons, it is not clear how to report
+the relative odds that an individual matching those characteristics is
+present. There are vastly more degenerate solutions pointing to
+Solution \#1 than to Solution \#2 or \#3, and Solution \#1 is the
+solution that PicoSAT reports first in almost all cases. However, all three solutions
+are allowed by the constraints, so they are all theoretically
+possible. 
 
 \section{Defending Against a DRA}\label{solution}
 There are three approaches for defending against a database reconstruction: publish less
@@ -492,55 +536,64 @@ the tabulation. We consider them in order below.
 Although it might seem that publishing less statistical data is a
 reasonable defense against the DRA, this choice may severely limit the number
 of tabulations that can be published. A
-related problem is that it may be computationally infeasible to
-determine when a reconstruction is possible from limited publications.
+related problem is that, with even a moderately large population, it may be computationally infeasible to
+determine when the intersection of all possible reconstructions
+identifies individuals.
 
 A second approach is to apply noise to the data before
-tabulation. For example, each respondent's age might be randomly
-altered by a small amount, perhaps $-2 \ldots 2$; 
-the statistical agency then tabulates the values. 
-In this scenario, if the attacker performs a DRA, the result is the altered dataset, and not the underlying true values. Thus, if two responses
-are processed with noise of this sort, there are now $5^2 = 25$
-possible solutions. If noise infusion is applied to all 7 age
-variables, there are $5^{7}=78,125$ possible
-solutions. Database reconstruction may still be possible, but there is no
-way to know which reconstructed databse is correct. 
+tabulation. This approach is called \emph{input noise infusion}. For example, each respondent's age might be randomly
+altered by a small amount. Input noise infusion
+doesn't prevent database reconstruction, but it limits the value of
+the reconstructed data by creating uncertainty for each of the
+reconstructed values. 
 
-A third approach is to use output noise infusion. Instead of reporting
-precise answers for each of the quoted statics, each is reported with
-the addition of noise.  With output noise infusion, the attacker must
-revise each constraint from an equality to a bounded range, resulting
-again in an explosion of possible solutions that is exponential in the
-number of constraints. Exact solutions can still be found, but there
-is no way for an attacker to determine which are correct.  Like input
-noise infusion, output noise infusion does not prevent an attacker
-from reconstructing the database, but it prevents the attacker from
-knowing if the reconstruction is correct.
+For example, if a random offset in the range of $-2 \ldots +2$ is
+added to each record of our census and the reconstruction results in individuals of
+ages (7, 17, 22, 29, 36, 66, 82) or (6, 18, 26, 31, 34, 68,
+82). An attacker would presumably take this into account, but they
+would have no way of knowing if the true age of the youngest person is
+6, 7, 8, 9 or 10. Randomness could also be applied to the sex, race
+and marital status variables. Clearly, the more noise that is added,
+the better privacy is protected, but the less accurate are the
+resulting statistics. Considering statistic 1A, input noise infusion
+might result with a median $28\ldots32$ and a mean $36\ldots40$. 
 
-\textbf{How much noise should be added? --- have a brief intro to
-  differential privacy here, and then the big finish.}
+The third approach is to add noise to the statistics themselves. This
+is called \emph{output noise infusion}. Whereas input noise infusion
+applies noise to the microdata directly, output noise infusion applies
+output to the statistical publications.  Output noise infusion impacts
+database reconstruction in two ways. First, the resulting statistical
+publication is likely no longer consistent, so the reconstruction of
+\emph{any} database may no longer be possible. Second, even if a
+database is reconstructed, it is likely not the correct database.
 
 \section{Related Work}
 
-Dinur and Nissim\cite{noise} showed that the underlying
+In 2003 Irit Dinur and Kobbi Nissim\cite{DinurNissim2003} showed that the underlying
 confidential data of a statistical database can be reconstructed with
 a surprisingly small number of queries. In practice, most statistical
 agencies perform these queries themselves when they release
 statistical tables. Thus, Dinur and Nissim's primary finding
-is: a statistical agency that publishes too many accurate statistical
+is that a statistical agency that publishes too many accurate statistical
 tables drawn from the same confidential dataset risks inadvertently
-compromising that dataset unless it takes specific protective measures.
+compromising that dataset unless it takes specific protective
+measures. This paper is a demonstration of that finding.
 
 Statistical tables create the possibility of database reconstruction
 because they form a set of constraints for which there is ultimately
-only one exact solution. Restricting
-the number or specific types of queries---for example, by suppressing
-results from a small number of respondents---is often insufficient to prevent access
-to indirectly identifying information, because the system's refusal to
-answer a ``dangerous'' query itself provides the attacker with information. 
-Dinur and Nissim found that, if a database is modeled as a string of $n$ bits,
-then at least $\sqrt{n}$ bits must be modified by adding noise to
-protect persons from being identified.
+only one exact solution. Restricting the number or specific types of
+queries---for example, by suppressing results from a small number of
+respondents---is often insufficient to prevent access to indirectly
+identifying information, because the system's refusal to answer a
+``dangerous'' query itself provides the attacker with information.
+Dinur and Nissim found that, if a database is modeled as a string of
+$n$ bits, then at least $\sqrt{n}$ bits must be modified by adding
+noise to protect persons from being identified. In our example, each
+record is contains 11 bits of data, so the confidential database has
+77 bits of information. Each statistic in Table~\ref{variables}
+can be modeled as a 4 bit of count, a 7 bit of median, and a 7 bit of
+mean, for a total of 18 bits; Table~\ref{variables} releases 126 bits
+of information.
 
 Kasiviswanathan, Rudelson, and Smith\cite{Kasiviswanathan:2013:PLR:2627817.2627919} introduced
 the concept of the linear reconstruction attack, which underlies the  DRA. The key concept is that,
@@ -549,34 +602,26 @@ can construct a matrix of linear equalities that can often be solved
 in polynomial time. The paper also analyzes a common reconstruction
 technique known as least squares decoding, where the attacker sets up
 a goal function to minimize the square of the distance between two
-databases in order to reconstruct the original database.
-
-Brown and Heathers\cite{doi:10.1177/1948550616673876} developed the
-granularity-related inconsistency of means (GRIM) test in response to
-observed inconsistencies in published data from psychological
-journals. This test is centered around the premise that, for
-statistics drawn from integer data, only certain means are
-possible. The GRIM test determines whether reported means could
-possibly have come from data sets with a certain size, granularity,
-and group number. In surveying 71 published articles, the authors
-found 36 papers with one inconsistency and 16 with two or more
-inconsistencies. Although this test was intended to detect possible
-errors or mean falsification in published articles, the concept of
-drawing inferential conclusions about a data set based only on 
-published statistics is a key concept behind the DRA.
-
+databases in order to reconstruct the original database. This paper
+does not use that attack technique, but instead creates a system of
+constraints and solves them with a solver that can solve NP-hard
+problems. Although such a solver requires exponential time in the
+worst case, in this case it is quite fast.
 
 \section{Conclusion}
 
-With the dramatic improvement in the efficiency of SAT solvers in the
-last decade, database reconstruction attacks are no longer just a 
+With the dramatic improvement in both computer speeds and the
+efficiency of solvers in the
+last decade, database reconstruction attacks on statistical databases are no longer a 
 theoretical danger. The vast quantity of data products published by
 statistical agencies each year may give a determined attacker 
 more than enough constraints to reconstruct some or all of a target database and
 breach the privacy of millions of people. Although a suite of traditional
-disclosure avoidance technique is often sufficient to defend against a cursory attack, cell suppression and generalization are not secure against more sophisticated
-forms of attack. Agencies may also be using input and output noise infusion, but 
-current systems may not be noisy enough to materially control the DRA risk.
+disclosure avoidance technique is often sufficient to defend against a
+cursory attack, cell suppression and generalization are not secure
+against this kind of 
+attack. To protect the privacy of respondent data, statistical
+agencies must use some kind of noise infusion. 
 Formal privacy methods, especially differential privacy, were specifically
 designed to to control this risk and, as both of our noise-infusion examples
 illustrate, they do so by systematically expanding the universe of solutions
@@ -584,7 +629,7 @@ to the DBA constraints. In this expanded universe, the real confidential data
 are but a single solution, and no evidence in the published data can improve 
 an attacker's guess about which solution is the correct one.
 
-\section{References}\
+\section{References}
 
 \bibliographystyle{splncs03}
 \bibliography{white_paper}
@@ -597,11 +642,11 @@ The Boolean satisfiability problem (SAT) was the first
 problem to be proven NP-complete\cite{cooklevin}. This problem asks,
 for a given Boolean formula, whether replacing each variable with
 either True or False can make the formula evaluate to True.  A
-consequence of SAT being NP-complete is that any problem can be
+consequence of SAT being NP-complete is that many problems involving
+constraints on variables can be
 reduced in polynomial time (i.e., quickly) to an instance of the SAT
-problem. Once a problem has been reduced to an instance of the SAT
-problem, this SAT problem can be fed into a SAT solver to find
-possible solutions. Although the SAT problem is not solvable by
+problem. Once reduced, many such problems can be solved through the
+use of general-purpose heuristics. Although the SAT problem is not solvable by
 algorithms in polynomial time, researchers have found many heuristic
 techniques for expediting this process. SAT solvers combine a variety
 of these techniques into one complex process, resulting in polynomial
@@ -623,12 +668,13 @@ is:
 
 \end{enumerate}
 
-This process is much faster at solving SAT problems than previous
-processes used in SAT solvers because adding conflicts as new clauses
+This process is fast at solving SAT problems because adding conflicts as new clauses
 has the potential to avoid wasteful ``repeated backtracks.''
 Additionally, CDCL and its predecessor algorithm, DPLL, are both
 provably complete algorithms and will always return either a solution
-or ``Unsatisfiable'' if given enough time and memory.
+or ``Unsatisfiable'' if given enough time and memory. Another
+advantage is that CDCL solvers reuse past work when producing the universe of all
+possible solutions.
 
 There are a wide variety of SAT solvers available to the public for
 minimal or no cost. Although a SAT solver requires the user to
@@ -651,4 +697,4 @@ Input for the model in this paper is as follows:
 
 \end{document}
 
-% LocalWords:  microdata equalities satisfiability
+% LocalWords:  microdata equalities satisfiability uniary

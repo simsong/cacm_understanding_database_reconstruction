@@ -20,7 +20,7 @@
 
 
 
-;#define USE_SOLUTION   // for debugging
+
 
 ;; Sexes (0:female  1:male)
 
@@ -28,7 +28,7 @@
 (int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1)
 (int S5 0 1) (int S6 0 1) (int S7 0 1)
 
-;; Ages (between 1 and 115 years old)
+;; Ages (between 0 and 115 years old)
 
 
 (int A1 1 115) (int A2 1 115) (int A3 1 115) (int A4 1 115)
@@ -70,37 +70,14 @@
 ;; 1A Total Pop: 7 / Median 30 / Average 38
 
 ;;; Median age 30
-;;; A single variable is 30; 3 are <30, 3 are >30
-(= (+ (if (= A1 30) 1 0)
-      (if (= A2 30) 1 0)   
-      (if (= A3 30) 1 0)   
-      (if (= A4 30) 1 0)   
-      (if (= A5 30) 1 0)   
-      (if (= A6 30) 1 0)
-      (if (= A7 30) 1 0)
-      ) 1)
-
-(= (+ (if (> A1 30) 1 0)
-      (if (> A2 30) 1 0)   
-      (if (> A3 30) 1 0)   
-      (if (> A4 30) 1 0)   
-      (if (> A5 30) 1 0)   
-      (if (> A6 30) 1 0)
-      (if (> A7 30) 1 0)
-      ) 3)
-
-(= (+ (if (< A1 30) 1 0)
-      (if (< A2 30) 1 0)   
-      (if (< A3 30) 1 0)   
-      (if (< A4 30) 1 0)   
-      (if (< A5 30) 1 0)   
-      (if (< A6 30) 1 0)
-      (if (< A7 30) 1 0)
-      ) 3)
+;;; The ages are sorted, so A4 must be 30.
 
 ; mean age
 (= (+ A1 A2 A3 A4 A5 A6 A7)
    (* 7 38))
+
+; median. Note this is moved to the end of the file due to a bug in Sugar
+;(= A4 30)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -149,6 +126,7 @@
 ;;; Let MinAFAbove30 be the youngest female over 30
 ;;; The median is then (MaxAFBelow30+MinAFAbove30)/2
 
+
 (int MaxAFBelow30 0 29)
 (int MinAFAbove30 31 116)
 ;
@@ -162,7 +140,8 @@
              (max (if (and (= S7 0) (< A7 30)) A7 0)
                   0))))
 
-;;                            ))))))
+;;
+
 (= MinAFAbove30
    (min (min (min (if (and (= S1 0) (> A1 30)) A1 115)
                   (if (and (= S2 0) (> A2 30)) A2 115))
@@ -247,6 +226,7 @@
       )
    (* 3 44))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 2C Black.  n=4  median=51  average=48.5
 
@@ -289,6 +269,7 @@
       (if (and (= R6 0) (> A6 51)) 1 0)      
       (if (and (= R7 0) (> A7 51)) 1 0)
       ) 2)
+
 
 ; average black age = 48.5 (x 4 = 194)
 (= (+ (if (= R1 0) A1 0)   
@@ -434,6 +415,8 @@
 
 
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; 4A. Black Females
@@ -494,10 +477,21 @@
 
 
 
+;; Statistic 1A. This is a sugar bug:
+(= A4 30)
+
 ;; Solution. To verify constraints, uncomment these and everything should satisfy!
 ;; female=0        black=0   single=0
 ;; male  =1        white=1   married=1
 ;; Note that this is the sorted by age
+
+(= S1 0) (= A1  8) (= R1 0) (= M1 0)
+(= S2 1) (= A2 18) (= R2 1) (= M2 0)
+(= S3 0) (= A3 24) (= R3 1) (= M3 0)
+(= S4 1) (= A4 30) (= R4 1) (= M4 1)
+(= S5 0) (= A5 36) (= R5 0) (= M5 1)
+(= S6 0) (= A6 66) (= R6 0) (= M6 1)
+(= S7 1) (= A7 84) (= R7 0) (= M7 1)
 
 
 

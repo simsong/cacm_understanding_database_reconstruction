@@ -80,10 +80,11 @@ def extract_vars_from_sugar_decode(outdata):
             vars[var] = val
     return vars
 
-def sugar_decode_picostat_and_extract_vars(outdata,mapfile):
-    return extract_vars_from_sugar_decode( sugar_decode_picosat_out( outdata, mapfile))
+def sugar_decode_picostat_and_extract_vars(lines,mapfile):
+    return extract_vars_from_sugar_decode( sugar_decode_picosat_out( "\n".join(lines), mapfile))
 
-def python_decode_picostat_and_extract_vars(outdata,mapfile):
+def python_decode_picostat_and_extract_vars(lines,mapfile):
+    """lines is an array of lines"""
     vars    = {}                # extracted variables
     mapvars = {}
     with open(mapfile,"r") as f:
@@ -99,7 +100,7 @@ def python_decode_picostat_and_extract_vars(outdata,mapfile):
     highest = max(v[0]+v[2]-v[1] for v in mapvars.values())
     # Now read the boolean variables and map them back
     coefs = set()
-    for line in lines_iter(outdata):
+    for line in lines:
         if line[0]!='v': continue
         vals = [int(v) for v in line[2:].split(" ")]
         if abs(vals[0]) > highest:
@@ -140,33 +141,34 @@ def parse_vars_to_printable(vars):
         ret.append("\n")
     return "".join(ret)
 
-def parseall(data):
-    picosat_out = ""
+def parse_picosat_all_file(path):
     total_solutions = 0
     solutions = 0
     seen = set()
     code_count = defaultdict(int)
     ctr = 0
-    for line in lines_iter(data):
-        if line.startswith('s'):
-            if picosat_out:
-                ctr += 1; print("{}\r".format(ctr),end='')
-                #vars = sugar_decode_picostat_and_extract_vars(picosat_out, args.map)
-                vars = python_decode_picostat_and_extract_vars(picosat_out, args.map)
-                codes = parse_vars_to_printable(vars)
-                if codes not in seen:
-                    solutions += 1
-                    print("Solution:{}\n{}".format(solutions,codes))
-                    seen.add(codes)
-                    # Now add each code to the histogram
-                    for (age,code) in vars_to_codes(vars):
-                        code_count[code] += 1
-                picosat_out = ''
-        if line.startswith('s SOLUTIONS'):
-            total_solutions = int(line.split(" ")[2])
-            break
-        picosat_out += line + "\n"
-    with open("vars_multiple.tex","w") as f:
+    picosat_out = []
+    with open(path,"r") as f:
+        for line in f:
+            if line.startswith('s'):
+                if picosat_out:
+                    ctr += 1; print("{}\r".format(ctr),end='')
+                    #vars = sugar_decode_picostat_and_extract_vars(picosat_out, args.map)
+                    vars = python_decode_picostat_and_extract_vars(picosat_out, args.map)
+                    codes = parse_vars_to_printable(vars)
+                    if codes not in seen:
+                        solutions += 1
+                        print("Solution:{}\n{}".format(solutions,codes))
+                        seen.add(codes)
+                        # Now add each code to the histogram
+                        for (age,code) in vars_to_codes(vars):
+                            code_count[code] += 1
+                    picosat_out = []
+            if line.startswith('s SOLUTIONS'):
+                total_solutions = int(line.split(" ")[2])
+                break
+            picosat_out.append(line)
+    with open(args.all,"w") as f:
         print("distinct solutions: {}  additional degenerate solutions: {}".
               format(solutions,total_solutions-solutions))
         print(latex_def("NumDistinctSolutions",solutions),file=f)
@@ -184,12 +186,13 @@ if __name__=="__main__":
     parser.add_argument("--parseout",
                         help="Parse the variables out of an .out file. A map file must be specified")
     parser.add_argument("--parseall",help='Evaluate output file of the picosat --all')
-    parser.add_argument("--out",help='sugar output file',default='constraints.out')
+    parser.add_argument("--picosat_out",help='picosat output file',default='constraints.out')
     parser.add_argument("--map",help="Specify map file",default='constraints.map')
-    parser.add_argument("--all",help="Compute all possible solutions",action="store_true")
+    parser.add_argument("--all",help="Compute all possible solutions; store results in ALL")
     parser.add_argument("--decode",help="test the decode function")
+    parser.add_argument("--define",help="specify a #define to CPP")
+    parser.add_argument("--sugar_output",help="specify sugar output",default='constraints.sugar.out')
     args = parser.parse_args()
-    args.sugar_output = "constraints.sugar.out"
 
     if args.parseout:
         out = open(args.parseout,"r").read()
@@ -202,7 +205,7 @@ if __name__=="__main__":
         exit(1)
 
     if args.parseall:
-        parseall(open(args.parseall,"r").read())
+        parse_picosat_all_file(args.parseall)
         exit(0)
 
     if args.decode:
@@ -227,7 +230,7 @@ if __name__=="__main__":
     cmd = ['perl','sugar-v2-3-2/bin/sugar',
            '-jar','sugar-v2-3-2/bin/sugar-v2-3-2.jar',
            '-solver',solver_cmd,'-keep','-tmp','constraints',
-           '-output','constraints.out']
+           '-output',args.picosat_out]
     if args.all:
         cmd += ['-nodecode']
 
@@ -237,12 +240,16 @@ if __name__=="__main__":
     p = Popen(cmd,stdout=PIPE,stderr=PIPE)
     (out,err) = p.communicate()
     t1 = time.time()
-    sugar_out = out.decode('utf-8')
-    sugar_err = err.decode('utf-8')
+    sugar_out = out.decode('utf-8'); del out
+    sugar_err = err.decode('utf-8'); del err
     if p.returncode!=0:
         raise RuntimeError("sugar returned {}. out='{}' err='{}'".format(p.returncode,sugar_out,sugar_err))
         exit(1)
     print("sugar run time: {:.4} sec".format(t1-t0))
+
+    if args.all:
+        parse_picosat_all_file(args.picosat_out)
+        exit(0)
 
     # keep a copy of the sugar output
     # Not strictly necessary, but useful for debugging
@@ -256,10 +263,6 @@ if __name__=="__main__":
         print(sugar_out)
         exit(1)
     
-    if args.all:
-        parseall(out)
-        exit(0)
-
     vars    = extract_vars_from_sugar_decode(sugar_out)
     results = vars_to_codes(vars)
 
