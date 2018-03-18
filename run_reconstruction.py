@@ -4,15 +4,14 @@
 #
 # run the databse reconstruction with the specified input file
 
-SOLVER="picosat"
-
 import sys
 import re
 from subprocess import Popen,PIPE,call
 from collections import defaultdict
 import time
 
-JARFILE='./sugar-v2-3-2/bin/sugar-v2-3-2.jar'
+SUGAR_PERL = './sugar-v2-3-3/bin/sugar'
+SUGAR_JAR  = './sugar-v2-3-3/bin/sugar-v2-3-3.jar'
 # Our encodings
 SEXMAP = {"1":"M", "0":"F"}
 RACEMAP = {"1":"W", "0":"B"}
@@ -180,12 +179,12 @@ if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
     parser = ArgumentParser( formatter_class = ArgumentDefaultsHelpFormatter,
                              description="Runs sugar with picosat and parse the results into LaTeX")
-    parser.add_argument("--seed",type=int,default=0,help="specify the seed for the solver")
     parser.add_argument("--problem",default="one-block.csp",help="specify the problem CSP")
     parser.add_argument("--cnf",default="constraints.cnf",help="specify cnf file")
     parser.add_argument("--parseout",
                         help="Parse the variables out of an .out file. A map file must be specified")
     parser.add_argument("--parseall",help='Evaluate output file of the picosat --all')
+    parser.add_argument("--solver",default="picosat")
     parser.add_argument("--picosat_out",help='picosat output file',default='constraints.out')
     parser.add_argument("--map",help="Specify map file",default='constraints.map')
     parser.add_argument("--all",help="Compute all possible solutions; store results in ALL")
@@ -224,11 +223,17 @@ if __name__=="__main__":
             f.write("\n")
 
     # Run sugar, which runs the solver
-    all = "" if not args.all else " --all"
-    solver_cmd="{} -s {}{}".format(SOLVER,args.seed,all)
+    solver_cmd=args.solver
+    if args.all:
+        solver_cmd += " --all"
     tmp = args.cnf.replace(".cnf","")
-    cmd = ['perl','sugar-v2-3-2/bin/sugar',
-           '-jar','sugar-v2-3-2/bin/sugar-v2-3-2.jar',
+
+    # Here is what the Java looks like
+    # java  -cp './sugar-v2-3-3/bin/sugar-v2-3-3.jar' jp.kobe_u.sugar.SugarMain -v -v  -encode 'constraints.csp' 'constraints.cnf' 'constraints.map'
+
+    cmd = ['perl',SUGAR_PERL,
+           '-jar',SUGAR_JAR,
+           '-vv',
            '-solver',solver_cmd,'-keep','-tmp','constraints',
            '-output',args.picosat_out]
     if args.all:

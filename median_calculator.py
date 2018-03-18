@@ -35,7 +35,7 @@ if __name__=="__main__":
             else:
                 row += ['']*len(rows[0])
         tt.add_data(row)
-    tt.set_latex_colspec('|'.join(['rrr'] * COLUMNS))
+    tt.set_latex_colspec('@{\hspace{1pc}}|@{\hspace{1pc}}'.join(['rrr'] * COLUMNS))
     tt.add_variable("myconsidered",considered)
     tt.add_variable("mycount",count)
     tt.set_caption("The {} possible ages for which the median is {} and the mean is {}".format(count,MEDIAN,MEAN))

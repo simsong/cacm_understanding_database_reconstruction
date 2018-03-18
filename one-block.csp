@@ -65,23 +65,19 @@
 (<= A4 A5)
 (<= A6 A7)
 
-
 ;; Reported tables
-;; 1A Total Pop: 7 / Median 30 / Average 38
 
-;;; Median age 30
-;;; The ages are sorted, so A4 must be 30.
+;; Statistic 1A: Total Pop: 7 / Median 30 / Average 38
 
-; mean age
+;; Median age 30
+;; The ages are sorted, so A4 must be 30.
+(= A4 30)
+
+; mean age: 38
 (= (+ A1 A2 A3 A4 A5 A6 A7)
    (* 7 38))
 
-; median. Note this is moved to the end of the file due to a bug in Sugar
-;(= A4 30)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; 2A Female:  n=4, median=30, average=33.5
+;; Statistic 2A: Female:  n=4, median=30, average=33.5
 (= (+ S1 S2 S3 S4 S5 S6 S7) 3)  ;; 4 female (0=female, 1=male)
 
 ;;; Median age of female is 30
@@ -476,9 +472,8 @@
    110)
 #endif
 
-
-;; Statistic 1A. This is a sugar bug:
-(= A4 30)
+;; Statistic 1A. This is a sugar bug; we should not have to put it here.
+;(= A4 30)
 
 ;; Solution. To verify constraints, uncomment these and everything should satisfy!
 ;; female=0        black=0   single=0
