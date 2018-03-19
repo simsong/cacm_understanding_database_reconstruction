@@ -224,7 +224,6 @@
 
 (< MALEAGE1 MALEAGE2)
 (< MALEAGE2 MALEAGE3)
-(< MALEAGE3 MALEAGE4)
 
 ;; Fix the female ages to the person ages
 (element MALEID1 (A1 A2 A3 A4 A5 A6 A7) MALEAGE1)
