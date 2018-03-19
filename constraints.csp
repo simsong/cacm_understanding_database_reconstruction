@@ -259,34 +259,68 @@
    4) 
 
 ;;; Median age of blacks is 51
-;;; So the same number are over and under 51
-;;; We could tighten this up...
-(= (+ (if (and (= R1 0) (= A1 51)) 1 0)
-      (if (and (= R2 0) (= A2 51)) 1 0)      
-      (if (and (= R3 0) (= A3 51)) 1 0)      
-      (if (and (= R4 0) (= A4 51)) 1 0)      
-      (if (and (= R5 0) (= A5 51)) 1 0)      
-      (if (and (= R6 0) (= A6 51)) 1 0)      
-      (if (and (= R7 0) (= A7 51)) 1 0)
-      ) 0)
+(int BLACK_ID1 1 4)                     ; must leave room for 5, 6 and 7 to be female
+(int BLACK_ID2 2 5)                     ; must leave room for 1, 6 and 7 to be female
+(int BLACK_ID3 3 6)                     ; must leave room for 1, 2 and 7 to be female
+(int BLACK_ID4 4 7)                     ; must leave room for 1, 2 and 3 to be female
 
-(= (+ (if (and (= R1 0) (< A1 51)) 1 0)
-      (if (and (= R2 0) (< A2 51)) 1 0)      
-      (if (and (= R3 0) (< A3 51)) 1 0)      
-      (if (and (= R4 0) (< A4 51)) 1 0)      
-      (if (and (= R5 0) (< A5 51)) 1 0)      
-      (if (and (= R6 0) (< A6 51)) 1 0)      
-      (if (and (= R7 0) (< A7 51)) 1 0)
-      ) 2)
+(< BLACK_ID1 BLACK_ID2)
+(< BLACK_ID2 BLACK_ID3)
+(< BLACK_ID3 BLACK_ID4)
 
-(= (+ (if (and (= R1 0) (> A1 51)) 1 0)
-      (if (and (= R2 0) (> A2 51)) 1 0)      
-      (if (and (= R3 0) (> A3 51)) 1 0)      
-      (if (and (= R4 0) (> A4 51)) 1 0)      
-      (if (and (= R5 0) (> A5 51)) 1 0)      
-      (if (and (= R6 0) (> A6 51)) 1 0)      
-      (if (and (= R7 0) (> A7 51)) 1 0)
-      ) 2)
+;; Pigeon hole principle. If the IDs are in order, we only need to assure
+;; that each ID maps to a female. We add the final equal and a -1 to force 
+;; an error if there are not enough females.
+
+(= BLACK_ID1
+   (if (= R1 0) 1
+     (if (= R2 0) 2
+       (if (= R3 0) 3
+         (if (= R4 0) 4
+           -1)))))
+
+
+(= BLACK_ID2
+   (if (and (= R2 0) (< BLACK_ID1 2)) 2
+     (if (and (= R3 0) (< BLACK_ID1 3)) 3
+       (if (and (= R4 0) (< BLACK_ID1 4)) 4
+         (if (and (= R5 0) (< BLACK_ID1 5)) 5
+           -1)))))
+
+(= BLACK_ID3
+   (if (and (= R3 0) (< BLACK_ID2 3)) 3
+     (if (and (= R4 0) (< BLACK_ID2 4)) 4
+       (if (and (= R5 0) (< BLACK_ID2 5)) 5
+         (if (and (= R6 0) (< BLACK_ID2 6)) 6
+           (if (and (= R7 0) (< BLACK_ID2 7)) 7
+             -1))))))
+
+(= BLACK_ID4
+   (if (and (= R4 0) (< BLACK_ID3 4)) 4
+     (if (and (= R5 0) (< BLACK_ID3 5)) 5
+       (if (and (= R6 0) (< BLACK_ID3 6)) 6
+         (if (and (= R7 0) (< BLACK_ID3 7)) 7
+           -1)))))
+
+;; Create temporary variables for the ages of these females
+;; This uses the Sugar 
+(int BLACK_AGE1 1 115)
+(int BLACK_AGE2 1 115)
+(int BLACK_AGE3 1 115)
+(int BLACK_AGE4 1 115)
+
+(< BLACK_AGE1 BLACK_AGE2)
+(< BLACK_AGE2 BLACK_AGE3)
+(< BLACK_AGE3 BLACK_AGE4)
+
+;; Fix the female ages to the person ages
+(element BLACK_ID1 (A1 A2 A3 A4 A5 A6 A7) BLACK_AGE1)
+(element BLACK_ID2 (A1 A2 A3 A4 A5 A6 A7) BLACK_AGE2)
+(element BLACK_ID3 (A1 A2 A3 A4 A5 A6 A7) BLACK_AGE3)
+(element BLACK_ID4 (A1 A2 A3 A4 A5 A6 A7) BLACK_AGE4)
+
+;; The average of BLACK_AGE2 and BLACK_AGE3 is 51, so their sum is 51*2
+(= (+ BLACK_AGE2 BLACK_AGE3) (* 51 2))
 
 
 ; average black age = 48.5 (x 4 = 194)
