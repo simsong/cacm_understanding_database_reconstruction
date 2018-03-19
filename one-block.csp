@@ -100,6 +100,7 @@
 ;; Pigeon hole principle. If the IDs are in order, we only need to assure
 ;; that each ID maps to a female. We add the final equal and a -1 to force 
 ;; an error if there are not enough females.
+
 (= FEMALEID1
    (if (= S1 FEMALE) 1
      (if (= S2 FEMALE) 2
@@ -149,8 +150,6 @@
 
 ;; The average of these is 30, so their sum is 60
 (= (+ FEMALEAGE2 FEMALEAGE3) 60)
-#if 0
-#endif
 
 ;;;;;;;;;;;;;;;; end median calculation
 
@@ -179,38 +178,61 @@
    3) 
 
 
-;;; Median age of males is 30
-;;; We know that there are an odd number of males
-;;; And there are three. So we should have one or more less than 30, and one or more that are more than 30.one more that are , and one 30
-(= (+ (if (and (= S1 MALE) (= A1 30)) 1 0)
-      (if (and (= S2 MALE) (= A2 30)) 1 0)      
-      (if (and (= S3 MALE) (= A3 30)) 1 0)      
-      (if (and (= S4 MALE) (= A4 30)) 1 0)      
-      (if (and (= S5 MALE) (= A5 30)) 1 0)      
-      (if (and (= S6 MALE) (= A6 30)) 1 0)      
-      (if (and (= S7 MALE) (= A7 30)) 1 0)
-      )
-   1)
+;; constraints for median. There are only 3 men, so we know that Male #2 is 30
 
-(>= (+ (if (and (= S1 MALE) (<= A1 30)) 1 0)
-       (if (and (= S2 MALE) (<= A2 30)) 1 0)      
-       (if (and (= S3 MALE) (<= A3 30)) 1 0)      
-       (if (and (= S4 MALE) (<= A4 30)) 1 0)      
-       (if (and (= S5 MALE) (<= A5 30)) 1 0)      
-       (if (and (= S6 MALE) (<= A6 30)) 1 0)      
-       (if (and (= S7 MALE) (<= A7 30)) 1 0)
-       )
-    1)
+(int MALEID1 1 5)                     ; must leave room for 6 and 7 to be male
+(int MALEID2 2 6)                     ; must leave room for 1 and 7 to be male
+(int MALEID3 3 7)                     ; must leave room for 1 and 2 to be male
 
-(>= (+ (if (and (= S1 MALE) (>= A1 30)) 1 0)
-       (if (and (= S2 MALE) (>= A2 30)) 1 0)      
-       (if (and (= S3 MALE) (>= A3 30)) 1 0)      
-       (if (and (= S4 MALE) (>= A4 30)) 1 0)      
-       (if (and (= S5 MALE) (>= A5 30)) 1 0)      
-       (if (and (= S6 MALE) (>= A6 30)) 1 0)      
-       (if (and (= S7 MALE) (>= A7 30)) 1 0)
-       )
-    1)
+(< MALEID1 MALEID2)
+(< MALEID2 MALEID3)
+
+;; Pigeon hole principle. If the IDs are in order, we only need to assure
+;; that each ID maps to a female. We add the final equal and a -1 to force 
+;; an error if there are not enough females.
+(= MALEID1
+   (if (= S1 MALE) 1
+     (if (= S2 MALE) 2
+       (if (= S3 MALE) 3
+         (if (= S4 MALE) 4
+           (if (= S5 MALE) 5
+             -1))))))
+
+
+(= MALEID2
+   (if (and (= S2 MALE) (< MALEID1 2)) 2
+     (if (and (= S3 MALE) (< MALEID1 3)) 3
+       (if (and (= S4 MALE) (< MALEID1 4)) 4
+         (if (and (= S5 MALE) (< MALEID1 5)) 5
+           (if (and (= S6 MALE) (< MALEID1 6)) 6
+             -1))))))
+
+(= MALEID3
+   (if (and (= S3 MALE) (< MALEID2 3)) 3
+     (if (and (= S4 MALE) (< MALEID2 4)) 4
+       (if (and (= S5 MALE) (< MALEID2 5)) 5
+         (if (and (= S6 MALE) (< MALEID2 6)) 6
+           (if (and (= S7 MALE) (< MALEID2 7)) 7
+             -1))))))
+
+
+;; Create temporary variables for the ages of these females
+;; This uses the Sugar 
+(int MALEAGE1 MIN_AGE MAX_AGE)
+(int MALEAGE2 MIN_AGE MAX_AGE)
+(int MALEAGE3 MIN_AGE MAX_AGE)
+
+(< MALEAGE1 MALEAGE2)
+(< MALEAGE2 MALEAGE3)
+(< MALEAGE3 MALEAGE4)
+
+;; Fix the female ages to the person ages
+(element MALEID1 (A1 A2 A3 A4 A5 A6 A7) MALEAGE1)
+(element MALEID2 (A1 A2 A3 A4 A5 A6 A7) MALEAGE2)
+(element MALEID3 (A1 A2 A3 A4 A5 A6 A7) MALEAGE3)
+
+;; The median is 30
+(= MALEAGE2 30)
 
 ; average male age: 44
 (= (+ (if (= S1 MALE) A1 0)    ; average male age = 44
