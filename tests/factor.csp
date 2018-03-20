@@ -1,0 +1,6 @@
+;; a simple CSP to test factoring
+;; find all factors of 15
+
+(int X1 0 100)
+(int Y1 0 100)
+(= (* X1 Y1) 15)

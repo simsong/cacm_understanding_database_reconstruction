@@ -4,6 +4,7 @@
 #
 # run the databse reconstruction with the specified input file
 
+import os
 import sys
 import re
 from subprocess import Popen,PIPE,call
@@ -16,6 +17,10 @@ SUGAR_JAR  = './sugar-v2-3-3/bin/sugar-v2-3-3.jar'
 SEXMAP = {"1":"M", "0":"F"}
 RACEMAP = {"1":"W", "0":"B"}
 MARRIAGEMAP = {"0":"S", "1":"M"}
+
+def is_cnf_file(fname):
+    with open(fname,"r") as f:
+        return f.read(6)=="p cnf "
 
 def latex_def(name,value):
     return "\\newcommand\\{}{{\\xspace{:,d}\\xspace}}\n".format(name,value)
@@ -52,8 +57,26 @@ def unmap(var):
     # Must be an age
     return rvar
 
+def sugar_encode_csp(*,cspfile,cnffile,mapfile):
+    """Run sugar to make an output file"""
+    assert os.path.exists(cspfile)
+    assert not os.path.exists(cnffile)
+    assert not os.path.exists(mapfile)
+    cmd = ['java','-cp',SUGAR_JAR,'jp.kobe_u.sugar.SugarMain','-v', '-encode', cspfile, cnffile, mapfile]
+    print(" ".join(cmd))
+    p = Popen(cmd,stdout=PIPE,stderr=PIPE)
+    (out,err) = p.communicate()
+    sugar_out = out.decode('utf-8'); del out
+    sugar_err = err.decode('utf-8'); del err
+    if p.returncode!=0:
+        raise RuntimeError("sugar returned {}. out='{}' err='{}'".format(p.returncode,sugar_out,sugar_err))
+        exit(1)
+    assert os.path.exists(cnffile)
+    assert os.path.exists(mapfile)
+    
+
 def sugar_decode_picosat_out(outdata,mapfile):
-    cmd = ['java','-cp',JARFILE,'jp.kobe_u.sugar.SugarMain','-decode','/dev/stdin',mapfile]
+    cmd = ['java','-cp',SUGAR_JAR,'jp.kobe_u.sugar.SugarMain','-decode','/dev/stdin',mapfile]
     print(" ".join(cmd))
     print("len(outdata)={}".format(len(outdata)))
     (out,err) = Popen(cmd,stdin=PIPE,stdout=PIPE,stderr=PIPE).communicate(outdata.encode('utf-8'))
@@ -82,9 +105,10 @@ def extract_vars_from_sugar_decode(outdata):
 def sugar_decode_picostat_and_extract_vars(lines,mapfile):
     return extract_vars_from_sugar_decode( sugar_decode_picosat_out( "\n".join(lines), mapfile))
 
-def python_decode_picostat_and_extract_vars(lines,mapfile):
-    """lines is an array of lines"""
-    vars    = {}                # extracted variables
+def get_mapvars(mapfile):
+    """Read the sugar .map file and return a dictionary
+    where the key is the variable name and the value is the (start,r0,r1)
+    where r0 is the first ordinal and r1 is the last. Sugar uses uniary encoding."""
     mapvars = {}
     with open(mapfile,"r") as f:
         for line in f:
@@ -95,25 +119,41 @@ def python_decode_picostat_and_extract_vars(lines,mapfile):
             r0 = int(r0)
             r1 = int(r1)
             mapvars[name] = (start,r0,r1)
+    return mapvars
+
+def python_decode_picostat_and_extract_vars(lines,mapfile):
+    """lines is an array of lines"""
+    vars    = {}                # extracted variables
+    mapvars = get_mapvars(mapfile)
     # Compute the highest possible variable
     highest = max(v[0]+v[2]-v[1] for v in mapvars.values())
     # Now read the boolean variables and map them back
-    coefs = set()
+    coefs = set()               # each variable is positive or negative
     for line in lines:
+        # For each line in the DIMACS output file
+        # read the numbers and add each to the coefficients set. 
+        # stop when the first line is higher than the higest variable that we care about
         if line[0]!='v': continue
         vals = [int(v) for v in line[2:].split(" ")]
         if abs(vals[0]) > highest:
             break               # no need to read any more
         coefs.update(vals)
-    # Now for each variable, report its value
+
+    # Now for each variable, check all of the booleans that make it up
+    # to find the value of the variable. Also create the counter example.
+    counter = set()
     for var in mapvars:
         (start,r0,r1) = mapvars[var]
-        found = False
+        found = False           # we found the state change.
         for i in range(r1-r0):
-            if start+i in coefs:
-                vars[var] = str(r0+i)
-                found = True
-                break
+            x = start+i
+            if x in coefs:      # check for positive
+                if not found:   # must be the transition from negative to positive
+                    vars[var] = str(r0+i)
+                    found = True
+                coefs.add(-x)
+            else:
+                coefs.add(x)
         if not found:
             vars[var] = str(r0+1)
     return vars
@@ -152,7 +192,6 @@ def parse_picosat_all_file(path):
             if line.startswith('s'):
                 if picosat_out:
                     ctr += 1; print("{}\r".format(ctr),end='')
-                    #vars = sugar_decode_picostat_and_extract_vars(picosat_out, args.map)
                     vars = python_decode_picostat_and_extract_vars(picosat_out, args.map)
                     codes = parse_vars_to_printable(vars)
                     if codes not in seen:
@@ -174,6 +213,11 @@ def parse_picosat_all_file(path):
         print(latex_def("DegenerateSolutions",total_solutions-solutions),file=f)
         for (key,value) in code_count.items():
             print("{} = {:3}".format(key,value))
+
+def find_all_solutions(dimacsfile, mapfile):
+    """Given a DIMACS file and a mapfile, solve the DIMACS file with a solver,
+    then take the constraints (but only for the variables mentioned in the mapfile) 
+    and find another solution"""
 
 if __name__=="__main__":
     from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
