@@ -25,14 +25,18 @@
 ;; Sexes (0:female  1:male)
 
 
-(int S1 0 1) (int S2 0 1) (int S3 0 1) (int S4 0 1)
-(int S5 0 1) (int S6 0 1) (int S7 0 1)
+(int S1 0 1) (int S2 0 1)
+(int S3 0 1) (int S4 0 1)
+(int S5 0 1) (int S6 0 1)
+(int S7 0 1)
 
 ;; Ages (between 0 and 115 years old)
 
 
-(int A1 1 115) (int A2 1 115) (int A3 1 115) (int A4 1 115)
-(int A5 1 115) (int A6 1 115) (int A7 1 115)
+(int A1 1 115) (int A2 1 115)
+(int A3 1 115) (int A4 1 115)
+(int A5 1 115) (int A6 1 115)
+(int A7 1 115)
 
 ;; Races (0:black  1:white)
 
@@ -43,8 +47,10 @@
 ;; Marital Status (0:single  1:married)
 
 
-(int M1 0 1) (int M2 0 1) (int M3 0 1) (int M4 0 1)
-(int M5 0 1) (int M6 0 1) (int M7 0 1)
+(int M1 0 1) (int M2 0 1)
+(int M3 0 1) (int M4 0 1)
+(int M5 0 1) (int M6 0 1)
+(int M7 0 1)
 
 ;; Structural Zeros:
 ;;; Married people must be over 14. Set the minimum age based on the marriage flag
@@ -81,87 +87,81 @@
 (= (+ S1 S2 S3 S4 S5 S6 S7) 3)  ;; 4 female (0=female, 1=male)
 
 ;; Median age of female is 30
-
-;; To solve this, we create some temporary variables:
-;; FEMALEID1 FEMALEID2 FEMALEID3 FEMALEID4 - the ID number of each female, in order of ages
-;; FEMALEAGE1 FEMALEAGE2 FEMALEAGE3 FEMALEAGE4 - the age of each female, in order of ages 
 ;;
-;; So we kow that the average of FEMALEAGE2 and FEMALEA3 is 30
+;; To solve this, we create some temporary variables:
+;; FEMALEID1 FEMALEID2 FEMALEID3 FEMALEID4
+;;                 - the ID number of each female, in order of ages
+;; FEMALE_AGE1 FEMALE_AGE2 FEMALE_AGE3 FEMALE_AGE4 
+;;                 - the age of each female, in order of ages 
+;;
+;; So we kow that the average of FEMALE_AGE2 and FEMALEA3 is 30
 
-(int FEMALEID1 1 4)                     ; must leave room for 5, 6 and 7 to be female
-(int FEMALEID2 2 5)                     ; must leave room for 1, 6 and 7 to be female
-(int FEMALEID3 3 6)                     ; must leave room for 1, 2 and 7 to be female
-(int FEMALEID4 4 7)                     ; must leave room for 1, 2 and 3 to be female
+(int FEMALE_ID1 1 4)                     ; must leave room for 5, 6 and 7 to be female
+(int FEMALE_ID2 2 5)                     ; must leave room for 1, 6 and 7 to be female
+(int FEMALE_ID3 3 6)                     ; must leave room for 1, 2 and 7 to be female
+(int FEMALE_ID4 4 7)                     ; must leave room for 1, 2 and 3 to be female
 
-(< FEMALEID1 FEMALEID2)
-(< FEMALEID2 FEMALEID3)
-(< FEMALEID3 FEMALEID4)
+(< FEMALE_ID1 FEMALE_ID2)
+(< FEMALE_ID2 FEMALE_ID3)
+(< FEMALE_ID3 FEMALE_ID4)
 
 ;; Pigeon hole principle. If the IDs are in order, we only need to assure
 ;; that each ID maps to a female. We add the final equal and a -1 to force 
 ;; an error if there are not enough females.
 
-(= FEMALEID1
+(= FEMALE_ID1
    (if (= S1 0) 1
      (if (= S2 0) 2
        (if (= S3 0) 3
          (if (= S4 0) 4
            -1)))))
 
-
-(= FEMALEID2
-   (if (and (= S2 0) (< FEMALEID1 2)) 2
-     (if (and (= S3 0) (< FEMALEID1 3)) 3
-       (if (and (= S4 0) (< FEMALEID1 4)) 4
-         (if (and (= S5 0) (< FEMALEID1 5)) 5
+(= FEMALE_ID2
+   (if (and (= S2 0) (< FEMALE_ID1 2)) 2
+     (if (and (= S3 0) (< FEMALE_ID1 3)) 3
+       (if (and (= S4 0) (< FEMALE_ID1 4)) 4
+         (if (and (= S5 0) (< FEMALE_ID1 5)) 5
            -1)))))
 
-(= FEMALEID3
-   (if (and (= S3 0) (< FEMALEID2 3)) 3
-     (if (and (= S4 0) (< FEMALEID2 4)) 4
-       (if (and (= S5 0) (< FEMALEID2 5)) 5
-         (if (and (= S6 0) (< FEMALEID2 6)) 6
-           (if (and (= S7 0) (< FEMALEID2 7)) 7
+(= FEMALE_ID3
+   (if (and (= S3 0) (< FEMALE_ID2 3)) 3
+     (if (and (= S4 0) (< FEMALE_ID2 4)) 4
+       (if (and (= S5 0) (< FEMALE_ID2 5)) 5
+         (if (and (= S6 0) (< FEMALE_ID2 6)) 6
+           (if (and (= S7 0) (< FEMALE_ID2 7)) 7
              -1))))))
 
-(= FEMALEID4
-   (if (and (= S4 0) (< FEMALEID3 4)) 4
-     (if (and (= S5 0) (< FEMALEID3 5)) 5
-       (if (and (= S6 0) (< FEMALEID3 6)) 6
-         (if (and (= S7 0) (< FEMALEID3 7)) 7
+(= FEMALE_ID4
+   (if (and (= S4 0) (< FEMALE_ID3 4)) 4
+     (if (and (= S5 0) (< FEMALE_ID3 5)) 5
+       (if (and (= S6 0) (< FEMALE_ID3 6)) 6
+         (if (and (= S7 0) (< FEMALE_ID3 7)) 7
            -1)))))
 
 ;; Create temporary variables for the ages of these females
 ;; This uses the Sugar 
-(int FEMALEAGE1 1 115)
-(int FEMALEAGE2 1 115)
-(int FEMALEAGE3 1 115)
-(int FEMALEAGE4 1 115)
+(int FEMALE_AGE1 1 115)
+(int FEMALE_AGE2 1 115)
+(int FEMALE_AGE3 1 115)
+(int FEMALE_AGE4 1 115)
 
-(< FEMALEAGE1 FEMALEAGE2)
-(< FEMALEAGE2 FEMALEAGE3)
-(< FEMALEAGE3 FEMALEAGE4)
+(< FEMALE_AGE1 FEMALE_AGE2)
+(< FEMALE_AGE2 FEMALE_AGE3)
+(< FEMALE_AGE3 FEMALE_AGE4)
 
 ;; Fix the female ages to the person ages
-(element FEMALEID1 (A1 A2 A3 A4 A5 A6 A7) FEMALEAGE1)
-(element FEMALEID2 (A1 A2 A3 A4 A5 A6 A7) FEMALEAGE2)
-(element FEMALEID3 (A1 A2 A3 A4 A5 A6 A7) FEMALEAGE3)
-(element FEMALEID4 (A1 A2 A3 A4 A5 A6 A7) FEMALEAGE4)
+(element FEMALE_ID1 (A1 A2 A3 A4 A5 A6 A7) FEMALE_AGE1)
+(element FEMALE_ID2 (A1 A2 A3 A4 A5 A6 A7) FEMALE_AGE2)
+(element FEMALE_ID3 (A1 A2 A3 A4 A5 A6 A7) FEMALE_AGE3)
+(element FEMALE_ID4 (A1 A2 A3 A4 A5 A6 A7) FEMALE_AGE4)
 
 ;; The average of these is 30, so their sum is 60
-(= (+ FEMALEAGE2 FEMALEAGE3) 60)
+(= (+ FEMALE_AGE2 FEMALE_AGE3) 60)
 
-;;;;;;;;;;;;;;;; end median calculation
+;; end median calculation
 
-; average female age  = 33.5
-(= (+ (if (= S1 0) A1 0)  
-      (if (= S2 0) A2 0)
-      (if (= S3 0) A3 0)
-      (if (= S4 0) A4 0)
-      (if (= S5 0) A5 0)
-      (if (= S6 0) A6 0)
-      (if (= S7 0) A7 0)
-      )
+;; average female age  = 33.5
+(= (+ FEMALE_AGE1 FEMALE_AGE2 FEMALE_AGE3 FEMALE_AGE4)
    134) ; 33.5 * 4
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -177,20 +177,18 @@
       )
    3) 
 
-
 ;; constraints for median. There are only 3 men, so we know that Male #2 is 30
+(int MALE_ID1 1 5)                     ; must leave room for 6 and 7 to be male
+(int MALE_ID2 2 6)                     ; must leave room for 1 and 7 to be male
+(int MALE_ID3 3 7)                     ; must leave room for 1 and 2 to be male
 
-(int MALEID1 1 5)                     ; must leave room for 6 and 7 to be male
-(int MALEID2 2 6)                     ; must leave room for 1 and 7 to be male
-(int MALEID3 3 7)                     ; must leave room for 1 and 2 to be male
-
-(< MALEID1 MALEID2)
-(< MALEID2 MALEID3)
+(< MALE_ID1 MALE_ID2)
+(< MALE_ID2 MALE_ID3)
 
 ;; Pigeon hole principle. If the IDs are in order, we only need to assure
 ;; that each ID maps to a female. We add the final equal and a -1 to force 
 ;; an error if there are not enough females.
-(= MALEID1
+(= MALE_ID1
    (if (= S1 1) 1
      (if (= S2 1) 2
        (if (= S3 1) 3
@@ -199,49 +197,40 @@
              -1))))))
 
 
-(= MALEID2
-   (if (and (= S2 1) (< MALEID1 2)) 2
-     (if (and (= S3 1) (< MALEID1 3)) 3
-       (if (and (= S4 1) (< MALEID1 4)) 4
-         (if (and (= S5 1) (< MALEID1 5)) 5
-           (if (and (= S6 1) (< MALEID1 6)) 6
+(= MALE_ID2
+   (if (and (= S2 1) (< MALE_ID1 2)) 2
+     (if (and (= S3 1) (< MALE_ID1 3)) 3
+       (if (and (= S4 1) (< MALE_ID1 4)) 4
+         (if (and (= S5 1) (< MALE_ID1 5)) 5
+           (if (and (= S6 1) (< MALE_ID1 6)) 6
              -1))))))
 
-(= MALEID3
-   (if (and (= S3 1) (< MALEID2 3)) 3
-     (if (and (= S4 1) (< MALEID2 4)) 4
-       (if (and (= S5 1) (< MALEID2 5)) 5
-         (if (and (= S6 1) (< MALEID2 6)) 6
-           (if (and (= S7 1) (< MALEID2 7)) 7
+(= MALE_ID3
+   (if (and (= S3 1) (< MALE_ID2 3)) 3
+     (if (and (= S4 1) (< MALE_ID2 4)) 4
+       (if (and (= S5 1) (< MALE_ID2 5)) 5
+         (if (and (= S6 1) (< MALE_ID2 6)) 6
+           (if (and (= S7 1) (< MALE_ID2 7)) 7
              -1))))))
 
+;; Create temporary variables for the ages of these males
+(int MALE_AGE1 1 115)
+(int MALE_AGE2 1 115)
+(int MALE_AGE3 1 115)
 
-;; Create temporary variables for the ages of these females
-;; This uses the Sugar 
-(int MALEAGE1 1 115)
-(int MALEAGE2 1 115)
-(int MALEAGE3 1 115)
-
-(< MALEAGE1 MALEAGE2)
-(< MALEAGE2 MALEAGE3)
+(< MALE_AGE1 MALE_AGE2)
+(< MALE_AGE2 MALE_AGE3)
 
 ;; Fix the female ages to the person ages
-(element MALEID1 (A1 A2 A3 A4 A5 A6 A7) MALEAGE1)
-(element MALEID2 (A1 A2 A3 A4 A5 A6 A7) MALEAGE2)
-(element MALEID3 (A1 A2 A3 A4 A5 A6 A7) MALEAGE3)
+(element MALE_ID1 (A1 A2 A3 A4 A5 A6 A7) MALE_AGE1)
+(element MALE_ID2 (A1 A2 A3 A4 A5 A6 A7) MALE_AGE2)
+(element MALE_ID3 (A1 A2 A3 A4 A5 A6 A7) MALE_AGE3)
 
 ;; The median is 30
-(= MALEAGE2 30)
+(= MALE_AGE2 30)
 
 ; average male age: 44
-(= (+ (if (= S1 1) A1 0)    ; average male age = 44
-      (if (= S2 1) A2 0)
-      (if (= S3 1) A3 0)
-      (if (= S4 1) A4 0)
-      (if (= S5 1) A5 0)
-      (if (= S6 1) A6 0)
-      (if (= S7 1) A7 0)
-      )
+(= (+ MALE_AGE1 MALE_AGE2 MALE_AGE3)    ; average male age = 44
    (* 3 44))
 
 
@@ -279,7 +268,6 @@
          (if (= R4 0) 4
            -1)))))
 
-
 (= BLACK_ID2
    (if (and (= R2 0) (< BLACK_ID1 2)) 2
      (if (and (= R3 0) (< BLACK_ID1 3)) 3
@@ -302,8 +290,7 @@
          (if (and (= R7 0) (< BLACK_ID3 7)) 7
            -1)))))
 
-;; Create temporary variables for the ages of these females
-;; This uses the Sugar 
+;; Create temporary variables for the ages 
 (int BLACK_AGE1 1 115)
 (int BLACK_AGE2 1 115)
 (int BLACK_AGE3 1 115)
