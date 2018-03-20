@@ -17,6 +17,10 @@
 
 
 ;; Problem setup 
+#define USE_2A
+#define USE_2B
+#define USE_2C
+#define USE_2D
 #define USE_3B
 #define USE_4A        
 ;;#define USE_SOLUTION   // for debugging
@@ -64,6 +68,7 @@
 
 ;; Assure that the output is sorted by age. This does a good job 
 ;; eliminating dupliate answers that simply have swapped records.
+;; This is called "breaking symmetry" in the literature. 
 (<= A1 A2)
 (<= A2 A3)
 (<= A3 A4)
@@ -72,7 +77,7 @@
 
 ;; Reported tables
 
-;; Statistic 1A: Total Pop: 7 / Median 30 / Average 38
+;; Statistic 1A: Total Pop: 7, median=30, mean=38
 
 ;; Median age 30
 ;; The ages are sorted, so A4 must be 30.
@@ -82,7 +87,8 @@
 (= (+ A1 A2 A3 A4 A5 A6 A7)
    (* 7 38))
 
-;; Statistic 2A: Female:  n=4, median=30, average=33.5
+;; Statistic 2A: Female:  n=4, median=30, mean=33.5
+#ifdef USE_2A
 (= (+ S1 S2 S3 S4 S5 S6 S7) 3)  ;; 4 female (0=female, 1=male)
 
 ;; Median age of female is 30
@@ -162,14 +168,15 @@
 ;; end median calculation
 
 ;; average female age  = 33.5
-(= (+ FEMALE_AGE1 FEMALE_AGE2 FEMALE_AGE3 FEMALE_AGE4)
-   134) ; 33.5 * 4
+(= (+ FEMALE_AGE1 FEMALE_AGE2 FEMALE_AGE3 FEMALE_AGE4) 134) ; 33.5 * 4
+#endif
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 2B Male:  n=3, median=30, average=44
 ;; This is a generic pattern that will be repeated for any cell size of 3
 ;;
 
+#ifdef USE_2B
 ;; there are three males
 (= (+ (if (= S1 MALE) 1 0)  
       (if (= S2 MALE) 1 0)
@@ -238,9 +245,11 @@
 (= (+ MALE_AGE1 MALE_AGE2 MALE_AGE3)    ; average male age = 44
    (* 3 44))
 
+#endif
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 2C Black.  n=4  median=51  average=48.5
+#ifdef USE_2C
 
 ;; 4 blacks
 (= (+ (if (= R1 BLACK) 1 0)  
@@ -327,10 +336,12 @@
       (if (= R7 BLACK) A7 0)
       )
    194)
+#endif
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; 2D. White. n=3 median=24, mean=24  (white=1)
+#ifdef USE_2D
 
 ;; n=3 whites
 (= (+ (if (= R1 WHITE) 1 0)
@@ -399,6 +410,7 @@
 ; average white age: 24
 (= (+ WHITE_AGE1 WHITE_AGE2 WHITE_AGE3)    ; average white age = 24
    (* 3 24))
+#endif
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

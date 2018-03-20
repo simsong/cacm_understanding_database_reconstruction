@@ -360,6 +360,7 @@ permuted labels for the reconstructed individuals:
 \begin{Verbatim}
 ;; Assure that the output is sorted by age. This does a good job 
 ;; eliminating dupliate answers that simply have swapped records.
+;; This is called "breaking symmetry" in the formal methods literature. 
 (<= A1 A2)
 (<= A2 A3)
 (<= A3 A4)
@@ -421,22 +422,27 @@ translated this into \NumVariables Boolean variables consisting of
 Translating the constraints into CNF allows them to be solved using
 either a SAT (satisfiability), SMT (satisfiability module theories),
 or MIPM (mixed integer programming model) solver. There are many such
-solvers, and many of them take input in the so-called DIMACS file
-format, which is a standardized form for representing CNF problems.
+solvers, and many take input in the so-called DIMACS file
+format, which is a standardized form for representing CNF equations. 
 The DIMACS format was popularized by a series of annual SAT solver
 competitions; one of the results of these competitions was a
 tremendous speed-up of SAT solvers over the past two decades. Many
 solvers can now solve CNF systems with millions of variables and
-clauses in just a few minutes. In our case, the open source
+clauses in just a few minutes.
+
+In our case, the open source
 PicoSAT\cite{Biere_picosatessentials} SAT solver is able to find a
 solution to the CNF problem in less than 2 seconds on a 2013 MacBook
 Pro with a 2.8GHz Intel i7 processor and 16GiB of RAM (although the
-program is not limited by RAM).
+program is not limited by RAM), while the open source Glucose SAT solver
+can solve the problem in under 0.1 seconds on the same computer. The
+stark difference between the two solvers shows the speedup possible
+with an improved solving algorithm. 
 
 \subsection{Exploring the Solution Universe}
 
-PicoSAT's solution is a satisfying assignment for the \NumVariables{}
-Boolean variables. After PicoSAT runs, we can use Sugar to translate
+Both solvers create a satisfying assignment for the \NumVariables{}
+Boolean variables. After the solver runs, we can use Sugar to translate
 these assignments back into integer values of the constructed
 variables. (SMT and MIPM solvers can represent the constraints at a higher
 level of abstraction, but for our purposes a SAT solver is
@@ -453,11 +459,8 @@ no solution, the set of published statistics are inconsistent.
 Normally SAT, SMT and MIPM solvers will stop when they find a single
 satisfying solution. One of the advantages of PicoSAT is that it can
 produce the solution universe of all possible solutions to the CNF
-problem. Many of these solutions are degenerate, in that they are
-different assignments of the internal Boolean variables that result in
-the same higher-level variables.  In the case of this problem, there
-are actually 3,554 degenerate satisfying solutions, each of which maps
-to the same distinct assignment of attributes to the microdata that produce the statistics in
+problem. However, in this case, there is a single satisfying
+assignment that produce the statistics in
 Table~\ref{fictional}. That assignment is:
 
 \begin{center}
@@ -481,16 +484,20 @@ Table~\ref{fictional}. That assignment is:
 \end{tabular}
 \end{minipage}
 \end{center}  
-Table~\ref{fictional} is actually over-constrained: some (but not all) of the
+Table~\ref{fictional} is actually over-constrained: some of the
 constraints can be dropped while preserving a unique
-solution.
+solution. For example, dropping statistic 2A, 2B, 2C or 2D still yields a
+single solution, but dropping 2A \emph{and} 2B increases the solution universe to
+eight satisfying solutions. All of these solutions contain the
+reconstructed microdata records 8FBS, 36FBM, 66FBM and 84MBM. This
+means that even if statistics 2A and 2B are censored, we can still
+infer that these four microdata must be present.
 
-However, rather than looking for the ways that the table is
-over-constrained, it is more useful here to explore what happens when
-a critical statistic is suppressed. After all, statistical agencies
-have long used suppression (censoring) in an attempt to provide
-privacy to those whose attributes are presented in the microdata. How
-effective is this approach?
+Statistical agencies have long used suppression (censoring) in an
+attempt to provide privacy to those whose attributes are presented in
+the microdata, although the statistics that they typically drop are
+those that are based on a small number of persons. How effective is
+this approach?
 
 Reviewing Table~\ref{fictional}, statistic 4A is an obvious candidate
 for suppression---especially given that statistics 4B, 4C and 4D have
@@ -498,34 +505,23 @@ already been suppressed to avoid an inappropriate statistical
 disclosure.
 
 Removing the constraints for statistic 4A increases the number of
-degenerate solutions from 3,554 to 12,498. More importantly, it
-increases the number of distinct solutions from 1 to 3. The three
-satisfying solutions are:
+solutions from 1 to 2:
 
 \begin{center}
-\begin{tabular}{c|c|c}
-  Solution \#1 & Solution \#2 & Solution \#3\\
+\begin{tabular}{c|c}
+\multicolumn{2}{c}{Solutions without 4A}\\
+  Solution \#1 & Solution \#2 \\
 \hline
- \texttt{ 8FBS } &  \texttt{ 8FBS} & \texttt{ 8MBS} \\
- \texttt{18MWS } &  \texttt{18FWS} & \texttt{18FWS} \\
- \texttt{24FWS } &  \texttt{24MWS} & \texttt{24FWS} \\
- \texttt{30MWM } &  \texttt{30MWM} & \texttt{30MWM} \\
- \texttt{36FBM } &  \texttt{42FBM} & \texttt{36FBM} \\
- \texttt{66FBM } &  \texttt{66FBM} & \texttt{56FBM} \\
- \texttt{84MBM } &  \texttt{78MBM} & \texttt{94MBM} \\
+ \texttt{ 8FBS } &  \texttt{ 2FBS} \\
+ \texttt{18MWS } &  \texttt{12MWS} \\
+ \texttt{24FWS } &  \texttt{24FWM} \\
+ \texttt{30MWM } &  \texttt{30MBM} \\
+ \texttt{36FBM } &  \texttt{36FWS} \\
+ \texttt{66FBM } &  \texttt{72FBM} \\
+ \texttt{84MBM } &  \texttt{90MBM} \\
   \end{tabular}
 \end{center}
 
-Notice that each of these solutions contains 30MWM (age 30, Male,
-White, Married). Since a record with these attributes is common to all
-of the solutions, this record is revealed even when statistic 4A is
-suppressed.  For the remaining persons, it is not clear how to report
-the relative odds that an individual matching those characteristics is
-present. There are vastly more degenerate solutions pointing to
-Solution \#1 than to Solution \#2 or \#3, and Solution \#1 is the
-solution that PicoSAT reports first in almost all cases. However, all three solutions
-are allowed by the constraints, so they are all theoretically
-possible. 
 
 \section{Defending Against a DRA}\label{solution}
 There are three approaches for defending against a database reconstruction: publish less

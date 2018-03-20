@@ -13,26 +13,35 @@ import time
 
 SUGAR_PERL = './sugar-v2-3-3/bin/sugar'
 SUGAR_JAR  = './sugar-v2-3-3/bin/sugar-v2-3-3.jar'
+PICOSAT_SOLVER = '/usr/local/bin/picosat'
+GLUCOSE_SOLVER = './glucose_static'
+DEFAULT_SOLVER = PICOSAT_SOLVER
 # Our encodings
 SEXMAP = {"1":"M", "0":"F"}
 RACEMAP = {"1":"W", "0":"B"}
 MARRIAGEMAP = {"0":"S", "1":"M"}
+DEFAULT_ALL_VARS = 'all_solutions.tex'
+
+################################################################
+###
+### SAT SOLVER SUPPORT
+###
+################################################################
+
 
 def is_cnf_file(fname):
     with open(fname,"r") as f:
         return f.read(6)=="p cnf "
 
-def latex_def(name,value):
-    return "\\newcommand\\{}{{\\xspace{:,d}\\xspace}}\n".format(name,value)
-
-def lines_iter(data):
-    """Returns the lines without a newline"""
-    return (x.group(0) for x in re.finditer(".*", data) if x.group(0))
-
-def linecount(fname,filter_func):
-    return len(list(filter(filter_func,open(fname,"r").read().split("\n"))))
+def is_satisfied(fname):
+    with open(fname,"r") as f:
+        for line in f:
+            if "s SATISFIABLE" in line:
+                return True
+        return False
 
 def tally_dimacs_file(dimacs_file):
+    assert is_cnf_file(dimacs_file)
     with open(dimacs_file,"r") as f:
         for line in f:
             if line[0]=='c': continue
@@ -41,21 +50,33 @@ def tally_dimacs_file(dimacs_file):
             assert fields[1]=='cnf'
             return (int(fields[2]),int(fields[3]))
 
-def unmap(var):
-    # Given a variable that is to be unmapped (e.g. A2)
-    # transform it to text
-    try:
-        rvar = vars[var]        # rvar is what we are returning
-    except KeyError:
-        return var
-    if var[0]=='S':
-        return SEXMAP[rvar]
-    if var[0]=='R':
-        return RACEMAP[rvar]
-    if var[0]=='M':
-        return MARRIAGEMAP[rvar]
-    # Must be an age
-    return rvar
+def run_solver(*,solver,cnffile,outfile):
+    assert os.path.exists(cnffile)
+    assert not os.path.exists(outfile)
+    if "picosat" in solver:
+        cmd = [solver,cnffile,'-o',outfile]
+    elif "glucose" in solver:
+        cmd = [solver,cnffile,outfile]
+    else:
+        raise RuntimeError("Unknown solver: {}".format(solver))
+    print(" ".join(cmd))
+    p = Popen(cmd,stdout=PIPE,stderr=PIPE)
+    (out,err) = p.communicate()
+    assert os.path.exists(cnffile)
+    assert os.path.exists(outfile)
+    if is_satisfied(outfile):
+        return 
+    solver_out = out.decode('utf-8'); del out
+    solver_err = err.decode('utf-8'); del err
+    raise RuntimeError("solver failed. ret={} out='{}' err='{}'".format(p.returncode,solver_out,solver_err))
+
+
+################################################################
+###
+### SUGAR SUPPORT
+###
+################################################################
+
 
 def sugar_encode_csp(*,cspfile,cnffile,mapfile):
     """Run sugar to make an output file"""
@@ -74,36 +95,15 @@ def sugar_encode_csp(*,cspfile,cnffile,mapfile):
     assert os.path.exists(cnffile)
     assert os.path.exists(mapfile)
     
-
 def sugar_decode_picosat_out(outdata,mapfile):
     cmd = ['java','-cp',SUGAR_JAR,'jp.kobe_u.sugar.SugarMain','-decode','/dev/stdin',mapfile]
     print(" ".join(cmd))
-    print("len(outdata)={}".format(len(outdata)))
     (out,err) = Popen(cmd,stdin=PIPE,stdout=PIPE,stderr=PIPE).communicate(outdata.encode('utf-8'))
     out = out.decode('utf-8')
     err = err.decode('utf-8')
     if err:
         raise RuntimeError("sugar decode error: "+err)
     return out
-
-def extract_vars_from_sugar_decode(outdata):
-    """Extract the variables from the sugar output. Returns a dictionary
-    with the key the variable name and the value being the variable
-    value"""
-    # vars[] is the mapping of the sugar variable to the solution
-    vars = {}
-    for line in outdata.split("\n"):
-        line = line.strip()
-        if len(line)==0: continue
-        if line[0]=='s' and line!='s SATISFIABLE':
-            raise RuntimeError("Constraints not satisfied")
-        if line[0]=='a' and "\t" in line:
-            (var,val) = line[2:].split("\t")
-            vars[var] = val
-    return vars
-
-def sugar_decode_picostat_and_extract_vars(lines,mapfile):
-    return extract_vars_from_sugar_decode( sugar_decode_picosat_out( "\n".join(lines), mapfile))
 
 def get_mapvars(mapfile):
     """Read the sugar .map file and return a dictionary
@@ -113,23 +113,32 @@ def get_mapvars(mapfile):
     with open(mapfile,"r") as f:
         for line in f:
             (var,name,start,_) = line.strip().split(" ")
-            assert var=="int"
-            (r0,r1) = _.split("..")
+            if var=="int":
+                if ".." in _:
+                    (r0,r1) = _.split("..")
+                else:
+                    (r0,r1) = int(_),int(_)
+            else:
+                raise RuntimeError("Only variables of type {} are supported".format(var))
             start = int(start)
             r0 = int(r0)
             r1 = int(r1)
             mapvars[name] = (start,r0,r1)
     return mapvars
 
-def python_decode_picostat_and_extract_vars(lines,mapfile):
-    """lines is an array of lines"""
-    vars    = {}                # extracted variables
-    mapvars = get_mapvars(mapfile)
+def extract_vars_from_solver_output(*,solver_output_lines,mapfile,mapvars=None):
+    """Read the output from a SAT solver and a map file and return the variable assignments 
+    and a set of coeficients to add the dimacs file to prevent this solution."""
+
+    assert len(solver_output_lines) > 10
+    satvars    = {}                # extracted variables
+    if mapvars==None:
+        mapvars = get_mapvars(mapfile)
     # Compute the highest possible variable
     highest = max(v[0]+v[2]-v[1] for v in mapvars.values())
     # Now read the boolean variables and map them back
     coefs = set()               # each variable is positive or negative
-    for line in lines:
+    for line in solver_output_lines:
         # For each line in the DIMACS output file
         # read the numbers and add each to the coefficients set. 
         # stop when the first line is higher than the higest variable that we care about
@@ -149,70 +158,137 @@ def python_decode_picostat_and_extract_vars(lines,mapfile):
             x = start+i
             if x in coefs:      # check for positive
                 if not found:   # must be the transition from negative to positive
-                    vars[var] = str(r0+i)
+                    satvars[var] = str(r0+i)
                     found = True
                 coefs.add(-x)
             else:
                 coefs.add(x)
         if not found:
-            vars[var] = str(r0+1)
+            satvars[var] = str(r0+1)
+    print("satvars=",satvars)
+    return (mapvars,satvars,counter)
+
+################################################################
+def latex_def(name,value):
+    return "\\newcommand\\{}{{\\xspace{:,d}\\xspace}}\n".format(name,value)
+
+def lines_iter(data):
+    """Returns the lines without a newline"""
+    return (x.group(0) for x in re.finditer(".*", data) if x.group(0))
+
+def linecount(fname,filter_func):
+    return len(list(filter(filter_func,open(fname,"r").read().split("\n"))))
+
+def unmap(satvars,var):
+    # Given a variable that is to be unmapped (e.g. A2)
+    # transform it to text
+    try:
+        rvar = satvars[var]        # rvar is what we are returning
+    except KeyError:
+        return var
+    if var[0]=='S':
+        return SEXMAP[rvar]
+    if var[0]=='R':
+        return RACEMAP[rvar]
+    if var[0]=='M':
+        return MARRIAGEMAP[rvar]
+    # Must be an age
+    return rvar
+
+def extract_vars_from_sugar_decode(outdata):
+    """Extract the variables from the sugar output. Returns a dictionary
+    with the key the variable name and the value being the variable
+    value"""
+    # vars[] is the mapping of the sugar variable to the solution
+    vars = {}
+    for line in outdata.split("\n"):
+        line = line.strip()
+        if len(line)==0: continue
+        if line[0]=='s' and line!='s SATISFIABLE':
+            print(outdata)
+            raise RuntimeError("Constraints not satisfied; line={}".format(line))
+        if line[0]=='a' and "\t" in line:
+            (var,val) = line[2:].split("\t")
+            vars[var] = val
     return vars
 
 
-def vars_to_codes(vars):
+def sugar_decode_picostat_and_extract_satvars(lines,mapfile):
+    return extract_vars_from_sugar_decode( sugar_decode_picosat_out( "\n".join(lines), mapfile))
+
+
+
+def satvars_to_codes(satvars):
     """Transform the variables to a list of (age,code) person codes"""
     results = []
-    ids = [int(k[1:]) for k in  vars.keys() if k[0]=='A'] # everybody has an age
+    ids = [int(k[1:]) for k in  satvars.keys() if k[0]=='A'] # everybody has an age
     for i in ids:
         si  = str(i)
-        age = vars["A{}".format(i)]
-        sex = vars["S"+si]
-        race =vars["R"+si]
-        marriage = vars["M"+si]
-        desc = "{:>2}{}{}{}".format(age, SEXMAP[sex], RACEMAP[race], MARRIAGEMAP[marriage])
+        age = satvars["A{}".format(i)]
+        sex = satvars["S"+si]
+        race =satvars["R"+si]
+        marriage = satvars["M"+si]
+        try:
+            desc = "{:>2}{}{}{}".format(age, SEXMAP[sex], RACEMAP[race], MARRIAGEMAP[marriage])
+        except KeyError:
+            print(satvars)
+            raise RuntimeError("id={} age={} sex={} race={} marraige={}".format(i,age,sex,race,age))
         results.append((int(age),desc))
     return sorted(results)
 
-def parse_vars_to_printable(vars):
+def parse_vars_to_printable(satvars):
     ret = []
-    for (age,code) in vars_to_codes(vars):
+    for (age,code) in satvars_to_codes(satvars):
         ret.append(code)
         ret.append("\n")
     return "".join(ret)
 
+def picosat_get_next_solution(path):
+    lines = []
+    with open(path,"r") as f:
+        for line in f:
+            if line.startswith('c'):
+                continue
+            if line=="s SATISFIABLE\n":
+                if lines:
+                    yield lines
+                    lines = []
+            if line.startswith('s SOLUTIONS'):
+                continue
+            lines.append(line)
+        if lines:
+            yield(lines)
+            
+
 def parse_picosat_all_file(path):
+    print("parsing picosat all file {}".format(path))
     total_solutions = 0
     solutions = 0
     seen = set()
     code_count = defaultdict(int)
     ctr = 0
-    picosat_out = []
-    with open(path,"r") as f:
-        for line in f:
-            if line.startswith('s'):
-                if picosat_out:
-                    ctr += 1; print("{}\r".format(ctr),end='')
-                    vars = python_decode_picostat_and_extract_vars(picosat_out, args.map)
-                    codes = parse_vars_to_printable(vars)
-                    if codes not in seen:
-                        solutions += 1
-                        print("Solution:{}\n{}".format(solutions,codes))
-                        seen.add(codes)
-                        # Now add each code to the histogram
-                        for (age,code) in vars_to_codes(vars):
-                            code_count[code] += 1
-                    picosat_out = []
-            if line.startswith('s SOLUTIONS'):
-                total_solutions = int(line.split(" ")[2])
-                break
-            picosat_out.append(line)
-    with open(args.all,"w") as f:
-        print("distinct solutions: {}  additional degenerate solutions: {}".
-              format(solutions,total_solutions-solutions))
-        print(latex_def("NumDistinctSolutions",solutions),file=f)
-        print(latex_def("DegenerateSolutions",total_solutions-solutions),file=f)
-        for (key,value) in code_count.items():
-            print("{} = {:3}".format(key,value))
+    for lines in picosat_get_next_solution(path):
+        total_solutions += 1
+        #(mapvars,satvars,counter) = extract_vars_from_solver_output(solver_output_lines=lines,mapfile=args.map)
+        satvars = sugar_decode_picostat_and_extract_satvars(lines,args.map)
+        codes = parse_vars_to_printable(satvars)
+        if codes not in seen:
+            solutions += 1
+            print("Total solutions: {}  Solution:{}\n{}".format(total_solutions,solutions,codes))
+            seen.add(codes)
+            # Add each code to the histogram
+            for (age,code) in satvars_to_codes(satvars):
+                code_count[code] += 1
+
+    if args.all:
+        with open(args.all,"w") as f:
+            print("distinct solutions: {}  additional degenerate solutions: {}".
+                  format(solutions,total_solutions-solutions))
+            print(latex_def("NumDistinctSolutions",solutions),file=f)
+            print(latex_def("DegenerateSolutions",total_solutions-solutions),file=f)
+            print("histogram of results:")
+            for (key,value) in code_count.items():
+                print("{} = {:3}".format(key,value))
 
 def find_all_solutions(dimacsfile, mapfile):
     """Given a DIMACS file and a mapfile, solve the DIMACS file with a solver,
@@ -239,12 +315,9 @@ if __name__=="__main__":
 
     if args.parseout:
         out = open(args.parseout,"r").read()
-        t0 = time.time()
-        #vars = sugar_decode_picostat_and_extract_vars( out, args.map) 
-        vars = python_decode_picostat_and_extract_vars( out, args.map) 
-        t1 = time.time()
-        print(parse_vars_to_printable(vars))
-        print("time: {}".format(t1-t0))
+        (mapvars,satvars,counter) = extract_vars_from_solver_output( solver_output_lines=out.split("\n"), 
+                                                                     mapfile=args.map) 
+        print(parse_vars_to_printable(satvars))
         exit(1)
 
     if args.parseall:
@@ -292,7 +365,8 @@ if __name__=="__main__":
     sugar_out = out.decode('utf-8'); del out
     sugar_err = err.decode('utf-8'); del err
     if p.returncode!=0:
-        raise RuntimeError("sugar returned {}. out='{}' err='{}'".format(p.returncode,sugar_out,sugar_err))
+        raise RuntimeError("sugar returned {}. out='{}' err='{}'".
+                           format(p.returncode,sugar_out,sugar_err))
         exit(1)
     print("sugar run time: {:.4} sec".format(t1-t0))
 
@@ -312,8 +386,8 @@ if __name__=="__main__":
         print(sugar_out)
         exit(1)
     
-    vars    = extract_vars_from_sugar_decode(sugar_out)
-    results = vars_to_codes(vars)
+    satvars    = extract_vars_from_sugar_decode(sugar_out)
+    results = satvars_to_codes(satvars)
 
     # Print information about reconstruction, sorted
     for (age,desc) in sorted(results):
@@ -323,7 +397,7 @@ if __name__=="__main__":
     with open("id_table.tex","r") as fin:
         with open("id_table_solved.tex","w") as fout:
             for line in fin:
-                fout.write(" ".join([ unmap(var) for var in line.split(" ")]))
+                fout.write(" ".join([ unmap(satvars,var) for var in line.split(" ")]))
                     
     with open("vars.tex","w") as f:
         print(latex_def("NumConstraintLines",
