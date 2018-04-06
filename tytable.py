@@ -125,6 +125,7 @@ class ttable:
         self.col_alignment = {}
         self.variables    = {}  # additional variables that may be added
         self.label        = None
+        self.caption      = None
 
     ## Data adding functions
 
@@ -364,7 +365,7 @@ class ttable:
                 if OPTION_CENTER in self.options:
                     ret.append("\\begin{center}")
                 if LONGTABLE not in self.options:
-                    ret += ["\\caption{",self.caption, "}"]
+                    if self.caption: ret += ["\\caption{",self.caption, "}\n"]
                     if self.label:
                         ret.append("\\label{")
                         ret.append(self.label)
@@ -439,6 +440,7 @@ class ttable:
                 ret += latex_var(name,value)
             if self.mode==HTML:
                 ret += ["Note: ",name," is ", value, "<br>"]
+        print(ret)
         return "".join(ret)
 
     def add_variable(self,name,value):
