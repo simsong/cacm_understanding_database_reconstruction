@@ -178,7 +178,7 @@ statistical tables.
 To help understand the importance of adopting formal privacy methods, in
 this article we presents a database reconstruction attack on a much
 smaller statistical publication: a hypothetical block containing seven
-people distributed over two households. We show that even a relatively
+people distributed over two households.\footnote{The 2010 U.S. Census contained XXXX census blocks with seven or fewer people. The data can be downloaded from \url{https://www2.census.gov/census_2010/01-Redistricting_File--PL_94-171}} We show that even a relatively
 small number of constraints results in an exact solution the blocks'
 inhabitants. Finally, we show how differential privacy can protect the
 published data by creating uncertainty. Finally, we discuss
@@ -206,8 +206,8 @@ sourced from fewer than three people are suppressed.
 \newcommand{\cens}{\multicolumn{1}{c|}{\rule{6mm}{3mm}}}
 \begin{table}
 \caption{Fictional statistical data for a fictional block published by
-  a fictional statistics agency. Item numbers are for identification
-  purpose only.\label{fictional}}
+  a fictional statistics agency. The ``Statistics'' column is for identification
+  purposes only.\label{fictional}}
 \begin{center}
 \begin{tabular}{l|l|c|c|c|}
           &                           &       & \multicolumn{2}{|c|}{Age} \\
@@ -242,11 +242,11 @@ Statistic & Group                     & Count & Median & Mean \\
 To perform the database reconstruction attack, we view the attributes
 of the persons living on the block as a collection of 
 free variables. We then extract from the published table a set of
-constraints. The database reconstruct attack merely finds a set of
+constraints. The database reconstruction attack merely finds a set of
 attributes that are consistent with the constraints. If statistics are
 highly constrained, the only a single reconstruction will be
 possible, and that reconstruction should be the same as the underlying
-microdata used to create original table.
+microdata used to create the original table.
 
 For example, statistic 2B states that there are 3 males living in the
 geography.  Because age is reported to the nearest year, and
@@ -318,11 +318,11 @@ A1 + A2 + A3 + A4 + A5 + A6 + A7 = 7 \times 38
 \label{mean_age_38}
 \end{equation}
 
-We use a language called Sugar\cite{sugar} to encode the constraints
+We use the language Sugar\cite{sugar} to encode the constraints
 into a form that can be processed by our solver. Sugar represents
 constraints as
 \textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
-example, equation~\ref{mean_age_38} is can be represented this way:
+example, equation~\ref{mean_age_38} is can be represented as:
 
 \begin{Verbatim}
 ; First define the integer variables, with the range 0..115
@@ -342,11 +342,11 @@ example, equation~\ref{mean_age_38} is can be represented this way:
 Once the constraints in the statistical table are turned into
 s-expressions, Sugar encodes the s-expressions into a
 set of Boolean constraints that can be fed into a SAT-solver. For example, each age variable
-is encoded using uniary notation as 116 Boolean variables. Using this
+is encoded using unary notation as 116 Boolean variables. Using this
 notation, the decimal value 0 is encoded as 116 false Boolean
 variables, the decimal value 1 is encoded as 1 true and 115 false
 values, and so on. Although this
-conversion is not space efficient, it is fast, and the uniary notation makes
+conversion is not space efficient, it is fast, and the unary notation makes
 it easy to encode integer inequalities as simple functions of Boolean
 variables. 
 
@@ -359,7 +359,7 @@ permuted labels for the reconstructed individuals:
 
 \begin{Verbatim}
 ;; Assure that the output is sorted by age. This does a good job 
-;; eliminating dupliate answers that simply have swapped records.
+;; eliminating duplicate answers that simply have swapped records.
 ;; This is called "breaking symmetry" in the formal methods literature. 
 (<= A1 A2)
 (<= A2 A3)
@@ -369,7 +369,7 @@ permuted labels for the reconstructed individuals:
 \end{Verbatim}
 
 Having sorted the ages, we know that the middle variable must
-be median:
+be the median:
 
 \begin{Verbatim}
 (= A4 30)
@@ -400,7 +400,7 @@ This can be represented as:
 \end{Verbatim}
 
 Now, using the \texttt{if} function, it is straightforward to create a constraint for
-mean age of male persons is 44:
+the mean age 44 of male persons:
 
 \begin{Verbatim}
 (= (+ (if (= S1 MALE) A1 0)    ; average male age = 44
@@ -524,20 +524,19 @@ solutions from 1 to 2:
 
 
 \section{Defending Against a DRA}\label{solution}
-There are three approaches for defending against a database reconstruction: publish less
-statistical data, and apply noise (random changes) to the
+There are three approaches for defending against a database reconstruction: publish fewer
+statistical data, apply noise (random changes) to the
 statistical data being tabulated, or apply noise to the results after
-the tabulation. We consider them in order below.
+tabulation. We consider each of these below.
 
-Although it might seem that publishing less statistical data is a
+\paragraph{Option 1: Publisher fewer data.} Although it might seem that publishing less statistical data is a
 reasonable defense against the DRA, this choice may severely limit the number
 of tabulations that can be published. A
 related problem is that, with even a moderately large population, it may be computationally infeasible to
 determine when the intersection of all possible reconstructions
-identifies individuals.
+identifies individuals. While this would seem to alleviate the problem, advances in solver technology may mean that an attacker could do such a reconstruction in the future, even though we cannot evaluate if it is possible today.
 
-A second approach is to apply noise to the data before
-tabulation. This approach is called \emph{input noise infusion}. For example, each respondent's age might be randomly
+\paragraph{Option 2: Apply noise before tabulation.} This approach is called \emph{input noise infusion}. For example, each respondent's age might be randomly
 altered by a small amount. Input noise infusion
 doesn't prevent database reconstruction, but it limits the value of
 the reconstructed data by creating uncertainty for each of the
@@ -554,14 +553,14 @@ the better privacy is protected, but the less accurate are the
 resulting statistics. Considering statistic 1A, input noise infusion
 might result with a median $28\ldots32$ and a mean $36\ldots40$. 
 
-The third approach is to add noise to the statistics themselves. This
-is called \emph{output noise infusion}. Whereas input noise infusion
+\paragraph{Option 3: Apply noise to the published statistics.} This
+approach is called \emph{output noise infusion}. Whereas input noise infusion
 applies noise to the microdata directly, output noise infusion applies
 output to the statistical publications.  Output noise infusion impacts
-database reconstruction in two ways. First, the resulting statistical
-publication is likely no longer consistent, so the reconstruction of
-\emph{any} database may no longer be possible. Second, even if a
+database reconstruction in two ways. First, multiple statistical
+publications from the same confidential dataset will typically not be consistent with each other, since they will all have been subject to different specific values of noise. This lack of consistency may defeat \emph{any} database reconstruction attack, since there may no longer be a consistent solution to the published data. Second, even if a
 database is reconstructed, it is likely not the correct database.
+
 
 \section{Related Work}
 
@@ -602,7 +601,7 @@ databases in order to reconstruct the original database. This paper
 does not use that attack technique, but instead creates a system of
 constraints and solves them with a solver that can solve NP-hard
 problems. Although such a solver requires exponential time in the
-worst case, in this case it is quite fast.
+worst case, in many cases it is quite fast.
 
 \section{Conclusion}
 
@@ -616,7 +615,10 @@ breach the privacy of millions of people. Although a suite of traditional
 disclosure avoidance technique is often sufficient to defend against a
 cursory attack, cell suppression and generalization are not secure
 against this kind of 
-attack. To protect the privacy of respondent data, statistical
+attack. 
+While many statistical agencies, including the U.S. Census Bureau, currently use methods in addition to cell suppression and generalization to protect underlying confidential data, it is not clear if these approaches are resistant to database reconstruction attacks.
+
+To protect the privacy of respondent data, statistical
 agencies must use some kind of noise infusion. 
 Formal privacy methods, especially differential privacy, were specifically
 designed to to control this risk and, as both of our noise-infusion examples
@@ -625,7 +627,7 @@ to the DBA constraints. In this expanded universe, the real confidential data
 are but a single solution, and no evidence in the published data can improve 
 an attacker's guess about which solution is the correct one.
 
-\subsection{Acknowldgements}
+\subsection{Acknowledgements}
 Robert Ashmead, Chris Clifton, and Philip Leclerc provided useful
 comments on this paper. Naoyuki Tamura provided invaluable help
 regarding the use of Sugar.
@@ -647,11 +649,11 @@ consequence of SAT being NP-complete is that many problems involving
 constraints on variables can be
 reduced in polynomial time (i.e., quickly) to an instance of the SAT
 problem. Once reduced, many such problems can be solved through the
-use of general-purpose heuristics. Although the SAT problem is not solvable by
+use of general-purpose heuristics. Although the SAT problem is not universally solvable by
 algorithms in polynomial time, researchers have found many heuristic
-techniques for expediting this process. SAT solvers combine a variety
+techniques for expediting this process that are capable of solving many instances of SAT problems efficiently. SAT solvers combine a variety
 of these techniques into one complex process, resulting in polynomial
-time solutions for the SAT problem in many cases.
+time solutions for many (but not all) SAT problem instances.
 
 Modern SAT solvers use a heuristic technique called Conflict-Driven
 Clause Learning, commonly referred to as CDCL\cite{cdcl}. Briefly, CDCL algorithm
