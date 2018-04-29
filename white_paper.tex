@@ -72,19 +72,18 @@
 \begin{abstract}
 Statistical agencies are mandated to publish summary statistics and
 micro-data while not providing data users with the ability to derive
-specific attributes for particular persons or
-establishments. 
-Traditionally, these privacy guarantees are assured through the
-use of \emph{Statistical Disclosure Limitation} (SDL)
-techniques. These techniques are not sufficient to
-prevent a database reconstruction attack of the sort anticipated by
-Dinur and Nissim (2003). To illustrate the problem, this paper
-presents a database reconstruction attack on a hypothetical block for
-which statistics have been published by an official statistics
-agency. We then show how the use of formally private noise reduces the
-privacy risk of the database reconstruction. The paper concludes with
-a discussion of the implications for the 2020 Census of Population and
-Housing. 
+specific attributes for particular persons or establishments.
+Traditionally, these privacy guarantees are assured through the use of
+\emph{Statistical Disclosure Limitation} (SDL) techniques. These
+techniques are not sufficient to prevent a database reconstruction
+attack of the sort anticipated by Dinur and Nissim (2003). To
+illustrate the problem, this paper presents a database reconstruction
+attack on a hypothetical block for which statistics have been
+published by an official statistics agency. We then show how the use
+of noise introduced to satisfy the requirements of a formal privacy
+model reduces the privacy risk of a database reconstruction. The
+paper concludes with a discussion of the implications for the 2020
+Census of Population and Housing.
 \end{abstract}
 
 \begin{keywords}
@@ -108,7 +107,7 @@ distribute more than \$675 billion in federal funds to states and
 local organizations.
 
 In addition to collecting and distributing data on the American
-people, the Census Bureau is charged with protecting the Privacy confidentiality of
+people, the Census Bureau is charged with protecting the privacy and confidentiality of
 survey responses. Specifically, all Census publications must uphold the
 confidentiality standard specified by Title 13 of the U.S. Code, which
 states, in part, that Bureau publications are prohibited from
@@ -143,46 +142,57 @@ the underlying confidential data can be \emph{reconstructed} by simply
 finding a consistent set of microdata that, when tabulated, produce
 the official statistics. One of the big surprises of the 2003 paper is
 that the number of tabulations required to enable a database reconstruction
-attack (DRA) is far fewer than might be intuitively expected: this is
+are far fewer than might be intuitively expected: this is
 because of the internal constraints and consistency requirements
-in the published data. 
+in the published data. Follow-up work showed that these results could
+be generalized to many more settings.
 
-While it is mathematically impossible to prevent a reconstruction of the
-underlying data, a data publisher can add noise to the published
-results so that the reconstructed data will not unambiguously reveal the actual
-confidential responses used to create the published
-tables. Clearly, as more noise that is added, the respondents will
-enjoy greater privacy protection, but the data publications will have
-lower accuracy. 
+It is mathematically impossible to prevent a reconstruction of
+microdata that will produce a published set of statistics. But a
+statiatical agency can add sufficient noise to the published tables, such that
+reconstructed microdata will not match the microdata that were
+collected and tabulated. 
 
-So how much noise needs to be added to protect privacy? Three years
-later, Dwork, McSherry, Nissim and Smith answered that question. In
-their paper ``Calibrating Noise to Sensitivity in Private Data
-Analysis,''\cite{Dwork:2006:CNS:2180286.2180305} the researchers
+Adding noise alone is not sufficient, however. Noise can't be added in an \emph{ad
+  hoc} manner: the noise must be carefully crafted so that it disables
+\emph{every possible} database reconstruction technique. 
+
+Subsequent
+publications~\cite{privacy-preserving-datamining-on-vertically-partitioned-databases,BDMN05}
+refined the idea of adding noise to published tables to protect the
+privacy of the individuals in the dataset. Then in 2006, Dwork, McSherry, Nissim and Smith proposed a formal framework
+to for understanding these results. Their paper ``Calibrating Noise to Sensitivity in Private Data
+Analysis,''\cite{Dwork:2006:CNS:2180286.2180305} 
 introduced the concept of \emph{differential privacy}. The paper
 provides a mathematical definition of the privacy loss that
 persons suffer as a result of a data publication, and proposes a
 mechanism for determining how much noise needs to be added for any
-given level of privacy protection.
+given level of privacy protection. In 2016, the paper's authors were awarded the
+prestigious ``Test of Time'' award at the Theory of Cryptography
+Conference (TCC)
 
 The 2020 census is expected to count roughly 320 million people living
 on roughly 8.5 million inhabited blocks, with some blocks having as
 few as a single person and other blocks having thousands. With this
 level of scale and diversity, it is difficult to visualize how such a
-data release might be susceptible to a database reconstruction
-attack. Nevertheless, with recent improvements in both computing power
-and big data applications, such reconstructions now pose a significant
-risk to the confidentiality of microdata that underlies unprotected
-statistical tables.
+data release might be susceptible to database reconstruction. But we
+now know that reconstruction would in fact pose a significant threat
+to the confidentiality of the 2020 microdata that underlies
+unprotected statistical tables if privacy-protecting measured are not
+implemented. 
 
 To help understand the importance of adopting formal privacy methods, in
-this article we presents a database reconstruction attack on a much
+this article we presents a database reconstruction of a much
 smaller statistical publication: a hypothetical block containing seven
 people distributed over two households.\footnote{The 2010 U.S. Census contained XXXX census blocks with seven or fewer people. The data can be downloaded from \url{https://www2.census.gov/census_2010/01-Redistricting_File--PL_94-171}} We show that even a relatively
-small number of constraints results in an exact solution the blocks'
+small number of constraints results in an exact solution for the blocks'
 inhabitants. Finally, we show how differential privacy can protect the
-published data by creating uncertainty. Finally, we discuss
-implications for the decennial census.
+published data by creating uncertainty. Although readers may think
+that the reconstruction of a block with just seven people is an
+insignificant risk for the country as a whole, this attack can be
+performed for virtually every block in the United States using the
+data provided in the 2010 census. As a result, our final section discusses
+implications for the 2020 decennial census.
 
 \section{An Example Database Reconstruction Attack}
 
@@ -217,16 +227,16 @@ Statistic & Group                     & Count & Median & Mean \\
 \hline
        2A & female                    & 4     &  30    & 33.5 \\
        2B & male                      & 3     &  30    & 44 \\
-       2C & Black or African American & 4     &  51    & 48.5 \\
+       2C & black or African American & 4     &  51    & 48.5 \\
        2D & White                     & 3     &  24    & 24 \\
 \hline
        3A & single adults             & \cens & \cens  & \cens \\
        3B & married adults            & 4     & 51     & 54 \\
 \hline
-       4A & Black or African American female              & 3     & 36     & 36.7 \\
-       4B & Black or African American male                & \cens & \cens  & \cens \\
-       4C & White male                & \cens & \cens  & \cens \\
-       4D & White female              & \cens & \cens  & \cens \\
+       4A & black or African American female              & 3     & 36     & 36.7 \\
+       4B & black or African American male                & \cens & \cens  & \cens \\
+       4C & white male                & \cens & \cens  & \cens \\
+       4D & white female              & \cens & \cens  & \cens \\
 \hline
        5A & persons under 5 years     & \cens & \cens  & \cens \\
        5B & persons under 18 years    & \cens & \cens  & \cens \\
@@ -239,18 +249,17 @@ Statistic & Group                     & Count & Median & Mean \\
 
 \subsection{Encoding the Constraints}
 
-To perform the database reconstruction attack, we view the attributes
+We can reconstruct the databsae by treating the attributes
 of the persons living on the block as a collection of 
 free variables. We then extract from the published table a set of
-constraints. The database reconstruction attack merely finds a set of
+constraints. The database reconstruction merely finds a set of
 attributes that are consistent with the constraints. If statistics are
-highly constrained, the only a single reconstruction will be
-possible, and that reconstruction should be the same as the underlying
-microdata used to create the original table.
+highly constraining, then there will be a single possible
+reconstruction, and those reconstructed microdata will necessarily be the same as the underlying
+microdata that were used to create the original statistical publication.
 
 For example, statistic 2B states that there are 3 males living in the
-geography.  Because age is reported to the nearest year, and
-age must necessarily be $[ 0 .. 115]$, there
+geography.  Because age processed by the statistical agency as an integer between 0 and 115, there
 are only a finite number of possible age combinations, specifically:
 
 \[ \binom{116}{3}=\frac{116 \times 115 \times 114}{3 \times 2 \times
@@ -334,7 +343,7 @@ example, equation~\ref{mean_age_38} is can be represented as:
 (int A6 0 115)
 (int A7 0 115)
 
-; Statistic 1A: Mean age is 30
+; Statistic 1A: Mean age is 38
 (= (+ A1 A2 A3 A4 A5 A6 A7)
    (* 7 38)
 )
@@ -350,12 +359,14 @@ conversion is not space efficient, it is fast, and the unary notation makes
 it easy to encode integer inequalities as simple functions of Boolean
 variables. 
 
-Although Sugar makes it relatively simple to encode constraints that
-represent counts and means, encoding medians is more complicated. The
-approach we settled upon requires that we first order the ages of the
-person records. An unanticipated advantage of ordering the ages is
-that it eliminates many degenerate solutions that different only in
-permuted labels for the reconstructed individuals:
+To encode the median age constraint, we abserve that the median of a group
+of numbers is the precisely defined as the value of the middle
+number when the numbers are arranged in sorted order (for the case in
+which there are an an odd number of numbers). Until now, we
+have not distinguished persons 1 through 7 in any way: the numbers
+labels are purely arbitrary. To make it easier to describe the median
+constraints, we can assert that the labels must be assigned in order
+of age. That is, we introduce these five constraints:
 
 \begin{Verbatim}
 ;; Assure that the output is sorted by age. This does a good job 
@@ -368,8 +379,8 @@ permuted labels for the reconstructed individuals:
 (<= A6 A7)
 \end{Verbatim}
 
-Having sorted the ages, we know that the middle variable must
-be the median:
+Having asserted that the labels are in chronological order, we can
+constrain the age of the person in the middle to be the median:
 
 \begin{Verbatim}
 (= A4 30)
@@ -382,8 +393,8 @@ average age is 44. We can use the value \texttt{0} to represent a female
 and \texttt{1} to represent a male:
 
 \begin{Verbatim}
-(int FEMALE 0)
-(int MALE   1)
+#define FEMALE 0
+#define MALE   1
 \end{Verbatim} 
 
 Using the variable \texttt{S\emph{n}} to represent the sex of person
@@ -418,6 +429,30 @@ We translated Table~\ref{fictional} into \NumSExpressions{} individual
 S-expressions extending over \NumConstraintLines{} lines. Sugar then
 translated this into \NumVariables Boolean variables consisting of
 \NumClauses clauses in the conjunctive normal form (CNF). 
+
+Interestingly, we can even create constraints for the suppressed data!
+Statistic 3A is suppressed, so we know that there are 0, 1 or 2 single
+adults. We let $\textrm{M}n$ represent the marrital status of person
+$n$:
+
+\begin{Verbatim}
+#define SINGLE 0
+#define MARRIED 1
+
+(int SINGLE_ADULT_COUNT 0 2)
+(= (+ (if (and (= M1 SINGLE) (> A1 17)) 1 0)
+      (if (and (= M2 SINGLE) (> A2 17)) 1 0)      
+      (if (and (= M3 SINGLE) (> A3 17)) 1 0)      
+      (if (and (= M4 SINGLE) (> A4 17)) 1 0)      
+      (if (and (= M5 SINGLE) (> A5 17)) 1 0)      
+      (if (and (= M6 SINGLE) (> A6 17)) 1 0)      
+      (if (and (= M7 SINGLE) (> A7 17)) 1 0))
+  SINGLE_ADULT_COUNT)
+
+(>= SINGLE_ADULT_COUNT 0)
+(<= SINGLE_ADULT_COUNT 2)
+\end{Verbatim}
+
 
 Translating the constraints into CNF allows them to be solved using
 either a SAT (satisfiability), SMT (satisfiability module theories),
@@ -530,17 +565,21 @@ statistical data being tabulated, or apply noise to the results after
 tabulation. We consider each of these below.
 
 \paragraph{Option 1: Publisher fewer data.} Although it might seem that publishing less statistical data is a
-reasonable defense against the DRA, this choice may severely limit the number
-of tabulations that can be published. A
-related problem is that, with even a moderately large population, it may be computationally infeasible to
-determine when the intersection of all possible reconstructions
-identifies individuals. While this would seem to alleviate the problem, advances in solver technology may mean that an attacker could do such a reconstruction in the future, even though we cannot evaluate if it is possible today.
+reasonable defense against the DRA, this choice may severely limit the
+number of tabulations that can be published. A related problem is
+that, with even a moderately small population, it may be
+computationally infeasible to determine when the intersection of all
+possible reconstructions identifies individuals. While this would seem
+to alleviate the problem, advances in solver technology may mean that
+an attacker could do such a reconstruction in the future, even though
+we cannot evaluate if it is possible today.
 
 \paragraph{Option 2: Apply noise before tabulation.} This approach is called \emph{input noise infusion}. For example, each respondent's age might be randomly
 altered by a small amount. Input noise infusion
-doesn't prevent database reconstruction, but it limits the value of
-the reconstructed data by creating uncertainty for each of the
-reconstructed values. 
+doesn't prevent finding a set of microdata that are consistent with
+the published statistics, what we call \emph{database reconstruction}, but it limits the value of
+the reconstructed microdata, since what is reconstructed are the
+microdata \emph{after} the noise has been added. 
 
 For example, if a random offset in the range of $-2 \ldots +2$ is
 added to each record of our census and the reconstruction results in individuals of
@@ -558,8 +597,11 @@ approach is called \emph{output noise infusion}. Whereas input noise infusion
 applies noise to the microdata directly, output noise infusion applies
 output to the statistical publications.  Output noise infusion impacts
 database reconstruction in two ways. First, multiple statistical
-publications from the same confidential dataset will typically not be consistent with each other, since they will all have been subject to different specific values of noise. This lack of consistency may defeat \emph{any} database reconstruction attack, since there may no longer be a consistent solution to the published data. Second, even if a
-database is reconstructed, it is likely not the correct database.
+publications from the same confidential dataset will appear
+inconsistent to a na\"ive data user who does not take the noise into
+account. Second, even if a database is reconstructed, it will be a
+database that has been infused with noise, rather than the original
+private data. 
 
 
 \section{Related Work}
@@ -628,7 +670,7 @@ are but a single solution, and no evidence in the published data can improve
 an attacker's guess about which solution is the correct one.
 
 \subsection{Acknowledgements}
-Robert Ashmead, Chris Clifton, and Philip Leclerc provided useful
+Robert Ashmead, Chris Clifton, Kobbi Nissim, and Philip Leclerc provided useful
 comments on this paper. Naoyuki Tamura provided invaluable help
 regarding the use of Sugar.
 

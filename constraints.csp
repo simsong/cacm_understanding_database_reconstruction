@@ -413,6 +413,21 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 3A. Single Adults.  This is suppressed, so we know there are 0, 1 or 2
+(int SINGLE_ADULT_COUNT 0 2)
+(= (+ (if (and (= M1 0) (> A1 17)) 1 0)
+      (if (and (= M2 0) (> A2 17)) 1 0)      
+      (if (and (= M3 0) (> A3 17)) 1 0)      
+      (if (and (= M4 0) (> A4 17)) 1 0)      
+      (if (and (= M5 0) (> A5 17)) 1 0)      
+      (if (and (= M6 0) (> A6 17)) 1 0)      
+      (if (and (= M7 0) (> A7 17)) 1 0)
+      )
+   SINGLE_ADULT_COUNT
+   )
+
+(>= SINGLE_ADULT_COUNT 0)
+(<= SINGLE_ADULT_COUNT 2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 3B. Married Adults
