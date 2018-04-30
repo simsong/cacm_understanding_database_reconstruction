@@ -607,6 +607,26 @@ database that has been infused with noise, rather than the original
 private data. 
 
 
+\subsection{Implications for the 2020 Census}
+
+The U.S. Census Bureau has announced that it is adopting a noise
+infusion mechanism based on differential privacy to provide privacy
+protection for the underlying microdata that are collected as part of
+the 2020 census. This paper on database reconstruction provides some
+of the motivation for the Bureau's decision.
+
+The protection mechanism developed for the 2010 Census was based
+on a technique called swapping and that is described elsewhere\cite{swapping}. The swapping technique was not
+designed to protect the underlying data against a database
+reconstruction attack. Indeed, it is the Census Bureau's policy that
+both the swapped and the unswapped microdata are considered
+confidential.
+
+
+largely on swapping some attributes betwene some pairs of households of households from Although the 2020 Census will be the 24th census conducted on behalf of the
+United States Congress, it is only the second census that will be
+conducted since the discovery of differential privacy.
+
 \section{Related Work}
 
 In 2003 Irit Dinur and Kobbi Nissim\cite{DinurNissim2003} showed that the underlying

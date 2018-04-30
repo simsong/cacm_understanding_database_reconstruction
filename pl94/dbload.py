@@ -53,6 +53,10 @@ def decode_geo_line(conn,c,line):
         return int(ex(desc))
     if exi(GEO_SUMLEV) in [750,755]:
         try:
+            if exi(GEO_BLOCK)==2005:
+                #print(line)
+                print("INSERT INTO blocks (state,county,tract,block,logrecno) values ({},{},{},{},{})".format(
+                    ex(GEO_STUSAB), exi(GEO_COUNTY), exi(GEO_TRACT), exi(GEO_BLOCK), exi(GEO_LOGRECNO)))
             c.execute("INSERT INTO blocks (state,county,tract,block,logrecno) values (?,?,?,?,?)",
                       (ex(GEO_STUSAB), exi(GEO_COUNTY), exi(GEO_TRACT), exi(GEO_BLOCK), exi(GEO_LOGRECNO)))
         except sqlite3.IntegrityError as e:
