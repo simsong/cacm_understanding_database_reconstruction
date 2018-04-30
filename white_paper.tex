@@ -612,20 +612,49 @@ private data.
 The U.S. Census Bureau has announced that it is adopting a noise
 infusion mechanism based on differential privacy to provide privacy
 protection for the underlying microdata that are collected as part of
-the 2020 census. This paper on database reconstruction provides some
-of the motivation for the Bureau's decision.
+the 2020 census. Here we provide more of the motivation for that
+decision. 
 
-The protection mechanism developed for the 2010 Census was based
-on a technique called swapping and that is described elsewhere\cite{swapping}. The swapping technique was not
-designed to protect the underlying data against a database
-reconstruction attack. Indeed, it is the Census Bureau's policy that
-both the swapped and the unswapped microdata are considered
-confidential.
+The protection mechanism developed for the 2010 Census was based on a
+technique called swapping and that is described
+elsewhere\cite{swapping}. The swapping technique was not designed to
+protect the underlying data against a database reconstruction
+attack. Indeed, it is the Census Bureau's policy that both the swapped
+and the unswapped microdata are considered confidential.
 
+The 2010 census found a total population of 308,745,538. These people
+occupied in 10,620,683 habitable blocks. Each person was located in a
+residential household or institutional housing arrangement (what the
+Census Bureau called a ``group quarters''). For each person, the Census
+bureau tabulated the person's location as well as their sex, age,
+race and ethnicity, and their relationship
+to the head of the household---that is, five attributes per person,
+for a total of approximately 1.5 billion attributes in total. Using
+this data, the Bureu published approximately 7.7 billion statistics,
+including 2.7 billion in the PL94-171 redistricting file, 2.8 billion
+in the balance of Summary File 1, 2 billion in summary file 2, and 31
+million records in a public-use microdata sample. This is
+approximately 25 statistics per person. Given these numbers and the
+worked example in this article, it is clear that there is a
+theoretical possibility that the national level census could be
+reconstructed, although tools such as Sugar and Picosat are probably
+not powerful enough to do so.
 
-largely on swapping some attributes betwene some pairs of households of households from Although the 2020 Census will be the 24th census conducted on behalf of the
-United States Congress, it is only the second census that will be
-conducted since the discovery of differential privacy.
+To protect the privacy of census respondents, the Bureau is developing
+a privacy protection system based on differential privacy. This system
+will assure that every statistic and the corresponding microdata
+receives some amount of privacy protection, while providing that the
+resulting statistics are sufficiently accurate for their intended
+purpose.
+
+In this publication we have explained the motivation for the decision
+to use differential privacy. Without a privacy
+protection system based on noise infusion, it would be possible to
+reconstruct accurate microdata using only the published statistics. By
+using differential privacy, we can add the minimum amount of noise
+necessary to achive our privacy requirements. A future article will
+explain how that system works.
+
 
 \section{Related Work}
 

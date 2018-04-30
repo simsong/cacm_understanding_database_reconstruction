@@ -26,6 +26,10 @@
 ;;#define USE_SOLUTION   // for debugging
 
 ;; Sexes (0:female  1:male)
+; this doesn't work with sugar, but it should:
+;(int FEMALE 0)
+;(int MALE 1)
+; so instead, we use this and run through the CPP:
 #define FEMALE 0
 #define MALE   1
 (int S1 FEMALE MALE) (int S2 FEMALE MALE)
@@ -413,7 +417,9 @@
 #endif
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 3A. Single Adults.  This is suppressed, so we know there are 0, 1 or 2
+;; 3A. Single Adults.
+;; NOTE: THIS STATISTIC IS SUPPRESSED...
+;; ... so we know there are 0, 1 or 2 people in this class:
 (int SINGLE_ADULT_COUNT 0 2)
 (= (+ (if (and (= M1 SINGLE) (> A1 17)) 1 0)
       (if (and (= M2 SINGLE) (> A2 17)) 1 0)      

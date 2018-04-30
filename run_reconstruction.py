@@ -216,8 +216,6 @@ def extract_vars_from_sugar_decode(outdata):
 def sugar_decode_picostat_and_extract_satvars(lines,mapfile):
     return extract_vars_from_sugar_decode( sugar_decode_picosat_out( "\n".join(lines), mapfile))
 
-
-
 def satvars_to_codes(satvars):
     """Transform the variables to a list of (age,code) person codes"""
     results = []
@@ -269,6 +267,7 @@ def parse_picosat_all_file(path):
     ctr = 0
     for lines in picosat_get_next_solution(path):
         total_solutions += 1
+        # Our version worked, we seem to have a bug, so use the sugar code here.
         #(mapvars,satvars,counter) = extract_vars_from_solver_output(solver_output_lines=lines,mapfile=args.map)
         satvars = sugar_decode_picostat_and_extract_satvars(lines,args.map)
         codes = parse_vars_to_printable(satvars)

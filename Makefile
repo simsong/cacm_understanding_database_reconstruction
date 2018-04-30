@@ -17,7 +17,7 @@ toy_regression.pdf: toy_regression.py
 	python3 toy_regression.py
 
 vars.tex: run_reconstruction.py $(PROBLEM)
-	python run_reconstruction.py
+	python run_reconstruction.py --problem $(PROBLEM)
 
 medians.tex: median_calculator.py tytable.py
 	python median_calculator.py
