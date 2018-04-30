@@ -44,7 +44,7 @@ def make_database(conn):
     conn.cursor().execute(SQL_SET_CACHE)
     SLGSQL.create_schema(conn,SQL_SCHEMA)
 
-def decode_geo_line(c,line):
+def decode_geo_line(conn,c,line):
     """Decode the hiearchical geography lines. These must be done before the other files are read
     to get the logrecno."""
     def ex(desc):
@@ -56,20 +56,20 @@ def decode_geo_line(c,line):
             c.execute("INSERT INTO blocks (state,county,tract,block,logrecno) values (?,?,?,?,?)",
                       (ex(GEO_STUSAB), exi(GEO_COUNTY), exi(GEO_TRACT), exi(GEO_BLOCK), exi(GEO_LOGRECNO)))
         except sqlite3.IntegrityError as e:
-            c.commit()          # save where we are
+            conn.commit()          # save where we are
             print("INSERT INTO blocks (state,county,tract,block,logrecno) values ({},{},{},{},{})".format(
                 ex(GEO_STUSAB), exi(GEO_COUNTY), exi(GEO_TRACT), exi(GEO_BLOCK), exi(GEO_LOGRECNO)))
             raise e
             
 
-def decode_12010(c,line):
+def decode_12010(conn,c,line):
     fields = line.split(",")
     (fileid,stusab,chariter,cifsn,logrecno,p0010001) = fields[0:6]
     assert fileid=='PLST'
     c.execute("UPDATE blocks set pop=? where state=? and logrecno=?",
               (p0010001,stusab,logrecno))
 
-def decode_22010(c,line):
+def decode_22010(conn,c,line):
     fields = line.split(",")
     (fileid,stusab,chariter,cifsn,logrecno) = fields[0:5]
     (h0010001,h0010002,h0010003) = fields[-3:]
@@ -83,12 +83,12 @@ def load_file(conn,fname,func):
     c = conn.cursor()
     print("starting {}".format(fname))
     t0 = time.time()
-    with open(fname) as f:
+    with open(fname,encoding='latin1') as f:
         ll = 0
         for line in f:
             #print(line)
             try:
-                func(c,line)
+                func(conn,c,line)
             except ValueError as e:
                 print("{}: {}".format(ll,line))
                 raise e
@@ -98,7 +98,7 @@ def load_file(conn,fname,func):
                 sys.stdout.flush()
     conn.commit()
     t1 = time.time()
-    print("Finished {}; {:.0} lines/sec".format(fname,ll/(t1-t0)))
+    print("Finished {}; {:10.1} lines/sec".format(fname,ll/(t1-t0)))
 
 if __name__ == "__main__":
     import argparse

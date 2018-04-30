@@ -70,20 +70,21 @@
 
 \maketitle
 \begin{abstract}
-Statistical agencies are mandated to publish summary statistics and
-micro-data while not providing data users with the ability to derive
-specific attributes for particular persons or establishments.
-Traditionally, these privacy guarantees are assured through the use of
-\emph{Statistical Disclosure Limitation} (SDL) techniques. These
-techniques are not sufficient to prevent a database reconstruction
-attack of the sort anticipated by Dinur and Nissim (2003). To
-illustrate the problem, this paper presents a database reconstruction
-attack on a hypothetical block for which statistics have been
-published by an official statistics agency. We then show how the use
-of noise introduced to satisfy the requirements of a formal privacy
-model reduces the privacy risk of a database reconstruction. The
-paper concludes with a discussion of the implications for the 2020
-Census of Population and Housing.
+In 2020 the Census Bureau will conduct the constitutionally mandated
+decennial Census of Population and Housing. Because a census involves
+collecting large amounts of private data under the promise of
+confidentiality, traditionally statistics are only published at high
+levels of aggregation.  Published statistical tables are vulnerabile
+to a kind of \emph{database reconstruction attack}, in which the
+underlying microdata are recovered merely by finding a set of
+microdata that are consistent with the published statitical
+tabulations. This paper shows how a database reconstruction attack can
+be performed by using the tables to create a set of mathematical
+constraints and then solving the resulting set of simultaneous
+equations.  We then show how the attack addressed by adding noise to
+the published tabulations, so that the reconstrution no longer results
+in the original data. The paper concludes with a discussion of the
+implications for the 2020 Census of Population and Housing.
 \end{abstract}
 
 \begin{keywords}
@@ -119,33 +120,35 @@ information that might identify a specific person or establishment.
 Upholding this confidentiality requirement frequently poses a
 challenge, because many statistics can inadvertently provide
 information in a way that can be attributed to a particular
-entity. For example, a survey of salaries in a region might report the
-average salary earned by people of different occupations. However, if
-there is only one bricklayer, than reporting the average salary of a
-bricklayer will allow anyone who sees to statistical product to infer
-that person's salary. If there are two bricklayers in the region,
-reporting the average salary will allow each bricklayer to infer the
-other's salary. Both of these cases would be clear violations of Title
-13. The Bureau has traditionally used cell suppression to protect
-privacy in situations such as this: the cells of statistical tables
-that result from \emph{small counts} are suppressed and not
-reported. If totals are reported, cell suppression requires that
-additional \emph{complementary} cells be suppressed so that the values
-of the suppressed cells cannot be worked out with simple arithmetic. 
+entity. For example, if a statistical agency accurately reported that
+there were 2 persons living on a block and that the average age of the
+block's residents was 35, that would constitute an improper disclosure
+of personal information, because one of the residents could look up
+the data, subtract their contribution, and infer the age of the other
+resident. To avoid such privacy compromises, statistical agencies have
+traditionally suppressed statistics resulting from a small number of
+people, a process called \emph{cell suppression}, and instead
+published statistics at higher levels of aggregation. Other approaches
+that statistical agencies use to protect privacy are
+\emph{top-coding}, in which ages higher than a certain limit are coded
+as that limit, \emph{noise-infusion}, in which random values are added
+to to some attributes, and \emph{swapping}, in which some of the
+attributes of records representing different individuals or families
+are swapped. Together, these techniques are called \emph{statistical
+  disclosure limitation} (SDL).
 
-In 2003, Dinur and Nissim showed that simple cell
-suppression is not sufficient to protect the underlying confidential
-data collected and used by a statistical agency to produce official
-statistics\cite{DinurNissim2003}. To the contrary, they showed that
+In 2003, Dinur and Nissim showed that 
 once an agency publishes more than a critical number of statistics,
 the underlying confidential data can be \emph{reconstructed} by simply
 finding a consistent set of microdata that, when tabulated, produce
-the official statistics. One of the big surprises of the 2003 paper is
+the official statistics. This happens even if the agency only
+publishes aggregate statistics. One of the big surprises of the 2003 paper is
 that the number of tabulations required to enable a database reconstruction
 are far fewer than might be intuitively expected: this is
 because of the internal constraints and consistency requirements
 in the published data. Follow-up work showed that these results could
-be generalized to many more settings.
+be generalized to many more settings, and that many traditional
+SDL techniques are insufficient to protect against reconstruciton.
 
 It is mathematically impossible to prevent a reconstruction of
 microdata that will produce a published set of statistics. But a
@@ -648,26 +651,28 @@ worst case, in many cases it is quite fast.
 \section{Conclusion}
 
 With the dramatic improvement in both computer speeds and the
-efficiency of solvers in the
-last decade, database reconstruction attacks on statistical databases are no longer a 
-theoretical danger. The vast quantity of data products published by
-statistical agencies each year may give a determined attacker 
-more than enough constraints to reconstruct some or all of a target database and
-breach the privacy of millions of people. Although a suite of traditional
+efficiency of solvers in the last decade, database reconstruction
+attacks on statistical databases are no longer a theoretical
+danger. The vast quantity of data products published by statistical
+agencies each year may give a determined attacker more than enough
+constraints to reconstruct some or all of a target database and breach
+the privacy of millions of people. Although a suite of traditional
 disclosure avoidance technique is often sufficient to defend against a
 cursory attack, cell suppression and generalization are not secure
-against this kind of 
-attack. 
-While many statistical agencies, including the U.S. Census Bureau, currently use methods in addition to cell suppression and generalization to protect underlying confidential data, it is not clear if these approaches are resistant to database reconstruction attacks.
+against this kind of attack.  While many statistical agencies,
+including the U.S. Census Bureau, currently use methods in addition to
+cell suppression and generalization to protect underlying confidential
+data, it is not clear if these approaches are resistant to database
+reconstruction attacks.
 
-To protect the privacy of respondent data, statistical
-agencies must use some kind of noise infusion. 
-Formal privacy methods, especially differential privacy, were specifically
-designed to to control this risk and, as both of our noise-infusion examples
-illustrate, they do so by systematically expanding the universe of solutions
-to the DBA constraints. In this expanded universe, the real confidential data
-are but a single solution, and no evidence in the published data can improve 
-an attacker's guess about which solution is the correct one.
+To protect the privacy of respondent data, statistical agencies must
+use some kind of noise infusion.  Formal privacy methods, especially
+differential privacy, were specifically designed to to control this
+risk and, as both of our noise-infusion examples illustrate, they do
+so by systematically expanding the universe of solutions to the DBA
+constraints. In this expanded universe, the real confidential data are
+but a single solution, and no evidence in the published data can
+improve an attacker's guess about which solution is the correct one.
 
 \subsection{Acknowledgements}
 Robert Ashmead, Chris Clifton, Kobbi Nissim, and Philip Leclerc provided useful
