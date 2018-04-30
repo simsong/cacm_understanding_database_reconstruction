@@ -30,3 +30,6 @@ picosat-965
 sf1.pdf
 sugar-v2-3-2
 white_paper.pdf
+.cache
+*.sqlite3
+sugar-*

@@ -1,0 +1,50 @@
+Use the following columns from PL94:
+
+STATE/US-Abbreviation (USPS) STUSAB     2
+State (FIPS)                 STATE      2
+County                       COUNTY     3
+Census Tract                 TRACT      6
+Block Group                  BLKGRP     1
+Block                        BLOCK      4
+
+
+P1 - P0010001 - Total Population
+H1 - H0010002 - Occupied Housing Units
+
+We do our testing with Alaska
+Tracts: https://www.census.gov/geo/maps-data/maps/2010ref/st02_tract.html
+Summary levels: https://factfinder.census.gov/help/en/summary_level_code_list.htm
+
+FIPS County Class Codes: https://factfinder.census.gov/help/en/fips_class_code.htm
+
+We want summary level 750 and 755
+750 - State⌀County⌀Voting District/Remainder⌀County Subdivision⌀Place/Remainder-Census Tract-Block Group⌀Block
+755 - State-County-Voting District/Remainder-County Subdivision-Subminor Civil Division-Census Tract-Block Group-Block
+
+Here is what the first line of the 3 files for AK look like:
+
+FILEID,STUSAB,CHARITER,CIFSN,LOGRECNO,P0010001
+ak000012010.pl
+PLST,AK,000,01,0000001,710231,658356,473576,23263,104871,38135,7409,11102,51875,47286,4685,26127,6915,1095,2211,1777,530,213,409,1200,431,429,782,368,114,4181,1415,252,85,68,1103,177,233,529,67,13,50,17,47,30,5,3,60,14,3,10,361,153,21,33,24,13,1,79,14,1,12,5,4,0,0,1,47,39,8,0,0,0,0,0,0,710231,39249,670982,625614,455320,21949,102556,37459,7219,1111,45368,41711,4155,24741,6498,1028,284,1643,484,174,118,1119,395,115,730,193,34,3387,1219,217,75,18,975,164,61,448,26,6,48,17,20,25,1,2,56,3,1,5,234,117,16,11,13,2,0,65,2,0,1,5,2,0,0,0,36,36,0,0,0,0,0,0,0
+
+FILEID,STUSAB,CHARITER,CIFSN,LOGRECNO,...H0010001,H0010002,H0010003
+ak000022010.pl
+PLST,AK,000,02,0000001,522853,497328,368895,16904,70630,28312,4599,7988,25525,23913,1418,14709,3010,488,1179,712,219,60,197,717,150,237,515,238,64,1471,489,58,16,27,382,45,90,238,27,5,12,3,25,11,3,2,26,4,1,7,120,50,2,11,8,5,1,28,5,1,6,1,2,0,0,0,21,20,1,0,0,0,0,0,0,522853,24437,498416,475596,356987,16129,69383,27883,4496,718,22820,21511,1277,14156,2868,470,198,671,207,52,65,669,142,79,487,150,20,1215,420,49,14,15,341,43,34,211,15,2,11,3,13,10,1,2,24,1,1,5,77,37,1,6,5,1,0,21,2,0,1,1,2,0,0,0,17,17,0,0,0,0,0,0,0,306967,258058,48909
+
+
+Geo coding:
+@1 FILEID $6. /*File Identification*/
+@7 STUSAB $2. /*State/US-Abbreviation (USPS)*/
+@9 SUMLEV $3. /*Summary Level*/
+@12 GEOCOMP $2. /*Geographic Component*/
+@28 STATE $2. /*State (FIPS)*/
+@30 COUNTY $3. /*County*/
+@55 TRACT $6. /*Census Tract*/
+@61 BLKGRP $1. /*Block Group*/
+@62 BLOCK $4. /*Block*/
+@66 IUC $2. /*Internal Use Code*/
+
+BLOCKGROUP is the first digit of BLOCK
+
+akgeo2010.pl
+PLST  AK04000000  00000014902                                                                                                                                                                          1477953211577  245383480336Alaska                                                                                    A!   710231   306967+63.3461910-152.837067900            01785533                                                                                                                       
