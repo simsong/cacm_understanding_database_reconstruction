@@ -1,0 +1,5 @@
+1.  There are connections here to the work in algebraic statistics for tables, in which one can bound cell entries given margins.  Some of this work is by Sesa Slavkovic
+
+2.  After using a solver to find a set of feasible reconstructions, the intruder might be able to use domain knowledge to pick one that is most likely. This could be based on, for example, experience with relationships across variables or individuals. 
+
+3. You all wrote an interesting sentence just before Section 4: without consistent margins reconstruction attacks may not be possible.  Is that a hard result?  I ask because a lot of the synthetic data products that we have created in the past do not match any published margins, in ways that are probabilistic and difficult to predict generally.  So maybe there is some hope that reconstruction attacks are not feasible with model based synthetic data?  (That is probably too strong a statement on my part.)
