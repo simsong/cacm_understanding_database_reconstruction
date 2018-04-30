@@ -212,7 +212,7 @@ clearer. Below, I've included my remarks page-by-page, separated between "Substa
 		
 	pg. 9
 	
-		"For example, if a random oset in the range of −2 . . . + 2 is added to each
+		"For example, if a random oset in the range of ???2 . . . + 2 is added to each
 		record of our census and the reconstruction results in individuals of ages (7, 17,
 		22, 29, 36, 66, 82) or (6, 18, 26, 31, 34, 68, 82)."
 		
@@ -271,10 +271,10 @@ clearer. Below, I've included my remarks page-by-page, separated between "Substa
 		
 	pg. 9
 	
-		"Dinur and Nissim found that, if a database is modeled as a string of 𝑛 bits,
+		"Dinur and Nissim found that, if a database is modeled as a string of ???? bits,
 		then at least
-		√
-		𝑛 bits must be modied by adding noise to protect persons from
+		???
+		???? bits must be modied by adding noise to protect persons from
 		being identied."
 		
 		I don't think this is correct. Dinur & Nissim don't assume the underlying database is perturbed
