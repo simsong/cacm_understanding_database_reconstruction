@@ -24,6 +24,7 @@ constraints_.cnf
 constraints_.cnf.cnf
 constraints_.cnf.map
 constraints_.map
+<<<<<<< Updated upstream
 latex_tools
 pbsugar-v1-1-1
 picosat-965
@@ -33,3 +34,15 @@ white_paper.pdf
 .cache
 *.sqlite3
 sugar-*
+=======
+*.pyc
+.DS_Store
+
+Walksat_V51
+constraints_.cnf.cnf
+constraints_.cnf.map
+latex_tools
+sf1.pdf
+*.pdf
+
+>>>>>>> Stashed changes

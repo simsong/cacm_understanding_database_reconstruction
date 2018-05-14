@@ -17,7 +17,6 @@ from sql import SLGSQL
 CACHE_SIZE = -1024              # negative nubmer = multiple of 1024. So this is a 1MB cache.
 SQL_SET_CACHE = "PRAGMA cache_size = {};".format(CACHE_SIZE)
 
-
 SQL_SCHEMA=\
     """
 CREATE TABLE IF NOT EXISTS blocks (state VARCHAR(2), county INTEGER, tract INTEGER, block INTEGER, logrecno INTEGER, pop INTEGER, houses INTEGER, occupied INTEGER);
@@ -38,6 +37,8 @@ GEO_TRACT=(55,6)
 GEO_BLKGRP=(61,1)
 GEO_BLOCK=(62,4)        # first digit of block is blockgroup
 
+DEBUG_BLOCK=None
+
 
 def make_database(conn):
     conn.row_factory = sqlite3.Row
@@ -51,10 +52,9 @@ def decode_geo_line(conn,c,line):
         return line[desc[0]-1:desc[0]+desc[1]-1]
     def exi(desc):
         return int(ex(desc))
-    if exi(GEO_SUMLEV) in [750,755]:
+    if exi(GEO_SUMLEV) in [750]:
         try:
-            if exi(GEO_BLOCK)==2005:
-                #print(line)
+            if DEBUG_BLOCK and exi(GEO_BLOCK)==DEBUG_BLOCK:
                 print("INSERT INTO blocks (state,county,tract,block,logrecno) values ({},{},{},{},{})".format(
                     ex(GEO_STUSAB), exi(GEO_COUNTY), exi(GEO_TRACT), exi(GEO_BLOCK), exi(GEO_LOGRECNO)))
             c.execute("INSERT INTO blocks (state,county,tract,block,logrecno) values (?,?,?,?,?)",
@@ -67,6 +67,7 @@ def decode_geo_line(conn,c,line):
             
 
 def decode_12010(conn,c,line):
+    """Update the database for a line. Note that the logical record number may not be in the DB, because this line may not be for a block"""
     fields = line.split(",")
     (fileid,stusab,chariter,cifsn,logrecno,p0010001) = fields[0:6]
     assert fileid=='PLST'
@@ -74,21 +75,20 @@ def decode_12010(conn,c,line):
               (p0010001,stusab,logrecno))
 
 def decode_22010(conn,c,line):
+    """Update the database for a line. Note that the logical record number may not be in the DB, because this line may not be for a block"""
     fields = line.split(",")
     (fileid,stusab,chariter,cifsn,logrecno) = fields[0:5]
     (h0010001,h0010002,h0010003) = fields[-3:]
     assert fileid=='PLST'
     c.execute("UPDATE blocks set houses=?,occupied=? where state=? and logrecno=?",
               (h0010001,h0010002,stusab,logrecno))
-    
-
 
 def load_file(conn,fname,func):
-    c = conn.cursor()
     print("starting {}".format(fname))
     t0 = time.time()
+    ll = 0
     with open(fname,encoding='latin1') as f:
-        ll = 0
+        c = conn.cursor()
         for line in f:
             #print(line)
             try:
@@ -100,9 +100,9 @@ def load_file(conn,fname,func):
             if ll%10000==0:
                 print("{}...".format(ll),end='')
                 sys.stdout.flush()
-    conn.commit()
+        conn.commit()
     t1 = time.time()
-    print("Finished {}; {:10.1} lines/sec".format(fname,ll/(t1-t0)))
+    print("Finished {}; {:,.0f} lines/sec".format(fname,ll/(t1-t0)))
 
 if __name__ == "__main__":
     import argparse
