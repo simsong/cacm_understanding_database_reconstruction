@@ -6,7 +6,7 @@
 PROBLEM=one-block.csp
 all: white_paper.pdf toy_mechanism.pdf
 
-white_paper.pdf: vars.tex white_paper.tex medians.tex
+white_paper.pdf: vars.tex white_paper.tex medians.tex white_paper.bib
 	latexmk -pdf white_paper.tex </dev/null
 
 toy: toy_mechanism.pdf

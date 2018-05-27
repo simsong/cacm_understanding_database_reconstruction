@@ -26,15 +26,9 @@
 ;;#define USE_SOLUTION   // for debugging
 
 ;; Sexes (0:female  1:male)
-<<<<<<< Updated upstream
-; this doesn't work with sugar, but it should:
+; this does not work with sugar, but it should:
 ;(int FEMALE 0)
 ;(int MALE 1)
-; so instead, we use this and run through the CPP:
-=======
-;(int FEMALE 0)
-;(int MALE 1)
->>>>>>> Stashed changes
 #define FEMALE 0
 #define MALE   1
 (int S1 FEMALE MALE) (int S2 FEMALE MALE)

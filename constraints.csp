@@ -26,14 +26,15 @@
 ;;#define USE_SOLUTION   // for debugging
 
 ;; Sexes (0:female  1:male)
+; this does not work with sugar, but it should:
 ;(int FEMALE 0)
-(int MALE 1)
+;(int MALE 1)
 
-;#define MALE   1
-(int S1 0 MALE) (int S2 0 MALE)
-(int S3 0 MALE) (int S4 0 MALE)
-(int S5 0 MALE) (int S6 0 MALE)
-(int S7 0 MALE)
+
+(int S1 0 1) (int S2 0 1)
+(int S3 0 1) (int S4 0 1)
+(int S5 0 1) (int S6 0 1)
+(int S7 0 1)
 
 ;; Ages (between 0 and 115 years old)
 
@@ -180,13 +181,13 @@
 
 
 ;; there are three males
-(= (+ (if (= S1 MALE) 1 0)  
-      (if (= S2 MALE) 1 0)
-      (if (= S3 MALE) 1 0)
-      (if (= S4 MALE) 1 0)
-      (if (= S5 MALE) 1 0)
-      (if (= S6 MALE) 1 0)
-      (if (= S7 MALE) 1 0)
+(= (+ (if (= S1 1) 1 0)  
+      (if (= S2 1) 1 0)
+      (if (= S3 1) 1 0)
+      (if (= S4 1) 1 0)
+      (if (= S5 1) 1 0)
+      (if (= S6 1) 1 0)
+      (if (= S7 1) 1 0)
       )
    3) 
 
@@ -202,28 +203,28 @@
 ;; that each ID maps to a female. We add the final equal and a -1 to force 
 ;; an error if there are not enough females.
 (= MALE_ID1
-   (if (= S1 MALE) 1
-     (if (= S2 MALE) 2
-       (if (= S3 MALE) 3
-         (if (= S4 MALE) 4
-           (if (= S5 MALE) 5
+   (if (= S1 1) 1
+     (if (= S2 1) 2
+       (if (= S3 1) 3
+         (if (= S4 1) 4
+           (if (= S5 1) 5
              -1))))))
 
 
 (= MALE_ID2
-   (if (and (= S2 MALE) (< MALE_ID1 2)) 2
-     (if (and (= S3 MALE) (< MALE_ID1 3)) 3
-       (if (and (= S4 MALE) (< MALE_ID1 4)) 4
-         (if (and (= S5 MALE) (< MALE_ID1 5)) 5
-           (if (and (= S6 MALE) (< MALE_ID1 6)) 6
+   (if (and (= S2 1) (< MALE_ID1 2)) 2
+     (if (and (= S3 1) (< MALE_ID1 3)) 3
+       (if (and (= S4 1) (< MALE_ID1 4)) 4
+         (if (and (= S5 1) (< MALE_ID1 5)) 5
+           (if (and (= S6 1) (< MALE_ID1 6)) 6
              -1))))))
 
 (= MALE_ID3
-   (if (and (= S3 MALE) (< MALE_ID2 3)) 3
-     (if (and (= S4 MALE) (< MALE_ID2 4)) 4
-       (if (and (= S5 MALE) (< MALE_ID2 5)) 5
-         (if (and (= S6 MALE) (< MALE_ID2 6)) 6
-           (if (and (= S7 MALE) (< MALE_ID2 7)) 7
+   (if (and (= S3 1) (< MALE_ID2 3)) 3
+     (if (and (= S4 1) (< MALE_ID2 4)) 4
+       (if (and (= S5 1) (< MALE_ID2 5)) 5
+         (if (and (= S6 1) (< MALE_ID2 6)) 6
+           (if (and (= S7 1) (< MALE_ID2 7)) 7
              -1))))))
 
 ;; Create temporary variables for the ages of these males
@@ -415,7 +416,9 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 3A. Single Adults.  This is suppressed, so we know there are 0, 1 or 2
+;; 3A. Single Adults.
+;; NOTE: THIS STATISTIC IS SUPPRESSED...
+;; ... so we know there are 0, 1 or 2 people in this class:
 (int SINGLE_ADULT_COUNT 0 2)
 (= (+ (if (and (= M1 0) (> A1 17)) 1 0)
       (if (and (= M2 0) (> A2 17)) 1 0)      
