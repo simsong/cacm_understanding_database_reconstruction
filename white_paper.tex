@@ -70,7 +70,7 @@
 
 \maketitle
 \begin{abstract}
-In 2020 the Census Bureau will conduct the constitutionally mandated
+In 2020 the Census Bureau will conduct the Constitutionally mandated
 decennial Census of Population and Housing. Because a census involves
 collecting large amounts of private data under the promise of
 confidentiality, traditionally statistics are only published at high
@@ -100,66 +100,42 @@ requirement to apportion the seats in the U.S. House of
 Representatives among the states according to their respective
 numbers.
 
-Beyond the Constitutionally mandated role of the decennial census, the
-US Congress has mandated many other purposes for the data. For
+In addition to this primary purpose of the decennial census, the
+US Congress has mandated many other uses for the data. For
 example, the U.S. Department of Justice uses block-by-block counts by
 race for enforcing the Voting Rights Act. More generally, the results
 of the decennial census, combined with other data, are used to help
 distribute more than \$675 billion in federal funds to states and
 local organizations.
 
-In addition to collecting and distributing data on the American
-people, the Census Bureau is charged with protecting the privacy and confidentiality of
-survey responses. Specifically, all Census publications must uphold the
-confidentiality standard specified by Title 13 of the U.S. Code, which
-states, in part, that Bureau publications are prohibited from
+Beyond collecting and distributing data on the American
+people, the Census Bureau is also charged with protecting the privacy and confidentiality of
+survey responses. All Census publications must uphold the
+confidentiality standard specified by Title 13, Section 9 of the U.S. Code, which
+states that Bureau publications are prohibited from
 identifying ``the data furnished by any particular
-establishment or individual.''[Title 13, Section 9] This section
+establishment or individual.'' This section
 prohibits the Bureau from publishing respondent names, addresses, or any other
 information that might identify a specific person or establishment.
 
 Upholding this confidentiality requirement frequently poses a
 challenge, because many statistics can inadvertently provide
 information in a way that can be attributed to a particular
-entity. For example, if a statistical agency accurately reported that
-there were 2 persons living on a block and that the average age of the
-block's residents was 35, that would constitute an improper disclosure
+entity. For example, if a statistical agency accurately reports that
+there are 2 persons living on a block and that the average age of the
+block's residents is 35, that would constitute an improper disclosure
 of personal information, because one of the residents could look up
-the data, subtract their contribution, and infer the age of the other
-resident. To avoid such privacy compromises, statistical agencies have
-traditionally suppressed statistics resulting from a small number of
-people, a process called \emph{cell suppression}, and instead
-published statistics at higher levels of aggregation. Other approaches
-that statistical agencies use to protect privacy are
-\emph{top-coding}, in which ages higher than a certain limit are coded
-as that limit, \emph{noise-infusion}, in which random values are added
-to to some attributes, and \emph{swapping}, in which some of the
+the data, subtract their contribution, and infer the age of the other. Of course, this is an extremely simple example: 
+statistical agencies have understood the risk of such unintended disclosure for decades, and have developed a variety of techniques to protect data confidentiality while still publishing useful statistics. These techniques include \emph{cell suppression}, which prohibits publishing statistical summaries from small groups of respondents, as well as other techniques such as \emph{top-coding}, in which ages higher than a certain limit are coded
+as that limit before statistics are computed, \emph{noise-infusion}, in which random values are added
+to some attributes, and \emph{swapping}, in which some of the
 attributes of records representing different individuals or families
 are swapped. Together, these techniques are called \emph{statistical
   disclosure limitation} (SDL).
+  
+Computer scientists started exploring the issue of statistical privacy in the 1970s with the increased availability of interactive query systems. The goal was to build a system that would allow users to make queries that would produce summary statistics without revealing information about individual records. Three approaches emerged: auditing database queries, so that users would be prevented from issuing queries that zeroed in on data from specific individuals; adding noise to the data stored within the database; and adding noise to query results\cite{Adam:1989:SMS:76894.76895}. Of these three, the approach of adding noise proved to be the easiest, because the complexity of auditing queries increased exponentially over time (and, in fact, was eventually shown to be NP-hard\cite{Kleinberg:2000:ABA:335168.335210}. Although these results were all couched in the language of interactive query systems, they apply equally well to the activities of statistical agencies, with the ``database'' being the set of confidential survey responses, and the ``queries'' being the schedule of statistical tables that the agency intends to publish.
 
-In 2003, Dinur and Nissim showed that 
-once an agency publishes more than a critical number of statistics,
-the underlying confidential data can be \emph{reconstructed} by simply
-finding a consistent set of microdata that, when tabulated, produce
-the official statistics. This happens even if the agency only
-publishes aggregate statistics. One of the big surprises of the 2003 paper is
-that the number of tabulations required to enable a database reconstruction
-are far fewer than might be intuitively expected: this is
-because of the internal constraints and consistency requirements
-in the published data. Follow-up work showed that these results could
-be generalized to many more settings, and that many traditional
-SDL techniques are insufficient to protect against reconstruction.
-
-It is mathematically impossible to prevent a reconstruction of
-microdata that will produce a published set of statistics. But a
-statistical agency can add sufficient noise to the published tables, such that
-reconstructed microdata will not match the microdata that were
-collected and tabulated. 
-
-Adding noise alone is not sufficient, however. Noise can't be added in an \emph{ad
-  hoc} manner: the noise must be carefully crafted so that it disables
-\emph{every possible} database reconstruction technique. 
+In 2003, Dinur and Nissim showed that it isn't even necessary for an attacker to carefully construct queries on a database to reveal its underlying confidential data. Even a surprisingly small number of random queries will reveal confidential data, because the results of the queries can be combined and then used to ``reconstruct'' the underlying confidential data. Adding noise to either the database or to the results of the queries decreases the accuracy of the reconstruction, but it also decreases the accuracy of the queries. The challenge is to add sufficient noise and in such a way that each individual's privacy is protected, but not so much noise that the utility of the database is ruined. 
 
 Subsequent
 publications~\cite{privacy-preserving-datamining-on-vertically-partitioned-databases,BDMN05}
