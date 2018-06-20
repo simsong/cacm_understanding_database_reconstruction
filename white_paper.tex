@@ -231,7 +231,7 @@ statistic & Group                     & Count & Median & Mean \\
 
 We can reconstruct the database by treating the attributes
 of the persons living on the block as a collection of 
-free variables. We then extract from the published table a set of
+variables. We then extract from the published table a set of
 constraints. The database reconstruction merely finds a set of
 attributes that are consistent with the constraints. If statistics are
 highly constraining, then there will be a single possible
@@ -252,7 +252,7 @@ are only a finite number of possible age combinations, specifically:
 \input{medians} % brings in \mycount also
 
 However, within the 317,750 possible age combinations, there are
-\mycount{} combinations that satisfy the constraint of having a median
+only \mycount{} combinations that satisfy the constraints of having a median
 of \mymedian{} and a mean of \mymean{} (see
 Table~\ref{fictional}). (Notice that the table does not depend on the
 oldest possible age, so long as it is 101 or over.) So
@@ -268,7 +268,7 @@ find an assignment of the variables that satisfies these constraints.
 To continue with our example, statistic 1A establishes the universe of
 the constraint system. Because the block contains 7 people, and there
 are four attributes for each (age, sex, race and marital status), we
-create 28 free variables representing those four attributes for each
+create 28 variables representing those four attributes for each
 person. These variables are $\textrm{A}1..\textrm{A}7$ (age),
 $\textrm{S}1..\textrm{S}7$ (sex), $\textrm{R}1..\textrm{R}7$ (race),
 and $\textrm{M}1..\textrm{M}7$ (marital status), as shown in
@@ -315,10 +315,10 @@ A1 + A2 + A3 + A4 + A5 + A6 + A7 = 7 \times 38
 \end{equation}
 
 We use the language Sugar\cite{sugar} to encode the constraints
-into a form that can be processed by our solver. Sugar represents
+into a form that can be processed by our SAT solver. Sugar represents
 constraints as
 \textit{s-expressions}\cite{McCarthy:1960:RFS:367177.367199}. For
-example, equation~\ref{mean_age_38} is can be represented as:
+example, equation~\ref{mean_age_38} can be represented as:
 
 \begin{Verbatim}
 ; First define the integer variables, with the range 0..125
@@ -508,7 +508,7 @@ Normally SAT, SMT and MIPM solvers will stop when they find a single
 satisfying solution. One of the advantages of PicoSAT is that it can
 produce the solution universe of all possible solutions to the CNF
 problem. However, in this case, there is a single satisfying
-assignment that produce the statistics in
+assignment that produces the statistics in
 Table~\ref{fictional}. That assignment is:
 
 \begin{center}
@@ -541,8 +541,8 @@ reconstructed microdata records 8FBS, 36FBM, 66FBM and 84MBM. This
 means that even if statistics 2A and 2B are censored, we can still
 infer that these four microdata must be present.
 
-Statistical agencies have long used suppression (censoring) in an
-attempt to provide privacy to those whose attributes are presented in
+Statistical agencies have long used suppression in an
+attempt to provide privacy to those whose attributes are present in
 the microdata, although the statistics that they typically drop are
 those that are based on a small number of persons. How effective is
 this approach?
@@ -603,7 +603,7 @@ would have no way of knowing if the true age of the youngest person is
 and marital status variables. Clearly, the more noise that is added,
 the better privacy is protected, but the less accurate are the
 resulting statistics. Considering statistic 1A, input noise infusion
-might result with a median $28\ldots32$ and a mean $36\ldots40$.
+might result in a median $28\ldots32$ and a mean $36\ldots40$.
 (Note that when using differential privacy, the infused noise is not
 drawn from a bounded domain, but instead is typically drawn from a
 Laplace or geometric distribution.)
@@ -692,7 +692,7 @@ reconstruction of the underlying data is on the order of $\Omaga\sqrt{n}$
 where $n$ is number of bits in the database. In practice, many statistical
 agencies do not add this much noise when they release
 statistical tables. (In our example, each
-record is contains 11 bits of data, so the confidential database has
+record contains 11 bits of data, so the confidential database has
 77 bits of information. Each statistic in Table~\ref{variables}
 can be modeled as a 4 bit of count, a 7 bit of median, and a 7 bit of
 mean, for a total of 18 bits; Table~\ref{variables} releases 126 bits
@@ -728,7 +728,7 @@ identifying information, because the system's refusal to answer a
 \section{Conclusion}
 
 With the dramatic improvement in both computer speeds and the
-efficiency of solvers in the last decade, database reconstruction
+efficiency of SAT and other NP-hard solvers in the last decade, database reconstruction
 attacks on statistical databases are no longer a theoretical
 danger. The vast quantity of data products published by statistical
 agencies each year may give a determined attacker more than enough
@@ -784,7 +784,7 @@ is:
 This process is fast at solving SAT problems because adding conflicts as new clauses
 has the potential to avoid wasteful ``repeated backtracks.''
 Additionally, CDCL and its predecessor algorithm, DPLL, are both
-provably complete algorithms and will always return either a solution
+provably complete algorithms: they will always return either a solution
 or ``Unsatisfiable'' if given enough time and memory. Another
 advantage is that CDCL solvers reuse past work when producing the universe of all
 possible solutions.

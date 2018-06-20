@@ -102,7 +102,7 @@
 ;; FEMALE_AGE1 FEMALE_AGE2 FEMALE_AGE3 FEMALE_AGE4 
 ;;                 - the age of each female, in order of ages 
 ;;
-;; So we kow that the average of FEMALE_AGE2 and FEMALEA3 is 30
+;; So we know that the average of FEMALE_AGE2 and FEMALEA3 is 30
 ;;
 ;; This is a generic pattern that will be repeated for any cell size of 4
 
@@ -199,9 +199,7 @@
 (< MALE_ID1 MALE_ID2)
 (< MALE_ID2 MALE_ID3)
 
-;; Pigeon hole principle. If the IDs are in order, we only need to assure
-;; that each ID maps to a female. We add the final equal and a -1 to force 
-;; an error if there are not enough females.
+;; Pigeon hole principle. 
 (= MALE_ID1
    (if (= S1 1) 1
      (if (= S2 1) 2
@@ -275,9 +273,7 @@
 (< BLACK_ID2 BLACK_ID3)
 (< BLACK_ID3 BLACK_ID4)
 
-;; Pigeon hole principle. If the IDs are in order, we only need to assure
-;; that each ID maps to a female. We add the final equal and a -1 to force 
-;; an error if there are not enough females.
+;; Pigeon hole principle. 
 
 (= BLACK_ID1
    (if (= R1 0) 1
@@ -365,9 +361,7 @@
 (< WHITE_ID1 WHITE_ID2)
 (< WHITE_ID2 WHITE_ID3)
 
-;; Pigeon hole principle. If the IDs are in order, we only need to assure
-;; that each ID maps to a female. We add the final equal and a -1 to force 
-;; an error if there are not enough females.
+;; Pigeon hole principle. 
 (= WHITE_ID1
    (if (= R1 1) 1
      (if (= R2 1) 2
@@ -454,18 +448,16 @@
 ;; Median age of married adults is = 51
 ;; There are 4, so there are 2 less than 51 and 2 more than 51
 
-(int MARRIED_ADULT_ID1 1 4)                     ; must leave room for 5, 6 and 7 to be married adult
-(int MARRIED_ADULT_ID2 2 5)                     ; must leave room for 1, 6 and 7 to be married adult
-(int MARRIED_ADULT_ID3 3 6)                     ; must leave room for 1, 2 and 7 to be married adult
-(int MARRIED_ADULT_ID4 4 7)                     ; must leave room for 1, 2 and 3 to be married adult
+(int MARRIED_ADULT_ID1 1 4) ; must leave room for 5, 6 and 7 to be married adult
+(int MARRIED_ADULT_ID2 2 5) ; must leave room for 1, 6 and 7 to be married adult
+(int MARRIED_ADULT_ID3 3 6) ; must leave room for 1, 2 and 7 to be married adult
+(int MARRIED_ADULT_ID4 4 7) ; must leave room for 1, 2 and 3 to be married adult
 
 (< MARRIED_ADULT_ID1 MARRIED_ADULT_ID2)
 (< MARRIED_ADULT_ID2 MARRIED_ADULT_ID3)
 (< MARRIED_ADULT_ID3 MARRIED_ADULT_ID4)
 
-;; Pigeon hole principle. If the IDs are in order, we only need to assure
-;; that each ID maps to a female. We add the final equal and a -1 to force 
-;; an error if there are not enough females.
+;; Pigeon hole principle. 
 
 (= MARRIED_ADULT_ID1
    (if (= M1 1) 1
@@ -553,9 +545,7 @@
 (< BLACK_FEMALE_ID1 BLACK_FEMALE_ID2)
 (< BLACK_FEMALE_ID2 BLACK_FEMALE_ID3)
 
-;; Pigeon hole principle. If the IDs are in order, we only need to assure
-;; that each ID maps to a female. We add the final equal and a -1 to force 
-;; an error if there are not enough females.
+;; Pigeon hole principle. 
 (= BLACK_FEMALE_ID1
    (if (and (= R1 0) (= S1 0)) 1
      (if (and (= R2 0) (= S2 0)) 2
