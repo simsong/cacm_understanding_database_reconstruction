@@ -36,13 +36,13 @@
 (int S5 0 1) (int S6 0 1)
 (int S7 0 1)
 
-;; Ages (between 0 and 115 years old)
+;; Ages (between 0 and 125 years old)
 
 
-(int A1 1 115) (int A2 1 115)
-(int A3 1 115) (int A4 1 115)
-(int A5 1 115) (int A6 1 115)
-(int A7 1 115)
+(int A1 1 125) (int A2 1 125)
+(int A3 1 125) (int A4 1 125)
+(int A5 1 125) (int A6 1 125)
+(int A7 1 125)
 
 ;; Races (0:black  1:white)
 
@@ -150,10 +150,10 @@
 
 ;; Create temporary variables for the ages of these females
 ;; This uses the Sugar 
-(int FEMALE_AGE1 1 115)
-(int FEMALE_AGE2 1 115)
-(int FEMALE_AGE3 1 115)
-(int FEMALE_AGE4 1 115)
+(int FEMALE_AGE1 1 125)
+(int FEMALE_AGE2 1 125)
+(int FEMALE_AGE3 1 125)
+(int FEMALE_AGE4 1 125)
 
 (< FEMALE_AGE1 FEMALE_AGE2)
 (< FEMALE_AGE2 FEMALE_AGE3)
@@ -228,9 +228,9 @@
              -1))))))
 
 ;; Create temporary variables for the ages of these males
-(int MALE_AGE1 1 115)
-(int MALE_AGE2 1 115)
-(int MALE_AGE3 1 115)
+(int MALE_AGE1 1 125)
+(int MALE_AGE2 1 125)
+(int MALE_AGE3 1 125)
 
 ;; make sure they are ordered
 (< MALE_AGE1 MALE_AGE2)
@@ -309,10 +309,10 @@
            -1)))))
 
 ;; Create temporary variables for the black ages 
-(int BLACK_AGE1 1 115)
-(int BLACK_AGE2 1 115)
-(int BLACK_AGE3 1 115)
-(int BLACK_AGE4 1 115)
+(int BLACK_AGE1 1 125)
+(int BLACK_AGE2 1 125)
+(int BLACK_AGE3 1 125)
+(int BLACK_AGE4 1 125)
 
 (< BLACK_AGE1 BLACK_AGE2)
 (< BLACK_AGE2 BLACK_AGE3)
@@ -394,9 +394,9 @@
              -1))))))
 
 ;; Create temporary variables for the ages of these males
-(int WHITE_AGE1 1 115)
-(int WHITE_AGE2 1 115)
-(int WHITE_AGE3 1 115)
+(int WHITE_AGE1 1 125)
+(int WHITE_AGE2 1 125)
+(int WHITE_AGE3 1 125)
 
 ;; make sure they are ordered
 (< WHITE_AGE1 WHITE_AGE2)
@@ -498,10 +498,10 @@
 
 ;; Create temporary variables for the ages of these females
 ;; This uses the Sugar 
-(int MARRIED_ADULT_AGE1 1 115)
-(int MARRIED_ADULT_AGE2 1 115)
-(int MARRIED_ADULT_AGE3 1 115)
-(int MARRIED_ADULT_AGE4 1 115)
+(int MARRIED_ADULT_AGE1 1 125)
+(int MARRIED_ADULT_AGE2 1 125)
+(int MARRIED_ADULT_AGE3 1 125)
+(int MARRIED_ADULT_AGE4 1 125)
 
 (< MARRIED_ADULT_AGE1 MARRIED_ADULT_AGE2)
 (< MARRIED_ADULT_AGE2 MARRIED_ADULT_AGE3)
@@ -582,9 +582,9 @@
              -1))))))
 
 ;; Create temporary variables for the ages of these males
-(int BLACK_FEMALE_AGE1 1 115)
-(int BLACK_FEMALE_AGE2 1 115)
-(int BLACK_FEMALE_AGE3 1 115)
+(int BLACK_FEMALE_AGE1 1 125)
+(int BLACK_FEMALE_AGE2 1 125)
+(int BLACK_FEMALE_AGE3 1 125)
 
 ;; make sure they are ordered
 (< BLACK_FEMALE_AGE1 BLACK_FEMALE_AGE2)
