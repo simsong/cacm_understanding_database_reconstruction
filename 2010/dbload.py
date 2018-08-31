@@ -11,6 +11,8 @@ import re
 import sqlite3
 import sys
 import time
+import zipfile
+import io
 
 from sql import SLGSQL
 
@@ -83,26 +85,46 @@ def decode_22010(conn,c,line):
     c.execute("UPDATE blocks set houses=?,occupied=? where state=? and logrecno=?",
               (h0010001,h0010002,stusab,logrecno))
 
-def load_file(conn,fname,func):
-    print("starting {}".format(fname))
+def load_file(conn,f,func):
     t0 = time.time()
     ll = 0
-    with open(fname,encoding='latin1') as f:
-        c = conn.cursor()
-        for line in f:
-            #print(line)
-            try:
-                func(conn,c,line)
-            except ValueError as e:
-                print("{}: {}".format(ll,line))
-                raise e
-            ll += 1
-            if ll%10000==0:
-                print("{}...".format(ll),end='')
-                sys.stdout.flush()
-        conn.commit()
+    c = conn.cursor()
+    for line in f:
+        #print(line)
+        try:
+            func(conn,c,line)
+        except ValueError as e:
+            print("{}: {}".format(ll,line))
+            raise e
+        ll += 1
+        if ll%10000==0:
+            print("{}...".format(ll),end='')
+            sys.stdout.flush()
+    conn.commit()
     t1 = time.time()
     print("Finished {}; {:,.0f} lines/sec".format(fname,ll/(t1-t0)))
+
+def process_name(conn,f,name):
+    if name[2:]=='geo2010.pl':
+        load_file(conn,f,decode_geo_line)
+    elif name[2:]=='000012010.pl':
+        load_file(conn,f,decode_12010)
+    elif name[2:]=='000022010.pl':
+        load_file(conn,f,decode_22010)
+    else:
+        raise RuntimeError("Unknown file type: {}".format(fname))
+
+def process_file(conn,fname):
+    (path,name) = os.path.split(fname)
+    print(name)
+    if name.lower().endswith(".zip"):
+        zf = zipfile.ZipFile(fname)
+        for zn in zf.namelist():
+            if zn.endswith(".pl"):
+                process_name( conn, io.TextIOWrapper(zf.open(zn), encoding='latin1'), zn)
+        return
+    process_name(conn, open(fname, encoding='latin1'), name)
+    
 
 if __name__ == "__main__":
     import argparse
@@ -110,19 +132,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Compute file changes',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--db", help="Specify database location", default="data.sqlite3")
-    parser.add_argument("files", help="Files to ingest", nargs="*")
+    parser.add_argument("files", help="Files to ingest. May be XX000012010.pl XX000022010.pl or a ZIP file", 
+                        nargs="*")
     args = parser.parse_args()
 
     # open database and give me a big cache
     conn = sqlite3.connect(args.db)
     make_database(conn)
     for fname in args.files:
-        (path,name) = os.path.split(fname)
-        if name[2:]=='geo2010.pl':
-            load_file(conn,fname,decode_geo_line)
-        elif name[2:]=='000012010.pl':
-            load_file(conn,fname,decode_12010)
-        elif name[2:]=='000022010.pl':
-            load_file(conn,fname,decode_22010)
-        else:
-            raise RuntimeError("Unknown file type: {}".format(fname))
+        process_file(conn,fname)
