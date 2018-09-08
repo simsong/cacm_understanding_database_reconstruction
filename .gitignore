@@ -1,3 +1,4 @@
+
 # Add any directories, files, or patterns you don't want to be tracked by version control*~
 *.aux
 *.bbl
@@ -14,39 +15,29 @@
 *.pl
 *.pyc
 *.spl
+*.sqlite3
 *.upa
 *.upb
 *.zip
 *~
 .DS_Store
+.cache
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 Walksat_V51
 constraints_.cnf
 constraints_.cnf.cnf
 constraints_.cnf.map
 constraints_.map
-<<<<<<< Updated upstream
+glucose-syrup*
+glucose_static
 latex_tools
 pbsugar-v1-1-1
 picosat-965
-sf1.pdf
-sugar-v2-3-2
-white_paper.pdf
-.cache
-*.sqlite3
-sugar-*
-=======
-*.pyc
-.DS_Store
-
-Walksat_V51
-constraints_.cnf.cnf
-constraints_.cnf.map
-latex_tools
-sf1.pdf
-*.pdf
-
->>>>>>> Stashed changes
-glucose-syrup*
-glucose_static
 pl94
+sf1.pdf
+sugar-*
+sugar-v2-3-2
 white_paper.docx
+white_paper.pdf
